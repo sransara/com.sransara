@@ -12,15 +12,15 @@ and more importantly the **Why**.
 [commit](https://github.com/git/git/tree/e83c5163316f89bfbde7d9ab23ca2e25604af290)
 and the [README](https://github.com/git/git/blob/e83c5163316f89bfbde7d9ab23ca2e25604af290/README) of Git.[^1]
 
-There is few other good resources on the same idea of understanding the internals:
+There is few other good resources on the similar idea of this note:
 
 - [The Architecture of Open Source Applications (Volume 2): Git](http://aosabook.org/en/git.html)
 - [Git Internals](https://github.com/pluralsight/git-internals-pdf/releases)
 - [Pro Git](http://git-scm.com/book/en/Git-Internals)
 - [Learn Git Branching](http://pcottle.github.io/learnGitBranching/)
 
-In any case, this my take on building Git step by step. 
-And more important trying to focus on find the reasoning behind major design decisions.
+In any case, this is my take on building Git step by step. 
+And more importantly trying to focus on find the reasoning behind design decisions.
 
 To the best of my knowledge, concepts discussed in this note have been present from the initial commit of Git 
 (but may be with evolution in the terminology). In this note we will use the same terminology that 
@@ -30,8 +30,8 @@ the current versions of Git (2.x) uses.
 Nor will it try to be binary compatible with Git. But will try to keep same terminology and repository format.
 
 # What is a DVCS?
-We can view the Version Control System (VCS) of DVCS as a versioned backup system, that can keep the lineage of the versions
-(and can easily diff and merge among multiple versions).
+We can view the Version Control System (VCS) of DVCS as a versioned backup system, that can keep the lineage of the 
+versions (and can easily diff and merge among multiple versions).
 
 The Distributed (D) of DVCS comes from the idea that two instances of this system with a common history 
 can diverge from each other and be acted upon independently without needing to synchronize with a central server. 
@@ -44,7 +44,7 @@ can diverge from each other and be acted upon independently without needing to s
 ## Extras
 Linus Torvalds needed more from [his DVCS](https://en.wikipedia.org/wiki/Git). 
 Being the Linux kernel maintainer managing millions of lines of code
-and thousands of libraries there were some more important driving goals for developing Git[^2].
+and thousands of files there were some more important driving goals for developing Git[^2].
 
 - Security: in the sense that no one can corrupt or sneak in a change.
 - Be <i>fast</i>: at Linux kernel code scale, it is important that the DVCS will have performance in mind.
@@ -91,17 +91,17 @@ attr="from Git Basics"
 attrlink="https://git-scm.com/book/en/v1/Getting-Started-Git-Basics" 
 %}}
 
-*So where is the branching work flow?* 
+*So where is the branching work flow?*<br/> 
 It is simply a matter of doing `sheep checkout <checkpoint>` to go back to a checkpoint;
 Then `sheep branch <name>` to give the new branch a name.
-And followed it up by `sheep add` and `sheep commit` workflow in Figure 1.
+And follow it up by `sheep add` and `sheep commit` workflow in Figure 1.
 Later on we will see how this is handled internally.
 
 There is few other important intents/commands (diff, merge, fetch, push) that we will discuss as we go along.
 
 # sheep commit
 From the implementation point of view, `commit` is where the magic happens. 
-As discussed earlier user's intent is to make a new checkpoint, which entails two ideas:
+As discussed earlier, user's intent is to make a new checkpoint, which entails two ideas:
 
 1. Make a backup of all directory content that is currently being tracked. 
    Let's call the view of the tracked directory content at a checkpoint to be **snapshot**.
@@ -113,7 +113,7 @@ Let's give each step a name: by calling step 1 as 'create-content-snapshot' and 
 Now we can view `commit` as the composition of two functions `create-content-snapshot` 
 and `extend-commit-history-graph`.
 
-We need an interface for the two functions to compose. Observe: all that `extend-commit-history-graph` 
+There needs to be an interface for the two functions to compose. Observe: all that `extend-commit-history-graph` 
 needs is a way to find the snapshot created by `create-content-snapshot`. See the following to see how this 
 interfacing can be achieved using **pointer-to-snapshot**.
 
@@ -130,10 +130,10 @@ interfacing can be achieved using **pointer-to-snapshot**.
 commit = extend-history-graph( ... , create-content-snapshot( ... ) )
 ```
 
-So on each `commit`, `create-content-snapshot` function creates a new snapshot and feeds it to the 
+On each `commit`, `create-content-snapshot` function creates a new snapshot and feeds it to the 
 `extend-commit-history-graph` function to create the extended commit history graph.
 
-With the pieces of the commit puzzle in place. Let's start from `extend-commit-history-graph` corner 
+With the pieces of the commit puzzle in place, let's start from the `extend-commit-history-graph` corner 
 to see how everything will work.
 
 ## Extending the commit history graph
@@ -144,7 +144,7 @@ In the previous section we discussed `commit` as a verb. Here we talk about comm
 From the previous section we know that a commit holds information about the snapshot.
 Snapshot is a view of the directory content at a `commit`. The goal of taking a snapshot is because we want to 
 see all the changes to directory content after the parent commit. We would also like to see 
-who changed it, when they changed it, and why changed it at a later point of time.
+who changed it, when they changed it, and why they changed it at a later point of time.
 
 So to achieve this: think of a commit as a structure that holds 
 (snapshot + parent commits + metadata: author, date and message). We'll call this a **commit object**.
@@ -175,7 +175,6 @@ title="Figure 2: First two commits in the Commit History"
 %}}
 
 We'll name the commits A, B in sequence for first and second commit. 
-These names will be important, as we shall see soon.
 
 *A points to B? Or B points to A?*
 Although we usually like to imagine the flow as forward in <i>time</i>, hence point from A to B; 
@@ -216,7 +215,8 @@ define function extend-commit-history-graph:
 Now if we were to implement `sheep log`, it is simply a matter of traversing the pointers towards the ancestors
 while logging the metadata information in the output.
 
-Till now we have looking at simple linear history. Let's see how branching can effect on our commit implementation.
+Until now we have been looking at simple linear history. 
+Let's see how branching can affect our commit implementation.
 
 # sheep checkout, branch and heads
 ## Checkout
@@ -227,7 +227,7 @@ Let's imagine a scenario: Commit C is a Long Term Support (LTS) release. And in 
 To fix the bug user will just follow their intents.
 
 ```
-project/ $ # we are at commit D now (1)
+project/ $ # user is at commit D now (1)
 project/ $ sheep checkout C # (2)
 project/ $ vim test/main.c
 project/ $ sheep commit -a -m "Update tests"
@@ -246,7 +246,8 @@ In implementation, `checkout` is simply to **update the HEAD to a given commit**
 **recreate the directory content using the snapshot pointer** in that commit.
 
 ## Branches
-*Why do we need to support a branching workflow?* In figure 4 visually we can see the branch out at
+*Why do we need to support a branching workflow?* <br/>
+In figure 4 visually we can see the branch out at
 commit C. We need to support this kind of workflow because not all changes are sequential. One of our goals from the
 first section was to: let contributors work independently without synchronization at every commit.
 
@@ -321,13 +322,14 @@ Why? Because if it was an ephemeral data structure we will need to complicate ou
 primitives so that information about commits are not lost[^4]. For a better reasoning,
 [watch "Value of values" by Rich Hikey](https://www.infoq.com/presentations/Value-Values).
 
-Immutable values aggregate to immutable values. Since we want a persistent data structure
-If we make **commit objects and snapshot objects be immutable**, the commit history graph will be 
+Immutable values aggregate to immutable values. Since we want a persistent data structure,
+if we make **commit objects and snapshot objects be immutable**, the commit history graph will be 
 an immutable persistent data structure as well.
 
 We can be glad that the commit objects, that was discussed in the previous sections were not relying to be mutable.
-In `extend-commit-history-graph` we create a new commit, and extend the graph with a new commit.<br/>
-Our commit history graph is a fully persistent data structure 
+In `extend-commit-history-graph` we create a new commit, and extend the graph with a new commit.
+
+Note that the commit history graph is a **fully persistent data structure**
 (every version can be both accessed and modified) if we consider that commits are the entry points.
 But, since we use the branch heads as the actual entry points and because branch heads are mutable,
 the commit history graph is just a bit away from being a fully persistent data structure.
