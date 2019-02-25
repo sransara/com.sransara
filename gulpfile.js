@@ -44,6 +44,7 @@ function stylePublish() {
                     },
                     extensions: ["html"]
                 }],
+                whitelistPatternsChildren: [/classless/],
                 fontFace: true,
             }),
             autoprefixer({

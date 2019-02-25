@@ -62,7 +62,7 @@
   }
 
   pre {
-    @apply bg-grey-darker p-2 overflow-x-auto text-grey-lighter text-sm my-3;
+    @apply bg-grey-darker font-mono p-2 overflow-x-auto text-grey-lighter text-sm my-3;
     tab-size: 2;
     width: 92vw;
   }
