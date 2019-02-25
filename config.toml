@@ -1,5 +1,5 @@
 assetDir = "assets/build/"
-baseURL = "http://s.ransara.xyz/"
+baseURL = "https://s.ransara.xyz/"
 disableKinds = ["taxonomy", "taxonomyTerm"]
 languageCode = "en-us"
 title = "s.ransara"
