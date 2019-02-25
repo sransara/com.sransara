@@ -1,7 +1,11 @@
+/* purgecss start ignore */
 @tailwind preflight;
+/* purgecss end ignore */
+
 @tailwind components;
 
 /* Custom CSS here */
+/* purgecss start ignore */
 .classless {
   @apply font-serif leading-normal text-grey-darkest;
 
@@ -80,6 +84,7 @@
     padding: 0 1em;
   }
 }
+/* purgecss end ignore */
 
 
 @tailwind utilities;
