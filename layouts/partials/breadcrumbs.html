@@ -1,0 +1,34 @@
+{{ define "breadcrumb" }}
+  {{ with .Parent }}
+    {{ template "breadcrumb" . }}
+      <span class="whitespace-no-wrap inline-block">
+        / <a href="{{ .URL }}">
+          {{ if .IsHome }}
+          home/sransara
+          {{ else }}
+          {{ path.Base .Dir }}
+          {{ end }}
+        </a>
+      </span>
+  {{ end }}
+{{ end }}
+
+<div class="mb-6 text-lg font-mono">
+  {{ if .IsHome }}
+    <span class="whitespace-no-wrap inline-block">
+      / home/sransara
+    </span>
+  {{ else }}
+    {{ template "breadcrumb" . }}
+    {{ if not .IsPage }}
+      <span class="whitespace-no-wrap inline-block">
+        / {{ path.Base .Dir }}
+      </span>
+    {{ end }}
+  {{ end }}
+  <span class="whitespace-no-wrap inline-block"> / $
+    <span class="text-grey-dark inline-block">
+      cat /dev/urandom
+    </span>
+  </span>
+</div>

@@ -1,0 +1,20 @@
+{{ define "main" }}
+<main class="p-6 max-w-lg">
+  {{ partial "breadcrumbs.html" . }}
+  <h1 class="mb-2">{{ .Title }}</h1>
+  <h5 class="mb-6 text-grey">
+    Published on 
+    <span class="text-grey-darker">{{ .Date.Format "Jan 02, 2006" }}</span> 
+    by 
+    <span class="text-grey-darker">Samodya R. Abeysiriwardane</span> /
+    <a class="font-normal" target="_blank" rel="noopener noreferrer" href="https://github.com/sransara/sransara-xyz/commits/master/{{ .Dir }}">Source</a> 
+  </h5>
+  <div class="classless">
+    <div class="p-2 border-2 mb-4">
+      <span class="text-grey-dark">Table of Contents</span>
+      {{ .TableOfContents }}
+    </div>
+    {{ .Content }}
+  </div>
+</main>
+{{ end }}

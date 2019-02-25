@@ -1,0 +1,54 @@
+{{ define "title" }}
+s.ransara &mdash; True randomness
+{{ end }}
+
+{{ define "main" }}
+<main class="p-6">
+  {{ partial "breadcrumbs.html" . }}
+  <div class="my-6">
+    <h1>Hi, I am Samodya.</h1>
+    <h2 class="mt-2">Welcome to my corner of the cyberspace.</h2>
+  </div>
+
+  <div class="my-6 leading-normal">
+    <h3>Explore</h3>
+    <div>
+      <a href="/notes/">
+        <span>
+          <span>Notes</span>
+        </span>
+      </a> - Half baked writeups
+      <br />
+      <a href="/projects/">
+        <span>
+          <span>Projects</span>
+        </span>
+      </a> - This and that
+      <br />
+      <a href="/about/">
+        <span>
+          <span>About</span>
+        </span>
+      </a> - Meh
+    </div>
+  </div>
+
+  <div class="my-6 leading-normal">
+    <h3>Social</h3>
+    <div>
+      <a href="//github.com/sransara" target="_blank" rel="noopener noreferrer">
+        <span>
+          <span>Github</span>
+        </span>
+      </a>
+      <br />
+      <a href="//twitter.com/sransara" target="_blank" rel="noopener noreferrer">
+        <span>
+          <span>Twitter</span>
+        </span>
+      </a>
+      <br />
+    </div>
+  </div>
+</main>
+{{ end }}

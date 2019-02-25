@@ -1,0 +1,85 @@
+@tailwind preflight;
+@tailwind components;
+
+/* Custom CSS here */
+.classless {
+  @apply font-serif leading-normal text-grey-darkest;
+
+  blockquote {
+    @apply bg-grey-lighter border-l-4 border-grey p-2;
+  }
+
+  dt {
+    @apply font-bold mt-6;
+  }
+  
+  dd {
+    @apply mb-1;
+  }
+
+  em {
+    @apply underline roman;
+  }
+
+  figure {
+    @apply text-center border-4 border-grey-light p-2 my-4;
+  }
+  
+  figure figcaption {
+    @apply border-t-2 font-sans p-1;
+    
+    p {
+      @apply p-0 m-0;
+    }
+
+    h4 {
+      @apply p-0 m-0;
+    }
+  }
+
+  h1, h2, h3, h4 { 
+    @apply mt-4 mb-2;
+  }
+  
+  h5, h6 {
+    @apply mt-4 mb-0 uppercase;
+  }
+
+  li {
+    @apply my-1;
+  }
+
+  p {
+    @apply mt-2 mb-4;
+  }
+
+  table {
+    @apply w-full;
+  }
+
+  th, td {
+    @apply border border-collapse border-grey p-1;
+  }
+
+  pre {
+    @apply bg-grey-darker p-2 overflow-x-auto text-grey-lighter text-sm my-3;
+    tab-size: 2;
+    width: 92vw;
+  }
+
+  :not(pre) > code,
+  > code {
+    @apply bg-grey-darker font-mono px-1 rounded text-sm text-grey-lighter;
+  }
+
+  strong {
+    @apply bg-yellow font-medium;
+  }
+
+  ul {
+    padding: 0 1em;
+  }
+}
+
+
+@tailwind utilities;

@@ -1,0 +1,34 @@
+{{ define "main" }}
+<main class="p-6 max-w-xl">
+  {{ partial "breadcrumbs.html" . }}
+  <h1 class="mt-6 mb-3">{{ .Title }}</h1>
+  <div class="classless">
+    {{ .Content }}
+  </div>
+  <ul class="list-reset">
+    {{ range .Pages.ByDate.Reverse }}
+    <li class="my-2">
+      <span class="font-semibold">{{ .Date.Format "Jan 02, 2006" }}</span> 
+      &mdash; 
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+    {{ end }}
+    {{ range .Sections.ByWeight.Reverse }}
+    <li class="my-2">
+      <h2 class="mt-6 mb-3">
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+      </h2>
+    </li>
+    <ul class="list-reset">
+      {{ range .Pages.ByDate.Reverse }}
+      <li class="my-3">
+        <span class="font-semibold">{{ .Date.Format "Jan 02, 2006" }}</span> 
+        &mdash; 
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+      </li>
+      {{ end }}
+    </ul>
+    {{ end }}
+  </ul>
+</main>
+{{ end }}

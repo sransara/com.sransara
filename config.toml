@@ -1,0 +1,12 @@
+assetDir = "assets/build/"
+baseURL = "http://s.ransara.xyz/"
+disableKinds = ["taxonomy", "taxonomyTerm"]
+languageCode = "en-us"
+title = "s.ransara"
+
+[permalinks]
+  notes = "/:sections/:title/"
+
+[blackfriday]
+  plainIDAnchors = true
+  hrefTargetBlank = true
