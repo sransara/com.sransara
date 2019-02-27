@@ -3,31 +3,32 @@ title: Build yourself a Distributed Version Control System (just like Git)
 date: 2019-02-04
 ---
 # Intro
-In this note we explore how we could rebuild Git from the ground up. The goal is to build a DVCS step by step
-until we have something just like Git. As we are re-inventing the wheel for learning purposes, 
-we will analyze the basic concepts involved in building Git. In this note, we will focus on the **How** at each step
-and more importantly the **Why**.
+In this note we explore how we could rebuild Git from the ground up. 
+As we are re-inventing the wheel for learning purposes, we will analyze the basic concepts involved in building Git. 
+In this note, we will focus on the **How** and **Why** as we are incrementally building our DVCS.
 
 *Tidbit*: Have a look at Linus Torvalds' first
 [commit](https://github.com/git/git/tree/e83c5163316f89bfbde7d9ab23ca2e25604af290)
 and the [README](https://github.com/git/git/blob/e83c5163316f89bfbde7d9ab23ca2e25604af290/README) of Git.[^1]
 
-There is few other good resources on the similar idea of this note:
+There is few other good resources on Git internals:
 
 - [The Architecture of Open Source Applications (Volume 2): Git](http://aosabook.org/en/git.html)
 - [Git Internals](https://github.com/pluralsight/git-internals-pdf/releases)
 - [Pro Git](http://git-scm.com/book/en/Git-Internals)
 - [Learn Git Branching](http://pcottle.github.io/learnGitBranching/)
 
-In any case, this is my take on building Git step by step. 
-And more importantly trying to focus on find the reasoning behind design decisions.
+In any case, this is my take on building Git step by step. And more importantly trying to focus on finding
+the reasoning behind some of the major design decisions.
 
 To the best of my knowledge, concepts discussed in this note have been present from the initial commit of Git 
-(but may be with evolution in the terminology). In this note we will use the same terminology that 
+(may be with evolution in the terminology). Here we will use the same terminology that 
 the current versions of Git (2.x) uses.
 
-*Disclaimer*: This note is not intended as a Git usage or workflow guideline. This note will not have concrete code. 
-Nor will it try to be binary compatible with Git. But will try to keep same terminology and repository format.
+*Disclaimer*: This note is not intended as a Git usage or workflow guideline. This will not have concrete code, but
+will have some pseudo-code sprinkled in. Here we do not try to be binary compatible with Git, but will try to 
+keep same terminology and repository format. To re-iterate, the goal of the note is not really to build but 
+to understand how and why build Git this way.
 
 # What is a DVCS?
 We can view the Version Control System (VCS) of DVCS as a versioned backup system, that can keep the lineage of the 
@@ -247,19 +248,19 @@ In implementation, `checkout` is simply to **update the HEAD to a given commit**
 
 ## Branches
 *Why do we need to support a branching workflow?* <br/>
-In figure 4 visually we can see the branch out at
-commit C. We need to support this kind of workflow because not all changes are sequential. One of our goals from the
+In figure 4 visually we can see the branch out at commit C. 
+We need to support this kind of workflow because not all changes are sequential. One of our goals from the
 first section was to: let contributors work independently without synchronization at every commit.
 
-As figure 4 shows, the system that have discussed till this point can already support a branching workflow.
+As figure 4 shows, the system that we have discussed up to this point can already support a branching workflow.
 Is there more to be done? Yes there is. But not much.
 
 If we look at figure 4 again, we can see that there are two branches that has D and F as their tips.
 If the user wants to switch between the latest commit of each branch, with our current system they have to remember
 their exact commit name. But we can do better, with a simple layer of indirection.
 
-Since our problem was that user has to remember the name of the commit at branch tip: 
-we add a **layer of indirection**, that will **point memorable names to commits**. 
+Since our problem was that user has to remember the name of the commit at every branch tip: 
+we introduce a **layer of indirection**, that will **point memorable names to commits**. 
 In Git terms, this layer of indirection is called **refs**.
 
 Branch names are just pointers to commits that follow along as the commit history graph extends. 
@@ -299,8 +300,8 @@ Until now we have only focused on local operations and not focussed about the Di
 That is because our plan is to have a symmetric view from the point of branches. Simply put we view
 a remote repo as a namespaced collection of branches.
 
-This is because goals of branches was to enable parallel work that need not always be synchronized. In that sense
-remote repo branch is just another branch to our local repo.
+This is because a main goal of branches was to enable parallel work that need not always be synchronized. 
+In that sense remote repo branch is just another branch to our local repo.
 
 While local branches are called **heads** internally, remote branches are called **remotes**. 
 And they are both handled as **refs**.
@@ -735,6 +736,7 @@ For example:
   these changes in to the final snapshot. 
 - *6 only changed on the 'hot-fix' hence we can auto merge this change into the final snapshot as well.
 - *4 and *5 shows that README was changed in both branches: hence a conflict on that file.
+- Think about how we should handle auto merges for: deletes and renames
 
 At a conflict, `merge` will pause the merge and 
 do a diff and put helper markers to identify the base, ours (current branch) and theirs (merging branch) changes.
@@ -754,6 +756,8 @@ at each step of the way.
 If you are hungry for more DVCS concepts: look into [Pijul](https://pijul.org/model/).
 
 With that we mark the end of this ridiculously long note. Thank you for reading.
+
+Say no more to `rm -rf .git`. Say hello ro `rm -rf .sheep`.
 
 # Footnotes
 [^1]: The code is easy to digest. And the README provides great supplementary material on the thoughts behind the code. Just as expected from the great software engineer, Linus Torvalds.
