@@ -49,7 +49,7 @@
     @apply mt-4 mb-0 uppercase leading-tight;
   }
 
-  ul, {
+  ul {
     padding: 0 1em;
   }
 
