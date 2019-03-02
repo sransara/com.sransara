@@ -778,10 +778,10 @@ Say no more to `rm -rf .git`. Say hello to `rm -rf .sheep`.
 ## Birds eye view
 If we take a bird's eye view of what we have done until now: we can see that we have built a database. 
 A database with a branching based concurrency control mechanism. Taking the notion of **database as value** 
-([talk by Rich Hikey](https://www.youtube.com/watch?v=EKdV1IgAaFc)), the value we built for `sheep` is the **trie**. 
+([talk by Rich Hikey](https://www.youtube.com/watch?v=EKdV1IgAaFc)), the value we built for `sheep` is a **trie**. 
 But we focused on a trie merely because our aim was to build a DVCS.  Using just content addressable storage
 and ref indirection layer as our building blocks we should be able to build almost any fully persistent data structure. 
-Mirage OS [irmin project](https://mirage.io/blog/introducing-irmin) is an exploration of this idea.
+Mirage OS [Irmin project](https://mirage.io/blog/introducing-irmin) is an exploration of this idea.
 
 ## Conclusion
 In this note we managed to split Git and its concepts into manageable pieces so that we can build it from the ground up.
