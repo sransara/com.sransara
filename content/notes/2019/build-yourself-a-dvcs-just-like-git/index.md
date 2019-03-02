@@ -790,9 +790,9 @@ at each step of the way.
 
 If you are hungry for more DVCS concepts: look into [Pijul](https://pijul.org/model/).
 
-With that, we mark the end of this ridiculously long note. 
+With that, we mark the end of this ridiculously long note. Thank you for reading.
 
-Thank you for reading. Join for comments at https://news.ycombinator.com/item?id=19290473
+Join for comments at https://news.ycombinator.com/item?id=19290473
 
 # Footnotes
 [^1]: The code is easy to digest. And the README provides great supplementary material on the thoughts behind the code. Just as expected from the great software engineer, Linus Torvalds.
