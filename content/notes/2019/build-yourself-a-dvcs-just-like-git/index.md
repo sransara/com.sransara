@@ -1,6 +1,6 @@
 ---
 title: Build yourself a Distributed Version Control System (just like Git)
-date: 2019-02-04
+date: 2019-02-28
 ---
 # Intro
 In this note we explore how we could rebuild Git from the ground up. 
@@ -18,17 +18,20 @@ There is few other good resources on Git internals:
 - [Pro Git](http://git-scm.com/book/en/Git-Internals)
 - [Learn Git Branching](http://pcottle.github.io/learnGitBranching/)
 
-In any case, this is my take on building Git step by step. And more importantly trying to focus on finding
-the reasoning behind some of the major design decisions.
-
+In any case, this is my take on conceptually understanding the building blocks of Git.
 To the best of my knowledge, concepts discussed in this note have been present from the initial commit of Git 
-(may be with evolution in the terminology). Here we will use the same terminology that 
+(may be with some evolution in the terminology). Here we will use the same terminology that 
 the current versions of Git (2.x) uses.
 
 *Disclaimer*: This note is not intended as a Git usage or workflow guideline. This will not have concrete code, but
 will have some pseudo-code sprinkled in. Here we do not try to be binary compatible with Git, but will try to 
 keep same terminology and repository format. To re-iterate, the goal of the note is not really to build but 
-to understand how and why build Git this way.
+to get a better understanding of the ideas involved. Consider this note as a origin point for deeper rabbit holes
+to follow. 
+
+> If you wish to make an apple pie from scratch, you must first invent the universe. 
+>
+> &dash; Carl Sagan
 
 # What is a DVCS?
 We can view the Version Control System (VCS) of DVCS as a versioned backup system, that can keep the lineage of the 
@@ -373,7 +376,7 @@ And then let the user merge in the remote content with the local content at thei
 ## Fetching commit objects
 Collect all commit objects that are accessible from remote's entry pont(s) and put them all with
 the commit objects currently on the local repo. (Git takes an extra step here by compressing similar files called
-pack files, so that we transfer less over the network. But for `sheep` let's ignore that for the sake of simplicity.)
+**pack files**, so that we transfer less over the network. But for `sheep` let's ignore that for the sake of simplicity.)
 
 To implement this we need to concretize some ideas that we glossed over during `extend-commit-history-graph`.
 
@@ -490,12 +493,27 @@ But we can see that this naive method will cause **excessive duplication**, beca
 be lot of common content between two different commits. Since we make full backup of directory content with each backup
 we are not using space efficiently.
 
-There are different ways to solve this issue. But `sheep` will follow Git.
+## Trying a better implementation: intuitive attempt 
+The intuitive solution here is just store only the differences (diff). When we say differences between the snapshots we
+need to focus on:
 
-### Better implementation - the Git way
+- Differences in content (edits to file contents)
+- Differences in directory structure (add/remove directories)
+
+Let's say we model the diff as a function that brings the parent commit's snapshot to the child commit's. And store
+this function in some serialized format that we can apply later to reconstruct a version. Space problem solved.
+But this method has a major effect in performance for the user intent: going back to a previous revision.
+Because to reconstruct a previous revision of a file we have to go back to it's origin commit, and reapply
+all the differences down its lineage chain until the final version is constructed. Essentially reconstruction per file
+becomes O(ND) time complexity where N is the length of the lineage chain and D is size of the diff (in worst case D is the
+size of the file itself). 
+
+This is an alright solution if we just want to archive, but we can do better for `sheep`.   
+
+### Better implementation:  just like git
 To find a better way, we remind ourselves a property from the naive implementation.
 The snapshot that got backed up (in to .sheep/objects/&lt;hash&gt;) is never going to be modified by another commit.
-The **snapshots are immutable**. This means we can use a functional data structure to represent the snapshots,
+The **snapshots are immutable**. Hence we can use a functional data structure to represent the snapshots,
 which opens up for the great deal of literature on implementations with much better space and time complexity 
 than our naive implementation. On that note 
 [Purely Functional Data Structures by C. Okasaki](https://www.cs.cmu.edu/~rwh/theses/okasaki.pdf) is a must read. 
@@ -560,6 +578,12 @@ content addressable storage. **Key of a tree or blob will be the hash of its con
 Note that key of a blob is dependant only on the hash of its content, a rename would not affect the blob
 (This will help us track renames when doing `diff`).
 Hash of the root of the trie will be the snapshot pointer that will be used in creating a commit object.
+
+*Notice*: that we are treating blobs as opaque objects. We are not trying to store the diff between the blobs that
+could be almost the same, between revisions. We are still not using our space as efficiently as possible.
+This becomes an issue especially when we are transferring content over networks. As briefly touched upon before,
+Git uses something called **pack files**, you can read more about it 
+[here](https://codewords.recurse.com/issues/three/unpacking-git-packfiles).
 
 If we use cryptographic hashing as with commits: we get a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree) 
 at the snapshot level. This means any change in content will be reflected as a new change leading to new a snapshot
@@ -748,16 +772,27 @@ extra functionalities that it brings to the table.
 
 With that we have reached the end of essential command we planned out for `sheep`.
 
+Say no more to `rm -rf .git`. Say hello to `rm -rf .sheep`.
+
 # Final remarks
+## Birds eye view
+If we take a bird's eye view of what we have done until now: we can see that we have built a database. 
+A database with a branching based concurrency control mechanism. Taking the notion of **database as value** 
+([talk by Rich Hikey](https://www.youtube.com/watch?v=EKdV1IgAaFc)), the value we built for `sheep` is the **trie**. 
+But we focused on a trie merely because our aim was to build a DVCS.  Using just content addressable storage
+and ref indirection layer as our building blocks we should be able to build almost any fully persistent data structure. 
+Mirage OS [irmin project](https://mirage.io/blog/introducing-irmin) is an exploration of this idea.
+
+## Conclusion
 In this note we managed to split Git and its concepts into manageable pieces so that we can build it from the ground up.
 More importantly while building the concepts step by step, we tried to build up understanding by asking ourselves why 
 at each step of the way.
 
 If you are hungry for more DVCS concepts: look into [Pijul](https://pijul.org/model/).
 
-With that we mark the end of this ridiculously long note. Thank you for reading.
+With that, we mark the end of this ridiculously long note. 
 
-Say no more to `rm -rf .git`. Say hello ro `rm -rf .sheep`.
+Thank you for reading. Join for comments at https://news.ycombinator.com/item?id=19290473
 
 # Footnotes
 [^1]: The code is easy to digest. And the README provides great supplementary material on the thoughts behind the code. Just as expected from the great software engineer, Linus Torvalds.
