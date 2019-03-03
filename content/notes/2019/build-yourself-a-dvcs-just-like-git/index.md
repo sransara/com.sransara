@@ -51,7 +51,7 @@ Being the Linux kernel maintainer managing millions of lines of code
 and thousands of files there were some more important driving goals for developing Git[^2].
 
 - Security: in the sense that no one can corrupt or sneak in a change.
-- Be <i>fast</i>: at Linux kernel code scale, it is important that the DVCS will have performance in mind.
+- Be <i>fast</i>: at Linux kernel code scale, it's important that the DVCS will have performance in mind.
 
 # Sheep
 Okay now, let's get on to building this hypothetical DVCS that I will call `sheep`, because this `sheep` will 
@@ -61,7 +61,7 @@ follow the path set by [Git](https://github.com/git/git/tree/5d826e972970a784bd7
 Unlike a versioned file system where content is automatically backed up; in a DVCS, all actions are performed when a 
 user shows intent.  Therefore the interface to our DVCS plays a crucial role.
 
-So, let's first list essential user intents and map each of them to our UI.
+Let's first list essential user intents and map each of them to our UI.
 
 Intent to initialize a directory to be under version control
 : - `sheep init` 
@@ -96,7 +96,7 @@ attrlink="https://git-scm.com/book/en/v1/Getting-Started-Git-Basics"
 %}}
 
 *So where is the branching work flow?*<br/> 
-It is simply a matter of doing `sheep checkout <checkpoint>` to go back to a checkpoint;
+It's simply a matter of doing `sheep checkout <checkpoint>` to go back to a checkpoint;
 Then `sheep branch <name>` to give the new branch a name.
 And follow it up by `sheep add` and `sheep commit` workflow in Figure 1.
 Later on we will see how this is handled internally.
@@ -155,7 +155,7 @@ So to achieve this: think of a commit as a structure that holds
 
 ### Commit history graph
 Commit History Graph is the data structure that holds the lineage information of each and every commit.
-Basically it is the life blood of our DVCS. In implementation, Commit history graph is just the relative ordering
+Basically it's the life blood of our DVCS. In implementation, Commit history graph is just the relative ordering
 created by bunch of commit objects that connect to each other like a chain.
 
 ### Parent and Child commits
@@ -216,7 +216,7 @@ define function extend-commit-history-graph:
   # now update HEAD to c (we will revise this last step later on)
 ```
 
-Now if we were to implement `sheep log`, it is simply a matter of traversing the pointers towards the ancestors
+Now if we were to implement `sheep log`, it's simply a matter of traversing the pointers towards the ancestors
 while logging the metadata information in the output.
 
 Until now we have been looking at simple linear history. 
@@ -240,7 +240,7 @@ project/ $ vim CHANGELOG
 project/ $ sheep commit -a -m "Fix super nasty bug" # (3)
 ```
 
-And how it is represented internally at (1), (2), (3) instances above:
+And how it's represented internally at (1), (2), (3) instances above:
 {{% figure 
 src="commits-abcd-ef-0.png" 
 title="Figure 4: Checkout and extend"
@@ -353,7 +353,7 @@ title="Figure 6: After rebasing hot-fix on master"
 G and H is E and F respectively after being reapplied on the tip of master branch.
 Since E and F becomes detached heads they will eventually be garbage collected.
 
-It is recommended to **never do rebase on a public branch** for the reason that we destructively update the
+It's recommended to **never do rebase on a public branch** for the reason that we destructively update the
 branch pointer to a totally new branch, which can cause problems down the line when syncing back with the public.
 
 ## sheep fetch and sheep push
@@ -417,7 +417,7 @@ to falsify an 'e' that matches the hash with 'a'.
 Now that we have the Content addressable storage, fetching commit objects is just a matter of downloading
 all commits accessible from the remote branch access points on to the local repo. 
 Due to to our hashing mechanism we can ensure that we will not corrupt commit objects in the local repo.
-(We assume that hash collisions are very highly unlikely)
+(We assume that hash collisions are highly unlikely)
 
 Once we have all the commit objects from the remote repo, we just use the remote refs (or remote branch pointers)
 to access the Commit History Graph that the remote repo sees.
@@ -700,7 +700,7 @@ src="commits-abcd-ef-g.png"
 title="Figure 11: Merging 'hot-fix' on to 'master' branch. G is a merge commit."
 %}}
 
-G is a merge commit. It is special only in the sense that it has **two parent commits**. 
+G is a merge commit. It's special only in the sense that it has **two parent commits**. 
 Everything else that we know about commits apply here.
 
 ### 3 way merge
@@ -732,7 +732,7 @@ of the commit history DAG**.
 >
 > "Lowest common ancestors in trees and directed acyclic graphs" (2005) https://doi.org/10.1016/j.jalgor.2005.08.001
  
-When there are criss cross merges involved, there can be multiple LCAs. The default solution to this problem
+When there are crisscross merges involved, there can be multiple LCAs. The default solution to this problem
 in Git is to do recursive LCA on these two until we find a single LCA. 
 See [documentation for git-merge-base](https://git-scm.com/docs/git-merge-base).
 
@@ -775,8 +775,8 @@ With that we have reached the end of essential command we planned out for `sheep
 Say no more to `rm -rf .git`. Say hello to `rm -rf .sheep`.
 
 # Final remarks
-## Birds eye view
-If we take a bird's eye view of what we have done until now: we can see that we have built a database. 
+## Bird's-eye view
+If we take a bird's-eye view of what we have done until now: we can see that we have built a database. 
 A database with a branching based concurrency control mechanism. Taking the notion of **database as value** 
 ([talk by Rich Hikey](https://www.youtube.com/watch?v=EKdV1IgAaFc)), the value we built for `sheep` is a **trie**. 
 But we focused on a trie merely because our aim was to build a DVCS.  Using just content addressable storage
@@ -791,8 +791,6 @@ at each step of the way.
 If you are hungry for more DVCS concepts: look into [Pijul](https://pijul.org/model/).
 
 With that, we mark the end of this ridiculously long note. Thank you for reading.
-
-Join for comments at https://news.ycombinator.com/item?id=19290473
 
 # Footnotes
 [^1]: The code is easy to digest. And the README provides great supplementary material on the thoughts behind the code. Just as expected from the great software engineer, Linus Torvalds.
