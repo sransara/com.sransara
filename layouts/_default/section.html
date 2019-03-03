@@ -8,7 +8,7 @@
   <ul class="list-reset">
     {{ range .Pages.ByDate.Reverse }}
     <li class="my-2">
-      <span class="font-semibold">{{ .Date.Format "Jan 02, 2006" }}</span> 
+      <span class="text-grey-darker">{{ .Date.Format "Jan 02, 2006" }}</span> 
       &mdash; 
       <a href="{{ .Permalink }}">{{ .Title }}</a>
     </li>
@@ -22,7 +22,7 @@
     <ul class="list-reset">
       {{ range .Pages.ByDate.Reverse }}
       <li class="my-3">
-        <span class="font-semibold">{{ .Date.Format "Jan 02, 2006" }}</span> 
+        <span class="text-grey-darker">{{ .Date.Format "Jan 02, 2006" }}</span> 
         &mdash; 
         <a href="{{ .Permalink }}">{{ .Title }}</a>
       </li>
