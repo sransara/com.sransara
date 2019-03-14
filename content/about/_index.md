@@ -19,6 +19,7 @@ Have a peek at my:
 - [Projects] (/projects/)
 - [Github](//github.com/sransara/)
 - [Resume](/files/resume/index.pdf)
+- [LinkedIn](//www.linkedin.com/in/samodya-abeysiriwardane-b01866133/)
 
 Say hello through:
 
