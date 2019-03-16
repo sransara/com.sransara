@@ -19,7 +19,7 @@ Have a peek at my:
 
 - [Github](//github.com/sransara/)
 - [LinkedIn](//www.linkedin.com/in/samodya-abeysiriwardane-b01866133/)
-- [Resume](/files/resume/index.pdf)
+- <a href="/files/resume/index.pdf" target="_blank">Resume</a>
 - [Projects] (/projects/)
 
 Say hello through:
