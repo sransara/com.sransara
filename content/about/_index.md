@@ -12,14 +12,15 @@ I got my MSc. from the Department of Computer Science, Purdue University in 2018
 During my graduate studies, I followed my budding enthusiasm for databases, concurrency control 
 and programming language theory.
 
-I would love to connect if you have a job opportunity.
+At the moment I consider myself a generalist. But I am looking for job opportunities to specialize in 
+developer tools/programming languages/distributed databases. I would love to connect if you have an opportunity.
 
 Have a peek at my:
 
-- [Projects] (/projects/)
 - [Github](//github.com/sransara/)
-- [Resume](/files/resume/index.pdf)
 - [LinkedIn](//www.linkedin.com/in/samodya-abeysiriwardane-b01866133/)
+- [Resume](/files/resume/index.pdf)
+- [Projects] (/projects/)
 
 Say hello through:
 
