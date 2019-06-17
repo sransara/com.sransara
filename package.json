@@ -5,13 +5,13 @@
   "main": "index.js",
   "repository": "http://github.com/sransara/sransara.xyz",
   "dependencies": {
-    "@fullhuman/postcss-purgecss": "^1.1.0",
-    "autoprefixer": "^9.4.7",
-    "del": "^3.0.0",
-    "gulp": "^4.0.0",
+    "@fullhuman/postcss-purgecss": "^1.2.0",
+    "autoprefixer": "^9.6.0",
+    "del": "^4.1.1",
+    "gulp": "^4.0.2",
     "gulp-plumber": "^1.2.1",
     "gulp-postcss": "^8.0.0",
-    "tailwindcss": "^0.7.4"
+    "tailwindcss": "^1.0.4"
   },
   "devDependencies": {},
   "scripts": {

@@ -1,68 +1,101 @@
 /* purgecss start ignore */
-@tailwind preflight;
-/* purgecss end ignore */
+@tailwind base;
 
-@tailwind components;
+html {
+  font-size: 18px;
+}
 
-/* Custom CSS here */
-/* purgecss start ignore */
+h1 {
+  @apply text-2xl;
+}
+
+h2 {
+  @apply text-xl;
+}
+
+h3 {
+  @apply text-lg;
+}
+
+h4 {
+  @apply text-base;
+}
+
+h5 {
+  @apply text-base;
+}
+
+h6 {
+  @apply text-base;
+}
+
+a {
+  @apply text-blue-600 underline;
+}
+
 .classless {
-  @apply font-serif leading-normal text-grey-darkest;
+  @apply font-serif leading-normal text-gray-900;
 
   blockquote {
-    @apply bg-grey-lighter border-l-4 border-grey p-2;
+    @apply bg-gray-200 border-l-4 border-gray-500 p-2;
   }
 
   dt {
-    @apply font-bold mt-6;
+    @apply font-semibold mt-6;
   }
-  
+
   dd {
     @apply mb-1;
   }
 
   em {
-    @apply underline roman;
+    @apply underline;
   }
 
   figure {
-    @apply text-center border-4 border-grey-light p-2 my-4;
+    @apply text-center border-4 border-gray-200 p-2 my-4;
+
+    img {
+      @apply mx-auto;
+    }
   }
-  
+
   figure figcaption {
     @apply border-t-2 font-sans p-1;
-    
+
     p {
       @apply p-0 m-0;
     }
 
     h4 {
-      @apply p-0 m-0;
+      @apply p-0 m-0 mt-2 text-sm;
     }
   }
 
-  h1, h2, h3, h4 { 
-    @apply mt-4 mb-2 leading-tight;
+  h1, h2, h3 {
+    @apply border-b mt-4 mb-2 leading-tight;
   }
-  
-  h5, h6 {
-    @apply mt-4 mb-0 uppercase leading-tight;
+
+  h4, h5, h6 {
+    @apply mt-4 mb-2 leading-tight;
   }
 
   ul {
     padding: 0 1em;
+    @apply mb-4 list-disc;
   }
 
   ol {
-    padding: 0 1.5em;
+    padding: 0 1em;
+    @apply mb-4 list-decimal;
   }
 
   li {
-    @apply my-1;
+    @apply my-2;
   }
 
   p {
-    @apply mt-3 mb-3;
+    @apply mt-2 mb-4;
   }
 
   table {
@@ -70,25 +103,26 @@
   }
 
   th, td {
-    @apply border border-collapse border-grey p-1;
+    @apply border border-collapse border-gray-500 p-1;
   }
 
   pre {
-    @apply bg-grey-darker font-mono p-2 overflow-x-auto text-grey-lighter text-sm my-3;
+    @apply bg-gray-800 font-mono p-2 overflow-x-auto text-gray-300 text-sm my-3;
     tab-size: 2;
     width: 92vw;
   }
 
   :not(pre) > code,
   > code {
-    @apply bg-grey-darker font-mono px-1 rounded text-sm text-grey-lighter;
+    @apply bg-gray-600 font-mono px-1 rounded text-sm text-gray-300;
   }
 
   strong {
-    @apply bg-yellow font-medium;
+    @apply bg-yellow-300 font-medium;
   }
 }
 /* purgecss end ignore */
 
+@tailwind components;
 
 @tailwind utilities;

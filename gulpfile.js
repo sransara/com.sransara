@@ -11,67 +11,55 @@ const nested = require('postcss-nested');
 const autoprefixer = require("autoprefixer");
 
 function styleBuild() {
-    return gulp.src("./assets/styles/main.css")
-        .pipe(plumber())
-        .pipe(postcss([
-            tailwind("./assets/styles/tailwind.js"),
-            nested(),
-            autoprefixer({
-                grid: true,
-                browsers: [">1%"]
-            }),
-        ]))
-        .pipe(gulp.dest("./assets/build/styles/"));
+  return gulp.src("./assets/styles/main.css")
+  .pipe(plumber())
+  .pipe(postcss([
+    tailwind("./assets/styles/tailwind.config.js"),
+    nested(),
+    autoprefixer(),
+  ]))
+  .pipe(gulp.dest("./assets/build/styles/"));
 }
 
 function stylePublish() {
-    let postCSSPlugins = []
-    postCSSPlugins.push(
-    )
-
-    return gulp.src("./assets/styles/main.css")
-        .pipe(plumber())
-        .pipe(postcss([
-            tailwind("./assets/styles/tailwind.js"),
-            nested(),
-            purgecss({
-                content: ["layouts/**/*.html"],
-                extractors: [{
-                    extractor: class TailwindExtractor {
-                        static extract(content) {
-                            return content.match(/[A-Za-z0-9-_:\/]+/g) || [];
-                        }
-                    },
-                    extensions: ["html"]
-                }],
-                fontFace: true,
-            }),
-            autoprefixer({
-                grid: true,
-                browsers: [">1%"]
-            }),
-        ]))
-        .pipe(gulp.dest("./assets/build/styles/"));
+  return gulp.src("./assets/styles/main.css")
+  .pipe(plumber())
+  .pipe(postcss([
+    tailwind("./assets/styles/tailwind.js"),
+    nested(),
+    purgecss({
+      content: ["layouts/**/*.html"],
+      extractors: [{
+        extractor: class TailwindExtractor {
+          static extract(content) {
+              return content.match(/[A-Za-z0-9-_:\/]+/g) || [];
+          }
+        },
+        extensions: ["html"]
+      }],
+      fontFace: true,
+    }),
+    autoprefixer(),
+  ]))
+  .pipe(gulp.dest("./assets/build/styles/"));
 }
 
 function styleClean() {
-    return del("./assets/build/styles/**");
+  return del("./assets/build/styles/**");
 }
 
 /* Assets */
-const assetBuild =
-    gulp.parallel(
-        gulp.series(styleClean, styleBuild)
-    );
+const assetBuild = gulp.parallel(
+  gulp.series(styleClean, styleBuild)
+);
 
 
-const assetPublish =
-    gulp.parallel(
-        gulp.series(styleClean, stylePublish)
-    );
+const assetPublish = gulp.parallel(
+  gulp.series(styleClean, stylePublish)
+);
 
 function assetWatch() {
-    gulp.watch("./assets/styles/**",  { delay: 500 }, styleBuild);
+  gulp.watch("./assets/styles/**",  { delay: 500 }, styleBuild);
 }
 
 /* Site */
@@ -84,16 +72,16 @@ function sitePublish() {
 }
 
 
-gulp.task("serve", 
-    gulp.series(
-        assetBuild,
-        gulp.parallel(siteServe, assetWatch)
-    )
+gulp.task("serve",
+  gulp.series(
+    assetBuild,
+    gulp.parallel(siteServe, assetWatch)
+  )
 );
 
-gulp.task("publish", 
-    gulp.series(
-        assetPublish,
-        sitePublish
-    )
+gulp.task("publish",
+  gulp.series(
+    assetPublish,
+    sitePublish
+  )
 );

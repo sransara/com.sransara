@@ -2,18 +2,18 @@
   {{ with .Parent }}
     {{ template "breadcrumb" . }}
       <span class="whitespace-no-wrap inline-block">
-        / <a href="{{ .URL }}">
+        / <a href="{{ .RelPermalink }}">
           {{ if .IsHome }}
           home/sransara
           {{ else }}
-          {{ path.Base .Dir }}
+          {{ path.Base .File.Dir }}
           {{ end }}
         </a>
       </span>
   {{ end }}
 {{ end }}
 
-<div class="mb-6 text-lg font-mono">
+<div class="mb-6 text-sm font-mono">
   {{ if .IsHome }}
     <span class="whitespace-no-wrap inline-block">
       / home/sransara
@@ -22,12 +22,12 @@
     {{ template "breadcrumb" . }}
     {{ if not .IsPage }}
       <span class="whitespace-no-wrap inline-block">
-        / {{ path.Base .Dir }}
+        / {{ path.Base .File.Dir }}
       </span>
     {{ end }}
   {{ end }}
   <span class="whitespace-no-wrap inline-block"> / $
-    <span class="text-grey-dark inline-block">
+    <span class="text-gray-600 inline-block">
       cat /dev/urandom
     </span>
   </span>
