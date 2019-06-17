@@ -11,7 +11,7 @@ In this note, we will focus on the **How** and **Why** as we are incrementally b
 [commit](https://github.com/git/git/tree/e83c5163316f89bfbde7d9ab23ca2e25604af290)
 and the [README](https://github.com/git/git/blob/e83c5163316f89bfbde7d9ab23ca2e25604af290/README) of Git.[^1]
 
-There is few other good resources on Git internals:
+There are few other good resources on Git internals:
 
 - [The Architecture of Open Source Applications (Volume 2): Git](http://aosabook.org/en/git.html)
 - [Git Internals](https://github.com/pluralsight/git-internals-pdf/releases)

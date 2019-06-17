@@ -34,7 +34,7 @@ a {
 }
 
 .classless {
-  @apply font-serif leading-normal text-gray-900;
+  @apply font-serif leading-normal text-gray-800;
 
   blockquote {
     @apply bg-gray-200 border-l-4 border-gray-500 p-2;
@@ -64,7 +64,7 @@ a {
     @apply border-t-2 font-sans p-1;
 
     p {
-      @apply p-0 m-0;
+      @apply p-0 m-0 text-xs;
     }
 
     h4 {
@@ -73,11 +73,11 @@ a {
   }
 
   h1, h2, h3 {
-    @apply border-b mt-4 mb-2 leading-tight;
+    @apply border-b mt-4 mb-2 leading-tight text-black;
   }
 
   h4, h5, h6 {
-    @apply mt-4 mb-2 leading-tight;
+    @apply mt-4 mb-2 leading-tight text-black;
   }
 
   ul {
