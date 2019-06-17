@@ -25,7 +25,7 @@ function stylePublish() {
   return gulp.src("./assets/styles/main.css")
   .pipe(plumber())
   .pipe(postcss([
-    tailwind("./assets/styles/tailwind.js"),
+    tailwind("./assets/styles/tailwind.config.js"),
     nested(),
     purgecss({
       content: ["layouts/**/*.html"],
