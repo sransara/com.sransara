@@ -68,7 +68,7 @@ function siteServe() {
 }
 
 function sitePublish() {
-  return cp.spawn("hugo", ["--minify", "--templateMetrics", "--templateMetricsHints", "--stepAnalysis"], { stdio: "inherit" });
+  return cp.spawn("hugo", ["--minify", "--templateMetrics", "--templateMetricsHints"], { stdio: "inherit" });
 }
 
 
