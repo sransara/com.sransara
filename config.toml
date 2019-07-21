@@ -1,8 +1,8 @@
 assetDir = "assets/build/"
-baseURL = "https://s.ransara.xyz/"
+baseURL = "https://sransara.com/"
 disableKinds = ["taxonomy", "taxonomyTerm"]
 languageCode = "en-us"
-title = "s.ransara"
+title = "sransara"
 
 [permalinks]
   notes = "/:sections/:title/"
