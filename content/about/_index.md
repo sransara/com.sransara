@@ -24,6 +24,6 @@ Have a peek at my:
 
 Say hello through:
 
-- Email &mdash; hello@ransara.xyz
+- Email &mdash; hello@sransara.com
 - Twitter &mdash; [@sransara](//twitter.com/sransara)
 

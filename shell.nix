@@ -5,7 +5,9 @@ pkgs.mkShell {
   buildInputs = [
       nodejs
       hugo
-      texlive.combined.scheme-medium
+      (texlive.combine { 
+	inherit (texlive) scheme-medium enumitem;
+      })
   ];
   shellHook = ''
     export PATH="$PWD/node_modules/.bin/:$PATH"
