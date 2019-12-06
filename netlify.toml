@@ -1,6 +1,3 @@
 [build]
 publish = "public"
 command = "npm run gulp publish"
-
-[context.production.environment]
-  HUGO_VERSION = "0.55.4"
