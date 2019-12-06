@@ -1,4 +1,4 @@
-assetDir = "assets/build/"
+assetDir = "transient/assets/"
 baseURL = "https://sransara.com/"
 disableKinds = ["taxonomy", "taxonomyTerm"]
 languageCode = "en-us"
@@ -6,7 +6,3 @@ title = "sransara"
 
 [permalinks]
   notes = "/:sections/:title/"
-
-[blackfriday]
-  plainIDAnchors = true
-  hrefTargetBlank = true

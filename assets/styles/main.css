@@ -1,6 +1,6 @@
-/* purgecss start ignore */
 @tailwind base;
 
+/* purgecss start ignore */
 html {
   font-size: 18px;
 }

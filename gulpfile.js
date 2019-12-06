@@ -11,18 +11,18 @@ const nested = require('postcss-nested');
 const autoprefixer = require("autoprefixer");
 
 function styleBuild() {
-  return gulp.src("./assets/styles/main.css")
+  return gulp.src("./assets/styles/main.css", { base: '.' })
   .pipe(plumber())
   .pipe(postcss([
     tailwind("./assets/styles/tailwind.config.js"),
     nested(),
     autoprefixer(),
   ]))
-  .pipe(gulp.dest("./assets/build/styles/"));
+  .pipe(gulp.dest("./transient/"));
 }
 
 function stylePublish() {
-  return gulp.src("./assets/styles/main.css")
+  return gulp.src("./assets/styles/main.css", { base: '.' })
   .pipe(plumber())
   .pipe(postcss([
     tailwind("./assets/styles/tailwind.config.js"),
@@ -41,24 +41,23 @@ function stylePublish() {
     }),
     autoprefixer(),
   ]))
-  .pipe(gulp.dest("./assets/build/styles/"));
+  .pipe(gulp.dest("./transient/"));
 }
 
 function styleClean() {
-  return del("./assets/build/styles/**");
+  return del("./transient/assets/styles/**");
 }
 
 /* Assets */
-const assetBuild = gulp.parallel(
+const transientBuild = gulp.parallel(
   gulp.series(styleClean, styleBuild)
 );
 
-
-const assetPublish = gulp.parallel(
+const transientPublish = gulp.parallel(
   gulp.series(styleClean, stylePublish)
 );
 
-function assetWatch() {
+function transientWatch() {
   gulp.watch("./assets/styles/**",  { delay: 500 }, styleBuild);
 }
 
@@ -74,14 +73,14 @@ function sitePublish() {
 
 gulp.task("serve",
   gulp.series(
-    assetBuild,
-    gulp.parallel(siteServe, assetWatch)
+    transientBuild,
+    gulp.parallel(siteServe, transientWatch)
   )
 );
 
 gulp.task("publish",
   gulp.series(
-    assetPublish,
+    transientPublish,
     sitePublish
   )
 );
