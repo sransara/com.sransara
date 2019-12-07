@@ -1,5 +1,5 @@
 let
-  unstable = import (fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz) {};
+  unstable = import <nixpkgs-unstable> {};
 in
 with import <nixpkgs> {};
 
