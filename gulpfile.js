@@ -3,7 +3,6 @@ const plumber = require("gulp-plumber");
 const cp = require("child_process");
 const del = require("del");
 
-/* Styles */
 const postcss = require("gulp-postcss");
 const tailwind = require("tailwindcss");
 const purgecss = require("@fullhuman/postcss-purgecss");
@@ -48,7 +47,6 @@ function styleClean() {
   return del("./transient/assets/styles/**");
 }
 
-/* Assets */
 const transientBuild = gulp.parallel(
   gulp.series(styleClean, styleBuild)
 );
@@ -61,7 +59,6 @@ function transientWatch() {
   gulp.watch("./assets/styles/**",  { delay: 500 }, styleBuild);
 }
 
-/* Site */
 function siteServe() {
   return cp.spawn("hugo", ["server", "--minify"], { stdio: "inherit" });
 }

@@ -1,8 +1,8 @@
 {{ define "main" }}
-<main class="p-6 max-w-2xl">
+<main class="container leading-normal max-w-2xl mx-auto p-3">
   {{ partial "breadcrumbs.html" . }}
   <h1 class="mb-2 text-3xl font-bold">{{ .Title }}</h1>
-  <h5 class="mb-6 text-gray-500">
+  <h5 class="mb-6 text-gray-500 text-sm">
     Published on
     <span class="text-gray-700">{{ .Date.Format "Jan 02, 2006" }}</span>
     by
