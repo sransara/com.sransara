@@ -653,11 +653,12 @@ a {
   }
 
 .classless dd {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.75rem;
   }
 
 .classless em {
-    text-decoration: underline;
+    font-weight: 600;
+    font-style: normal;
   }
 
 .classless figure {
@@ -747,13 +748,12 @@ a {
     padding: 0.5rem;
     overflow-x: auto;
     color: #e2e8f0;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     margin-top: 0.75rem;
     margin-bottom: 0.75rem;
     -moz-tab-size: 2;
       -o-tab-size: 2;
          tab-size: 2;
-    width: 92vw;
   }
 
 .classless :not(pre) > code,

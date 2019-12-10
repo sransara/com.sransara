@@ -45,11 +45,11 @@ a {
   }
 
   dd {
-    @apply mb-1;
+    @apply mb-3;
   }
 
   em {
-    @apply underline;
+    @apply font-semibold not-italic;
   }
 
   figure {
@@ -107,9 +107,8 @@ a {
   }
 
   pre {
-    @apply bg-gray-800 font-mono p-2 overflow-x-auto text-gray-300 text-sm my-3;
+    @apply bg-gray-800 font-mono p-2 overflow-x-auto text-gray-300 text-xs my-3;
     tab-size: 2;
-    width: 92vw;
   }
 
   :not(pre) > code,
