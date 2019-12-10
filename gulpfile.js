@@ -1,58 +1,56 @@
-const gulp = require("gulp");
-const plumber = require("gulp-plumber");
 const cp = require("child_process");
-const del = require("del");
 
-const postcss = require("gulp-postcss");
-const tailwind = require("tailwindcss");
-const purgecss = require("@fullhuman/postcss-purgecss");
-const nested = require('postcss-nested');
-const autoprefixer = require("autoprefixer");
+const del = require("del");
+const gulp = require("gulp");
+const gulpChanged = require('gulp-changed');
+const gulpPlumber = require("gulp-plumber");
+const gulpPostcss = require("gulp-postcss");
+const postcssAutoprefixer = require("autoprefixer");
+const postcssPurgecss = require("@fullhuman/postcss-purgecss");
+const postcssNested = require('postcss-nested');
+const postcssTailwind = require("tailwindcss");
+
+
+function mdxBuild() {
+  return gulp.src("./content/**/*.md", { base: '.' })
+    .pipe(gulpChanged("./transient/"))
+    .pipe(gulp.dest("./transient/"));
+}
 
 function styleBuild() {
   return gulp.src("./assets/styles/main.css", { base: '.' })
-  .pipe(plumber())
-  .pipe(postcss([
-    tailwind("./assets/styles/tailwind.config.js"),
-    nested(),
-    autoprefixer(),
-  ]))
-  .pipe(gulp.dest("./transient/"));
-}
-
-function stylePublish() {
-  return gulp.src("./assets/styles/main.css", { base: '.' })
-  .pipe(plumber())
-  .pipe(postcss([
-    tailwind("./assets/styles/tailwind.config.js"),
-    nested(),
-    purgecss({
-      content: ["layouts/**/*.html"],
-      extractors: [{
-        extractor: class TailwindExtractor {
-          static extract(content) {
-              return content.match(/[A-Za-z0-9-_:\/]+/g) || [];
-          }
-        },
-        extensions: ["html"]
-      }],
-      fontFace: true,
-    }),
-    autoprefixer(),
-  ]))
-  .pipe(gulp.dest("./transient/"));
+    .pipe(gulpPlumber())
+    .pipe(gulpPostcss([
+      postcssTailwind("./assets/styles/tailwind.config.js"),
+      postcssNested(),
+      postcssPurgecss({
+        content: ["layouts/**/*.html"],
+        extractors: [{
+          extractor: class TailwindExtractor {
+            static extract(content) {
+                return content.match(/[A-Za-z0-9-_:\/]+/g) || [];
+            }
+          },
+          extensions: ["html"]
+        }],
+        fontFace: true,
+      }),
+      postcssAutoprefixer(),
+    ]))
+    .pipe(gulp.dest("./transient/"));
 }
 
 function styleClean() {
   return del("./transient/assets/styles/**");
 }
 
-const transientBuild = gulp.parallel(
-  gulp.series(styleClean, styleBuild)
-);
+function mdxClean() {
+  return del("./transient/content/**");
+}
 
-const transientPublish = gulp.parallel(
-  gulp.series(styleClean, stylePublish)
+const transientBuild = gulp.parallel(
+  gulp.series(styleClean, styleBuild),
+  gulp.series(mdxClean, mdxBuild),
 );
 
 function transientWatch() {
@@ -63,7 +61,7 @@ function siteServe() {
   return cp.spawn("hugo", ["server", "--minify"], { stdio: "inherit" });
 }
 
-function sitePublish() {
+function siteBuild() {
   return cp.spawn("hugo", ["--minify", "--templateMetrics", "--templateMetricsHints"], { stdio: "inherit" });
 }
 
@@ -71,13 +69,13 @@ function sitePublish() {
 gulp.task("serve",
   gulp.series(
     transientBuild,
-    gulp.parallel(siteServe, transientWatch)
+    gulp.parallel(siteServe, transientWatch),
   )
 );
 
 gulp.task("publish",
   gulp.series(
-    transientPublish,
-    sitePublish
+    transientBuild,
+    siteBuild,
   )
 );

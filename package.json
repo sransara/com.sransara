@@ -13,7 +13,9 @@
     "gulp-postcss": "^8.0.0",
     "tailwindcss": "^1.1.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp-changed": "^4.0.2"
+  },
   "scripts": {
     "gulp": "gulp"
   },
