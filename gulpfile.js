@@ -4,15 +4,11 @@ const del = require("del");
 const gulp = require("gulp");
 const gulpChanged = require('gulp-changed');
 const gulpPlumber = require("gulp-plumber");
-const gulpPostcss = require("gulp-postcss");
-const postcssAutoprefixer = require("autoprefixer");
-const postcssPurgecss = require("@fullhuman/postcss-purgecss");
-const postcssNested = require('postcss-nested');
-const postcssTailwind = require("tailwindcss");
 
 
 function mdxBuild() {
   return gulp.src("./content/**/*.md", { base: '.' })
+    .pipe(gulpPlumber())
     .pipe(gulpChanged("./transient/"))
     .pipe(gulp.dest("./transient/"));
 }
@@ -20,10 +16,10 @@ function mdxBuild() {
 function styleBuild() {
   return gulp.src("./assets/styles/main.css", { base: '.' })
     .pipe(gulpPlumber())
-    .pipe(gulpPostcss([
-      postcssTailwind("./assets/styles/tailwind.config.js"),
-      postcssNested(),
-      postcssPurgecss({
+    .pipe(require("gulp-postcss")([
+      require("tailwindcss")("./assets/styles/tailwind.config.js"),
+      require('postcss-nested')(),
+      require("@fullhuman/postcss-purgecss")({
         content: ["layouts/**/*.html"],
         extractors: [{
           extractor: class TailwindExtractor {
@@ -35,7 +31,7 @@ function styleBuild() {
         }],
         fontFace: true,
       }),
-      postcssAutoprefixer(),
+      require("autoprefixer")(),
     ]))
     .pipe(gulp.dest("./transient/"));
 }

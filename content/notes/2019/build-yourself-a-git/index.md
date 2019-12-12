@@ -1,7 +1,15 @@
 ---
-title: Build yourself a Distributed Version Control System (just like Git)
+title: Build yourself a Git
 date: 2019-02-28
 ---
+Have you ever thought of building your own version control system? In this note
+we will incrementally build a version control system while taking inspiration
+from Git. Our main focus will be on the Git data model.
+
+**tldr**: It's all about the
+[DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) and a 
+[fully persistent trie](https://en.wikipedia.org/wiki/Persistent_data_structure).
+
 # Intro
 In this note we explore how we could rebuild Git from the ground up. 
 As we are re-inventing the wheel for learning purposes, we will analyze the basic concepts involved in building Git. 

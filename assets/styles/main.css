@@ -48,10 +48,6 @@ a {
     @apply mb-3;
   }
 
-  em {
-    @apply font-semibold not-italic;
-  }
-
   figure {
     @apply text-center border-4 border-gray-200 p-2 my-4;
 
@@ -116,7 +112,7 @@ a {
     @apply bg-gray-600 font-mono px-1 rounded text-sm text-gray-300;
   }
 
-  strong {
+  mark {
     @apply bg-yellow-300 font-medium;
   }
 }
