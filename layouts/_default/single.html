@@ -2,15 +2,16 @@
 <main class="container leading-normal max-w-2xl mx-auto p-3">
   {{ partial "breadcrumbs.html" . }}
   <h1 class="mb-2 text-3xl font-bold">{{ .Title }}</h1>
-  <h5 class="mb-6 text-gray-500 text-xs">
+  <h5 class="mb-2 text-gray-500 text-xs">
     Published
     by <span class="text-gray-800">Samodya R. Abeysiriwardane</span>
     on <span class="text-gray-800">{{ .Date.Format "Jan 02, 2006" }}</span>
     / <a target="_blank" rel="noopener noreferrer" href="https://github.com/sransara/sransara-com/tree/master/content/{{ .File.Dir }}">Source</a>
   </h5>
+  <hr class="my-2 border-2 border-gray-700" />
   <div class="classless">
     {{ .Content }}
-    <hr class="my-4 border-4 border-gray-700" />
   </div>
+  <hr class="my-2 border-2 border-gray-700" />
 </main>
 {{ end }}

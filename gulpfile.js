@@ -50,7 +50,7 @@ const transientBuild = gulp.parallel(
 );
 
 function transientWatch() {
-  gulp.watch("./assets/styles/**",  { delay: 500 }, styleBuild);
+  gulp.watch(["./assets/styles/**", "layouts/**/*.html"],  { delay: 500 }, styleBuild);
 }
 
 function siteServe() {
