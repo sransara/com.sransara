@@ -36,62 +36,32 @@ a {
 .classless {
   @apply font-serif leading-normal text-gray-800;
 
-  blockquote {
-    @apply bg-gray-200 border-l-4 border-gray-500 p-2;
-  }
-
-  dt {
-    @apply font-semibold mt-6;
-  }
-
-  dd {
-    @apply mb-3;
-  }
-
-  figure {
-    @apply text-center border-4 border-gray-200 p-2 my-4;
-
-    img {
-      @apply mx-auto;
-    }
-  }
-
-  figure figcaption {
-    @apply border-t-2 font-sans p-1;
-
-    p {
-      @apply p-0 m-0 text-xs;
-    }
-
-    h4 {
-      @apply p-0 m-0 mt-2 text-sm;
-    }
-  }
-
   h1, h2, h3 {
     @apply border-b mt-4 mb-2 leading-tight text-black;
   }
 
-  h4, h5, h6 {
-    @apply mt-4 mb-2 leading-tight text-black;
+  h4, h5 {
+    @apply leading-tight mt-4 mb-2 text-black;
   }
 
-  ul {
-    padding: 0 1em;
-    @apply mb-4 list-disc;
+  h6 {
+    @apply font-semibold leading-normal mb-2 mt-2; 
   }
 
-  ol {
-    padding: 0 1em;
-    @apply mb-4 list-decimal;
+  blockquote {
+    @apply bg-gray-200 border-l-4 border-gray-500 m-0 p-2;
   }
 
-  li {
-    @apply my-2;
+  strong {
+    @apply font-semibold;
   }
 
-  p {
-    @apply mt-2 mb-4;
+  em {
+    @apply italic;
+  }
+
+  mark {
+    @apply bg-yellow-300 font-medium;
   }
 
   table {
@@ -102,19 +72,70 @@ a {
     @apply border border-collapse border-gray-500 p-1;
   }
 
+
+  figure {
+    @apply text-center border-4 border-gray-200 py-2 m-0;
+
+    img {
+      @apply mx-auto;
+    }
+
+    figcaption {
+      @apply border-t-2 font-sans p-1;
+  
+      p {
+        @apply p-0 m-0 text-xs;
+      }
+  
+      h4 {
+        @apply p-0 m-0 mt-2 text-sm;
+      }
+    }
+  }
+
+  dt {
+    @apply font-semibold mt-4;
+  }
+
+  dd {
+    @apply mb-3 mx-0 mt-0 px-4 py-0;
+  }
+
+  ul {
+    list-style-type: square;
+    @apply mb-4 px-4 py-0;
+  }
+
+  p + ul {
+    @apply -mt-2;
+  }
+
+  ol {
+    @apply mb-4 list-decimal px-4 py-0;
+  }
+
+  p + ol {
+    @apply -mt-2;
+  }
+
+  li {
+    @apply my-2;
+  }
+
+  p {
+    @apply mt-2 mb-4;
+  }
+
   pre {
-    @apply bg-gray-800 font-mono p-2 overflow-x-auto text-gray-300 text-xs my-3;
     tab-size: 2;
+    @apply bg-gray-800 font-mono my-2 p-2 overflow-x-auto text-gray-300 text-xs;
   }
 
   :not(pre) > code,
   > code {
-    @apply bg-gray-600 font-mono px-1 rounded text-sm text-gray-300;
+    @apply bg-gray-600 font-mono px-1 rounded text-gray-300 text-sm;
   }
 
-  mark {
-    @apply bg-yellow-300 font-medium;
-  }
 }
 /* purgecss end ignore */
 

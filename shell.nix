@@ -8,5 +8,7 @@ pkgs.mkShell {
       unstable.hugo
   ];
   shellHook = ''
+    export NODEBIN="$HOME/Wenv/node/bin"
+    export PATH="$NODEBIN:$PATH"
   '';
 }

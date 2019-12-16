@@ -4,5 +4,13 @@ disableKinds = ["taxonomy", "taxonomyTerm"]
 languageCode = "en-us"
 title = "sransara"
 
+[markup]
+  [markup.goldmark]
+   [markup.goldmark.extensions]
+      footnote = false
+      typographer = false
+    [markup.goldmark.renderer]
+      unsafe = true
+
 [permalinks]
   notes = "/:sections/:title/"
