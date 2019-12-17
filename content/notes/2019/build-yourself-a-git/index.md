@@ -31,7 +31,7 @@ stood the test of time.
 >
 > &mdash; Carl Sagan
 
-{{< table-of-contents >}}
+{{<table-of-contents>}}
 
 # What is a Version Control System?
 
@@ -111,11 +111,11 @@ Following image shows the basic Git (and hence Sheep) workflow, that essentially
 name="git-basics-staging"
 src="git-basics-staging.png"
 caption="Basic local Git workflow"
-attr="[from Git basics](https://git-scm.com/book/en/v1/Getting-Started-Git-Basics)" >}}
+attr="[from Git basics](https://git-scm.com/book/en/v1/Getting-Started-Git-Basics)">}}
 
-**So where is the branching work flow?** It's simply a matter of executing `sheep checkout <checkpoint>` 
+**So where is the branching work flow?** It's simply a matter of executing `sheep checkout <checkpoint>`
 to go back to a checkpoint; then `sheep branch <name>` to give the new branch a name.
-And follow it up by `sheep add` and `sheep commit` workflow in {{<ref-image name="git-basics-staging">}}. 
+And follow it up by `sheep add` and `sheep commit` workflow in {{<ref-image name="git-basics-staging">}}.
 Later on we will see how this is handled internally.
 
 There is few other important intents/commands (diff, merge, fetch, push) that we will discuss as we go along.
@@ -135,23 +135,24 @@ Let's give each step a name: by calling step 1 as 'create-content-snapshot' and 
 Now we can view `commit` as the composition of two functions `create-content-snapshot`
 and `extend-commit-history-graph`.
 
-There needs to be an interface for the two functions to compose. 
+There needs to be an interface for the two functions to compose.
 Observe: all that `extend-commit-history-graph`
 needs is a way to find the snapshot created by `create-content-snapshot`. See
 the {{<ref-listing name="commit-code-outline">}} to see how this
 interfacing can be achieved using <mark>pointer-to-snapshot</mark>.
 
 {{<named-listing
-name="commit-code-outline" >}}
+name="commit-code-outline">}}
 function create-content-snapshot:
-  parameters: dir-content
-  returns:    pointer-to-snapshot
+parameters: dir-content
+returns: pointer-to-snapshot
 
 function extend-commit-history-graph:
-  parameters: commit-history-graph, pointer-to-snapshot
-  returns:    commit-history-graph
+parameters: commit-history-graph, pointer-to-snapshot
+returns: commit-history-graph
 
 # and then
+
 commit = extend-history-graph( create-content-snapshot( ... ), ... )
 {{</named-listing>}}
 
@@ -188,7 +189,7 @@ created by bunch of commit objects that connect to each other like a chain.
 Let's look at two `sheep commit`s:
 
 {{<named-listing
-name="parent-child-commit-cmds" >}}
+name="parent-child-commit-cmds">}}
 project/ $ sheep init
 project/ $ vim README
 project/ $ vim LICENSE
@@ -205,7 +206,7 @@ And how they can be represented in the graph:
 {{<named-image
 name="commits-ab-0"
 src="commits-ab-0.png"
-caption="First two commits in the Commit History" >}}
+caption="First two commits in the Commit History">}}
 
 We'll name the commits A, B in sequence for first and second commit.
 
@@ -227,7 +228,7 @@ Let's put in few more commits to our history:
 {{<named-image
 name="commits-abcd-0"
 src="commits-abcd-0.png"
-caption="Linear commit history" >}}
+caption="Linear commit history">}}
 
 Visually we can see that repo was at commit B, and then added commit C and then commit D.
 In implementation this can simply be achieved by having a pointer that always point to the currently active commit.
@@ -235,16 +236,21 @@ Git calls this the <mark>HEAD</mark>. On the above history, since our currently 
 current value of HEAD will be D (This is not exactly how Git does it, there's one extra level of indirection.
 We will see about this in the branching section).
 
-{{<named-listing 
-name="extend-commit-history-graph-code" >}}
+{{<named-listing
+name="extend-commit-history-graph-code">}}
 define function extend-commit-history-graph:
-  # The current HEAD will be the parent commit for the new commit
-  p = get value at HEAD
-  s = create-content-snapshot(...)
-  m = { read metadata from user environment }
-  c = create-new-commit-object with (p, s, m)
-  # give a unique name to 'c' and save it in the repo (./sheep/objects/)
-  # now update HEAD to c (we will revise this last step later on)
+
+# The current HEAD will be the parent commit for the new commit
+
+p = get value at HEAD
+s = create-content-snapshot(...)
+m = { read metadata from user environment }
+c = create-new-commit-object with (p, s, m)
+
+# give a unique name to 'c' and save it in the repo (./sheep/objects/)
+
+# now update HEAD to c (we will revise this last step later on)
+
 {{</named-listing>}}
 
 Now if we were to implement `sheep log`, it's simply a matter of traversing the pointers towards the ancestors
@@ -263,8 +269,8 @@ This where `checkout` comes in to play.
 Let's imagine a scenario: Commit C is a Long Term Support (LTS) release. And in it there's a bug they want to fix.
 To fix the bug user will just follow their intents.
 
-{{<named-listing 
-name="cmds-checkout-example" >}}
+{{<named-listing
+name="cmds-checkout-example">}}
 project/ $ # user is at commit D now (1)
 project/ $ sheep checkout C # (2)
 project/ $ vim test/main.c
@@ -278,7 +284,7 @@ And how it's represented internally at (1), (2), (3) instances above:
 {{<named-image
 name="commits-abcd-ef-0"
 src="commits-abcd-ef-0.png"
-caption="Checkout and extend" >}}
+caption="Checkout and extend">}}
 
 In implementation, `checkout` is simply to <mark>update the HEAD to a given commit</mark> and
 <mark>recreate the directory content using the snapshot pointer</mark> in that commit.
@@ -306,27 +312,31 @@ In addition we can notice that HEAD concept we discussed before is almost too si
 Git integrates the HEAD concept with the branches concept. Internally Git calls local branches
 as <mark>heads</mark> with in refs.
 
-{{<named-listing 
-name="cmd-branch-workflow" >}}
-$ sheep checkout -b <some-branch-name> # sheep branch <b>; sheep checkout <b>
+{{<named-listing
+name="cmd-branch-workflow">}}
+$ sheep checkout -b < some-branch-name > 
+# sheep branch < branch >; sheep checkout < branch >
+
 # Updates the HEAD pointer to point
-#    to a branch (a local head in refs) that points to a commit
-#    ... and follow same procedure as before
+# to a branch (a local head in refs) that points to a commit
+# ... and follow same procedure as before
+
 $
 $ <... make some changes ...>
 $
 $ sheep commit -a -m "Super duper changes"
+
 # Revise our pseudo function: extend-commit-history-graph so that it
-#    looks at the HEAD and follows the pointer to the
-#    branch which points to a commit.
-#    Uses that value as the parent commit,
-#    and update that value with the name of the new commit
+# looks at the HEAD and follows the pointer to the
+# branch which points to a commit.
+# Uses that value as the parent commit,
+# and update that value with the name of the new commit
 {{</named-listing>}}
 
 {{<named-image
 name="commits-abcd-ef-1"
 src="commits-abcd-ef-1.png"
-caption="With branch heads" >}}
+caption="With branch heads">}}
 
 Heads or branches are the entry points to our commit-history-graph. That's why in Git,
 if you `git checkout <random-commit>`, it warns about <mark>detached head</mark>.
@@ -387,7 +397,7 @@ Using commit history from figure 5, let's see the end result of doing `rebase` h
 {{<named-image
 name="commits-abcd-ef-2"
 src="commits-abcd-ef-2.png"
-caption="Figure 6: After rebasing hot-fix on master" >}}
+caption="Figure 6: After rebasing hot-fix on master">}}
 
 G and H is E and F respectively after being reapplied on the tip of master branch.
 Since E and F becomes detached heads they will eventually be garbage collected.
@@ -446,12 +456,12 @@ If we use cryptographic hashing, we are able to attain the Security goal of Git 
 By using <mark>cryptographic content hashing</mark> we are feeding two birds with one little grain.
 Observe the similarities of our commit history graph to a [Merkle tree](https://en.wikipedia.org/wiki/Merkle_tree).
 
-{{% figure
+{{<named-image
+name="hash-tree"
 src="hash-tree.png"
-title="Figure 7: Viewing Commit History DAG as a Merkel tree "
-%}}
+caption="Viewing Commit History DAG as a Merkel tree">}}
 
-Figure 7 shows that if an attacker tries to modify history by falsifying a commit (C2) they will end up
+{{<ref-image name="hash-tree">}} shows that if an attacker tries to modify history by falsifying a commit (C2) they will end up
 creating a new branch out instead. As long as 'a' and 'e' are different c2 and c2_evil will have two different
 commit hashes. By using a cryptographic hashing mechanism we can ensure that it will be hard for an attacker
 to falsify an 'e' that matches the hash with 'a'.
@@ -474,29 +484,33 @@ After a long detour we are back on track to our main command `sheep commit`.
 
 With the extra knowledge we gathered, we need to revise our algorithm for `extend-commit-history-graph` function.
 
-```
+{{<named-listing
+name="revised-extend-commit-history-graph">}}
 define function extend-commit-history-graph:
-  # The current HEAD will be the parent commit for the new commit
-  # HEAD can either be a commit or a ref
-  if HEAD is a branch ref:
-    pc = get value at branch ref
-  else:
-    pc = get value at HEAD
 
-  s = create-content-snapshot(...)
-  m = { read metadata from user environment }
-  c = create-new-commit-object with (pc, s, m)
+# The current HEAD will be the parent commit for the new commit
 
-  commit_name = crypto-hash(c)
-  write-file(directory="./sheep/objects/", filename=commit_name, content=serialize(c))
+# HEAD can either be a commit or a ref
 
-  if HEAD is a branch ref:
-    update the value of branch ref to --> commit_name
-  else:
-    update the value of HEAD to --> commit_name
+if HEAD is a branch ref:
+pc = get value at branch ref
+else:
+pc = get value at HEAD
 
-  return commit_name
-```
+s = create-content-snapshot(...)
+m = { read metadata from user environment }
+c = create-new-commit-object with (pc, s, m)
+
+commit_name = crypto-hash(c)
+write-file(directory="./sheep/objects/", filename=commit_name, content=serialize(c))
+
+if HEAD is a branch ref:
+update the value of branch ref to --> commit_name
+else:
+update the value of HEAD to --> commit_name
+
+return commit_name
+{{</named-listing>}}
 
 Next up is implementing `create-content-snapshot`.
 
@@ -514,12 +528,12 @@ Few important requirements for snapshot from the previous sections:
 
 ### Naive implementation
 
-```
+{{<named-listing name="naive-content-snapshot">}}
 snapshot_name = create-unique-name-for-snapshot()
 create directory to store snapshot
 copy all tracked directory content in the repo to the new directory
 return snapshot_name; # to be used by extend-commit-history function
-```
+{{</named-listing>}}
 
 We can reuse some concepts from the earlier section:
 
@@ -529,12 +543,12 @@ We can reuse some concepts from the earlier section:
 
 With that we can modify the naive implementation to be:
 
-```
+{{<named-listing name="naive-implementation">}}
 snapshot_name = get-total-hash-of-the-content-being-tracked()
 create directory named by 'snapshot_name' in ./sheep/objects/
 copy all tracked directory content in the repo to the new directory
 return snapshot_name; # to be used by extend-commit-history function
-```
+{{</named-listing>}}
 
 This is a fine implementation of the interface of `create-content-snapshot`.
 And conceptually we are done with `sheep commit`.
@@ -576,10 +590,10 @@ We have to model our file system into a data structure.
 For that if we view the file system as a key-value storage where the keys have a hierarchical structure, then
 the [Trie](https://en.wikipedia.org/wiki/Trie) data structure naturally fits in as a data structure of choice.
 
-{{% figure
+{{<named-image
+name="trying-trie"
 src="trying-trie.png"
-title="Figure 8: Project directory tree on the left. Trie on the right."
-%}}
+caption="Project directory tree on the left. Trie on the right.">}}
 
 In our implementation the project tree trie can be viewed as a recursive data structure:
 <mark>a rooted tree where the tree can hold tree objects or blobs</mark>. <mark>Tree object represents a directory</mark>
@@ -601,20 +615,20 @@ other techniques.
 
 Path copying means we copy the path only for the values that changed.
 
-{{% figure
+{{<named-image
+name="persistent-trie-0"
 src="persistent-trie-0.png"
-title="Figure 9: Changing README file and adding game.py to V0 snapshot leading to V1 snapshot"
-%}}
+caption="Changing README file and adding game.py to V0 snapshot leading to V1 snapshot">}}
 
 In figure 10 we can see that in V1 snapshot has made a copy of the path to README because README file was changed
 in this snapshot. Meanwhile "tests" directory and "setup.py" were kept as is, so those pointers are reused.
 
 One more example to show off path copying in action:
 
-{{% figure
+{{<named-image
+name="persistent-trie-1"
 src="persistent-trie-1.png"
-title="Figure 10: Changing tests/camera.py file from V1 snapshot leading to V2 snapshot"
-%}}
+caption="Changing tests/camera.py file from V1 snapshot leading to V2 snapshot">}}
 
 As we can see this solves our duplication problem in `create-content-snapshot`, because we can reuse the pointer for
 any trees/blobs objects that were not changed.
@@ -691,24 +705,25 @@ Now we only need to check the entries marked in the 'index' to be included as ch
 
 Let's write some pseudo code:
 
-```
+{{<named-listing
+name="revised-create-content-snapshot">}}
 define function create-content-snapshot:
-  s = empty tree
+s = empty tree
 
-  for each change marked on the index:
-    update s with adding the path by looking at the content in working dir
-    store the new objects in the content addressable storage
+for each change marked on the index:
+update s with adding the path by looking at the content in working dir
+store the new objects in the content addressable storage
 
-  for each all other entries on the index:
-    update s by reusing the same pointers
+for each all other entries on the index:
+update s by reusing the same pointers
 
-  key = hash(s)
-  include this key and s in the content addressable storage
+key = hash(s)
+include this key and s in the content addressable storage
 
-  update the index so that all entries are marked as unchanged
+update the index so that all entries are marked as unchanged
 
-  return the key # to be used when creating the new commit
-```
+return the key # to be used when creating the new commit
+{{</named-listing>}}
 
 With the completion of `create-content-snapshot` we now have completed the full puzzle of sheep commit.
 
@@ -757,10 +772,10 @@ these diverging changes. And that is where merging comes in. For `sheep` will on
 
 First let's look at how a merge looks like in our commit history graph.
 
-{{% figure
+{{<named-image
+name="commits-abcd-ef-g"
 src="commits-abcd-ef-g.png"
-title="Figure 11: Merging 'hot-fix' on to 'master' branch. G is a merge commit."
-%}}
+caption="Merging 'hot-fix' on to 'master' branch. G is a merge commit.">}}
 
 G is a merge commit. It's special only in the sense that it has <mark>two parent commits</mark>.
 Everything else that we know about commits apply here.
@@ -807,10 +822,10 @@ Once we have a base commit and the two conflicting commits, we are ready to do t
 We can think of trie merge as a merge function for key value storage, because trie is basically a key value storage
 where keys have a hierarchy.
 
-{{% figure
+{{<named-image
+name="trie-merge"
 src="trie-merge.png"
-title="Figure 12: View of the snapshots at commits C, D and F."
-%}}
+caption="View of the snapshots at commits C, D and F.">}}
 
 Figure 12 shows the view of the snapshots being used in the following merge example.
 Asterisks / stars (\*) are used to visually show which content were actually changed from C.
@@ -859,3 +874,7 @@ at each step of the way.
 If you are hungry for more VCS concepts: look into [Pijul](https://pijul.org/model/).
 
 With that, we mark the end of this ridiculously long note. Thank you for reading.
+
+```
+
+```
