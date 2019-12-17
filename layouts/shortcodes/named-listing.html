@@ -1,13 +1,13 @@
 <figure id="{{ index .Params "name" }}">
-    <img src="{{ index .Params "src" }}" {{ if isset .Params "caption" }}alt="{{ index .Params "caption"}}"{{ end }} />
+    <pre {{ if isset .Params "lang" }}data-lang="{{ index .Params "lang" }}"{{ end }}>{{ .Inner }}</pre>
     <figcaption>
       {{ if isset .Params "caption" }}
-      <strong>Figure {{ .Ordinal }}:</strong> {{ index .Params "caption" }}
+      <strong>Listing {{ .Ordinal }}:</strong> {{ index .Params "caption" }}
         {{ if isset .Params "attr" }}
 	<br />{{ index .Params "attr" | markdownify }}
         {{ end }}
       {{ else }}
-      <strong>Figure {{ .Ordinal }}</strong>
+      <strong>Listing {{ .Ordinal }}</strong>
       {{ end }}
     </figcaption>
 </figure>

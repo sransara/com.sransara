@@ -107,17 +107,15 @@ Let's first list essential user intents and map each of them to our UI.
 
 Following image shows the basic Git (and hence Sheep) workflow, that essentially combines the above commands.
 
-{{< named-image
+{{<named-image
 name="git-basics-staging"
 src="git-basics-staging.png"
-caption="Figure 1: Basic local Git workflow"
-attr="from Git Basics"
-attrlink="https://git-scm.com/book/en/v1/Getting-Started-Git-Basics" >}}
+caption="Basic local Git workflow"
+attr="[from Git basics](https://git-scm.com/book/en/v1/Getting-Started-Git-Basics)" >}}
 
-**So where is the branching work flow?** It's simply a matter of doing
-`sheep checkout <checkpoint>` to go back to a checkpoint;
-then `sheep branch <name>` to give the new branch a name.
-And follow it up by `sheep add` and `sheep commit` workflow in Figure 1.
+**So where is the branching work flow?** It's simply a matter of executing `sheep checkout <checkpoint>` 
+to go back to a checkpoint; then `sheep branch <name>` to give the new branch a name.
+And follow it up by `sheep add` and `sheep commit` workflow in {{<ref-image name="git-basics-staging">}}. 
 Later on we will see how this is handled internally.
 
 There is few other important intents/commands (diff, merge, fetch, push) that we will discuss as we go along.
@@ -137,22 +135,25 @@ Let's give each step a name: by calling step 1 as 'create-content-snapshot' and 
 Now we can view `commit` as the composition of two functions `create-content-snapshot`
 and `extend-commit-history-graph`.
 
-There needs to be an interface for the two functions to compose. Observe: all that `extend-commit-history-graph`
-needs is a way to find the snapshot created by `create-content-snapshot`. See the following to see how this
+There needs to be an interface for the two functions to compose. 
+Observe: all that `extend-commit-history-graph`
+needs is a way to find the snapshot created by `create-content-snapshot`. See
+the {{<ref-listing name="commit-code-outline">}} to see how this
 interfacing can be achieved using <mark>pointer-to-snapshot</mark>.
 
-```
-# function create-content-snapshot:
-#   params:   dir-content
-#   returns:  pointer-to-snapshot
+{{<named-listing
+name="commit-code-outline" >}}
+function create-content-snapshot:
+  parameters: dir-content
+  returns:    pointer-to-snapshot
 
-# function extend-commit-history-graph:
-#   params:   commit-history-graph, pointer-to-snapshot
-#   returns:  commit-history-graph
+function extend-commit-history-graph:
+  parameters: commit-history-graph, pointer-to-snapshot
+  returns:    commit-history-graph
 
 # and then
-commit = extend-history-graph( ... , create-content-snapshot( ... ) )
-```
+commit = extend-history-graph( create-content-snapshot( ... ), ... )
+{{</named-listing>}}
 
 On each `commit`, `create-content-snapshot` function creates a new snapshot and feeds it to the
 `extend-commit-history-graph` function to create the extended commit history graph.
@@ -186,7 +187,8 @@ created by bunch of commit objects that connect to each other like a chain.
 
 Let's look at two `sheep commit`s:
 
-```
+{{<named-listing
+name="parent-child-commit-cmds" >}}
 project/ $ sheep init
 project/ $ vim README
 project/ $ vim LICENSE
@@ -197,13 +199,13 @@ project/ $ vim quake.c
 project/ $ vim Makefile
 ... <removed commands for brevity> ...
 project/ $ sheep commit -a -m "Second"
-```
+{{</named-listing>}}
 
 And how they can be represented in the graph:
-{{% figure
+{{<named-image
+name="commits-ab-0"
 src="commits-ab-0.png"
-title="Figure 2: First two commits in the Commit History"
-%}}
+caption="First two commits in the Commit History" >}}
 
 We'll name the commits A, B in sequence for first and second commit.
 
@@ -222,10 +224,10 @@ will be a <mark>Directed Acyclic Graph</mark> (DAG).
 
 Let's put in few more commits to our history:
 
-{{% figure
+{{<named-image
+name="commits-abcd-0"
 src="commits-abcd-0.png"
-title="Figure 3: Linear commit history"
-%}}
+caption="Linear commit history" >}}
 
 Visually we can see that repo was at commit B, and then added commit C and then commit D.
 In implementation this can simply be achieved by having a pointer that always point to the currently active commit.
@@ -233,7 +235,8 @@ Git calls this the <mark>HEAD</mark>. On the above history, since our currently 
 current value of HEAD will be D (This is not exactly how Git does it, there's one extra level of indirection.
 We will see about this in the branching section).
 
-```
+{{<named-listing 
+name="extend-commit-history-graph-code" >}}
 define function extend-commit-history-graph:
   # The current HEAD will be the parent commit for the new commit
   p = get value at HEAD
@@ -242,7 +245,7 @@ define function extend-commit-history-graph:
   c = create-new-commit-object with (p, s, m)
   # give a unique name to 'c' and save it in the repo (./sheep/objects/)
   # now update HEAD to c (we will revise this last step later on)
-```
+{{</named-listing>}}
 
 Now if we were to implement `sheep log`, it's simply a matter of traversing the pointers towards the ancestors
 while logging the metadata information in the output.
@@ -260,7 +263,8 @@ This where `checkout` comes in to play.
 Let's imagine a scenario: Commit C is a Long Term Support (LTS) release. And in it there's a bug they want to fix.
 To fix the bug user will just follow their intents.
 
-```
+{{<named-listing 
+name="cmds-checkout-example" >}}
 project/ $ # user is at commit D now (1)
 project/ $ sheep checkout C # (2)
 project/ $ vim test/main.c
@@ -268,13 +272,13 @@ project/ $ sheep commit -a -m "Update tests"
 project/ $ vim quake.c
 project/ $ vim CHANGELOG
 project/ $ sheep commit -a -m "Fix super nasty bug" # (3)
-```
+{{</named-listing>}}
 
 And how it's represented internally at (1), (2), (3) instances above:
-{{% figure
+{{<named-image
+name="commits-abcd-ef-0"
 src="commits-abcd-ef-0.png"
-title="Figure 4: Checkout and extend"
-%}}
+caption="Checkout and extend" >}}
 
 In implementation, `checkout` is simply to <mark>update the HEAD to a given commit</mark> and
 <mark>recreate the directory content using the snapshot pointer</mark> in that commit.
@@ -302,7 +306,8 @@ In addition we can notice that HEAD concept we discussed before is almost too si
 Git integrates the HEAD concept with the branches concept. Internally Git calls local branches
 as <mark>heads</mark> with in refs.
 
-```
+{{<named-listing 
+name="cmd-branch-workflow" >}}
 $ sheep checkout -b <some-branch-name> # sheep branch <b>; sheep checkout <b>
 # Updates the HEAD pointer to point
 #    to a branch (a local head in refs) that points to a commit
@@ -316,12 +321,12 @@ $ sheep commit -a -m "Super duper changes"
 #    branch which points to a commit.
 #    Uses that value as the parent commit,
 #    and update that value with the name of the new commit
-```
+{{</named-listing>}}
 
-{{% figure
+{{<named-image
+name="commits-abcd-ef-1"
 src="commits-abcd-ef-1.png"
-title="Figure 5: With branch heads"
-%}}
+caption="With branch heads" >}}
 
 Heads or branches are the entry points to our commit-history-graph. That's why in Git,
 if you `git checkout <random-commit>`, it warns about <mark>detached head</mark>.
@@ -379,10 +384,10 @@ Yes, we are still being compatible with Git.
 Commands like `git commit --amend`, `git rebase` rewrites history by recreating the commits.
 Using commit history from figure 5, let's see the end result of doing `rebase` hot-fix branch onto master branch.
 
-{{% figure
+{{<named-image
+name="commits-abcd-ef-2"
 src="commits-abcd-ef-2.png"
-title="Figure 6: After rebasing hot-fix on master"
-%}}
+caption="Figure 6: After rebasing hot-fix on master" >}}
 
 G and H is E and F respectively after being reapplied on the tip of master branch.
 Since E and F becomes detached heads they will eventually be garbage collected.

@@ -11,7 +11,8 @@
     "gulp": "^4.0.2",
     "gulp-plumber": "^1.2.1",
     "gulp-postcss": "^8.0.0",
-    "tailwindcss": "^1.1.4"
+    "tailwindcss": "^1.1.4",
+    "through2": "^3.0.1"
   },
   "devDependencies": {
     "gulp-changed": "^4.0.2"
