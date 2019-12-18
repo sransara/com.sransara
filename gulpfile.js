@@ -4,12 +4,17 @@ const del = require("del");
 const gulp = require("gulp");
 const gulpChanged = require('gulp-changed');
 const gulpPlumber = require("gulp-plumber");
+const through = require('through2');
 
 
 function mdxBuild() {
-  return gulp.src("./content/**/*.md", { base: '.' })
+  return gulp.src("./content/**/index.md", { base: '.' })
     .pipe(gulpPlumber())
     .pipe(gulpChanged("./transient/"))
+    .pipe(through.obj(function (file, enc, cb) {
+      file.path = file.path.replace(/index.md$/, 'index.json')
+      return cb(null, file)
+    }))
     .pipe(gulp.dest("./transient/"));
 }
 

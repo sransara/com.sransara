@@ -828,7 +828,7 @@ src="trie-merge.png"
 caption="View of the snapshots at commits C, D and F.">}}
 
 Figure 12 shows the view of the snapshots being used in the following merge example.
-Asterisks / stars (\*) are used to visually show which content were actually changed from C.
+Asterisks / stars (*) are used to visually show which content were actually changed from C.
 
 We do a diff of the C's commit snapshot against D's to see what has changed from C to D.
 Then we do a diff of C's commit snapshot against F's to see what has changed from C to F.
@@ -836,9 +836,9 @@ These diff we will call <mark>patches</mark>. Now we use merge algorithm to auto
 
 For example:
 
-- *1, *2 and \*3 only changed on 'master' branch therefore we can <mark>auto merge</mark>
+- *1, *2 and *3 only changed on 'master' branch therefore we can <mark>auto merge</mark>
   these changes in to the final snapshot.
-- \*6 only changed on the 'hot-fix' hence we can auto merge this change into the final snapshot as well.
+- *6 only changed on the 'hot-fix' hence we can auto merge this change into the final snapshot as well.
 - *4 and *5 shows that README was changed in both branches: hence a conflict on that file.
 - Think about how we should handle auto merges for: deletes and renames
 
@@ -872,9 +872,3 @@ More importantly while building the concepts step by step, we tried to build up 
 at each step of the way.
 
 If you are hungry for more VCS concepts: look into [Pijul](https://pijul.org/model/).
-
-With that, we mark the end of this ridiculously long note. Thank you for reading.
-
-```
-
-```
