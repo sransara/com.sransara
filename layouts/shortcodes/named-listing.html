@@ -3,17 +3,18 @@
 {{ $shortcodes := index $mdmeta "named-shortcode" }}
 {{ $namedimages := index $shortcodes "named-listing" }}
 {{ $this := index $namedimages (index .Params "name") }}
+{{ $ordinal := index $this "ordinal" }}
 
-<figure id="listing:{{ index .Params "name" }}">
+<figure id="listing:{{ $ordinal }}{{ if isset .Params "name"}}:{{ index .Params "name" }}{{ end }}">
     <pre {{ if isset .Params "lang" }}data-lang="{{ index .Params "lang" }}"{{ end }}>{{ .Inner }}</pre>
     <figcaption>
         {{ if isset .Params "caption" }}
-        <strong>Listing {{ index $this "ordinal" }}:</strong> {{ index .Params "caption" }}
+        <strong>Listing {{ $ordinal }}:</strong> {{ index .Params "caption" }}
         {{ if isset .Params "attr" }}
         <br />{{ index .Params "attr" | markdownify }}
         {{ end }}
         {{ else }}
-        <strong>Listing {{ index $this "ordinal" }}</strong>
+        <strong>Listing {{ $ordinal }}</strong>
         {{ end }}
     </figcaption>
 </figure>

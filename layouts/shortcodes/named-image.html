@@ -3,17 +3,18 @@
 {{ $shortcodes := index $mdmeta "named-shortcode" }}
 {{ $namedimages := index $shortcodes "named-image" }}
 {{ $this := index $namedimages (index .Params "name") }}
+{{ $ordinal := index $this "ordinal" }}
 
-<figure id="figure:{{ index .Params "name" }}">
+<figure id="figure:{{ $ordinal }}{{ if isset .Params "name"}}:{{ index .Params "name" }}{{ end }}">
     <img src="{{ index .Params "src" }}" {{ if isset .Params "caption" }}alt="{{ index .Params "caption"}}"{{ end }} />
     <figcaption>
         {{ if isset .Params "caption" }}
-        <strong>Figure {{ index $this "ordinal" }}:</strong> {{ index .Params "caption" }}
+        <strong>Figure {{ $ordinal }}:</strong> {{ index .Params "caption" }}
         {{ if isset .Params "attr" }}
         <br />{{ index .Params "attr" | markdownify }}
         {{ end }}
         {{ else }}
-        <strong>Figure {{ index $this "ordinal" }}:</strong>
+        <strong>Figure {{ $ordinal }}:</strong>
         {{ end }}
     </figcaption>
 </figure>

@@ -3,5 +3,6 @@
 {{ $shortcodes := index $mdmeta "named-shortcode" }}
 {{ $namedimages := index $shortcodes "named-image" }}
 {{ $this := index $namedimages (index .Params "name") }}
+{{ $ordinal := index $this "ordinal" }}
 
-<a href='#figure:{{ index .Params "name" }}'>Figure {{ index $this "ordinal" }}</a>
+<a href='#figure:{{ $ordinal }}:{{ index .Params "name" }}'>Figure {{ $ordinal }}</a>

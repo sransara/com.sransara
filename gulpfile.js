@@ -21,10 +21,7 @@ function mdPreprocessor() {
     }
 
     if (file.isStream()) {
-      this.emit(
-        "error",
-        new pluginError(PLUGIN_NAME, "Streams are unsupported")
-      );
+      this.emit("error", new pluginError(PLUGIN_NAME, "Streams are unsupported"));
       return cb();
     }
 
@@ -41,26 +38,12 @@ function mdPreprocessor() {
     file.contents = Buffer.from(JSON.stringify(meta));
     visit(tree, "shortcode", function(node) {
       if (node.identifier.indexOf("named-") == 0) {
-        if (
-          _.has(meta, [
-            "named-shortcode",
-            node.identifier,
-            node.attributes.name
-          ])
-        ) {
-          gstream.emit(
-            "error",
-            `File: ${file.path}\n  shortcode: ${node.identifier}\n  conflicting names "${node.attributes.name}"`
-          );
+        if ( _.has(meta, ["named-shortcode", node.identifier, node.attributes.name])) {
+          gstream.emit( "error", `File: ${file.path}\n  shortcode: ${node.identifier}\n  conflicting names "${node.attributes.name}"`);
         }
-        _.set(
-          meta,
-          ["named-shortcode", node.identifier, node.attributes.name],
-          {
-            ordinal:
-              _.size(_.get(meta, ["named-shortcode", node.identifier], {})) + 1
-          }
-        );
+        _.set( meta, ["named-shortcode", node.identifier, node.attributes.name], {
+            ordinal: _.size(_.get(meta, ["named-shortcode", node.identifier], {})) + 1
+        });
       }
     });
     file.contents = Buffer.from(JSON.stringify(meta));
@@ -77,7 +60,17 @@ function mdxBuild() {
     .pipe(gulp.dest("./transient/"));
 }
 
-function styleBuild() {
+function scriptsBuild() {
+  return gulp
+    .src("./assets/scripts/main.js", { base: "." })
+    .pipe(gulp.dest("./transient/"));
+}
+
+function scriptsClean() {
+  return del("./transient/assets/scripts/**");
+}
+
+function stylesBuild() {
   return gulp
     .src("./assets/styles/main.css", { base: "." })
     .pipe(gulpPlumber())
@@ -105,7 +98,7 @@ function styleBuild() {
     .pipe(gulp.dest("./transient/"));
 }
 
-function styleClean() {
+function stylesClean() {
   return del("./transient/assets/styles/**");
 }
 
@@ -114,7 +107,7 @@ function mdxClean() {
 }
 
 const transientBuild = gulp.parallel(
-  gulp.series(styleClean, styleBuild),
+  gulp.series(stylesClean, stylesBuild),
   gulp.series(mdxClean, mdxBuild)
 );
 
@@ -122,7 +115,7 @@ function transientWatch() {
   gulp.watch(
     ["./assets/styles/**", "layouts/**/*.html"],
     { delay: 500 },
-    styleBuild
+    stylesBuild
   );
 
   gulp.watch(["./content/**/index.md"], { delay: 500 }, mdxBuild);
