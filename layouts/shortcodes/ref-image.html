@@ -4,4 +4,4 @@
 {{ $namedimages := index $shortcodes "named-image" }}
 {{ $this := index $namedimages (index .Params "name") }}
 
-<a href='#{{ index .Params "name" }}'>Figure {{ index $this "ordinal" }}</a>
+<a href='#figure:{{ index .Params "name" }}'>Figure {{ index $this "ordinal" }}</a>

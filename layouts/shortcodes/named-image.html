@@ -4,7 +4,7 @@
 {{ $namedimages := index $shortcodes "named-image" }}
 {{ $this := index $namedimages (index .Params "name") }}
 
-<figure id="{{ index .Params "name" }}">
+<figure id="figure:{{ index .Params "name" }}">
     <img src="{{ index .Params "src" }}" {{ if isset .Params "caption" }}alt="{{ index .Params "caption"}}"{{ end }} />
     <figcaption>
         {{ if isset .Params "caption" }}

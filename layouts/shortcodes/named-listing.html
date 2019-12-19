@@ -4,7 +4,7 @@
 {{ $namedimages := index $shortcodes "named-listing" }}
 {{ $this := index $namedimages (index .Params "name") }}
 
-<figure id="{{ index .Params "name" }}">
+<figure id="listing:{{ index .Params "name" }}">
     <pre {{ if isset .Params "lang" }}data-lang="{{ index .Params "lang" }}"{{ end }}>{{ .Inner }}</pre>
     <figcaption>
         {{ if isset .Params "caption" }}
