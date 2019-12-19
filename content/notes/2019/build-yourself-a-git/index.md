@@ -5,7 +5,7 @@ date: 2019-02-28
 
 Have you ever thought of building your own version control system? In this note
 we will incrementally build a version control system while taking inspiration
-from Git. Our main focus will be on finding data structures to model
+from Git. Our focus will be on finding data structures to model
 revision lineage and version backups.
 
 <!--more-->
