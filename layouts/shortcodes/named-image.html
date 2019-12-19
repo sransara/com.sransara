@@ -1,13 +1,19 @@
+{{ $mdmeta_file := .Page.Scratch.Get "mdmeta_file" | os.Stat }}
+{{ $mdmeta := .Page.Scratch.Get "mdmeta" }}
+{{ $shortcodes := index $mdmeta "named-shortcode" }}
+{{ $namedimages := index $shortcodes "named-image" }}
+{{ $this := index $namedimages (index .Params "name") }}
+
 <figure id="{{ index .Params "name" }}">
     <img src="{{ index .Params "src" }}" {{ if isset .Params "caption" }}alt="{{ index .Params "caption"}}"{{ end }} />
     <figcaption>
-      {{ if isset .Params "caption" }}
-      <strong>Figure {{ .Ordinal }}:</strong> {{ index .Params "caption" }}
+        {{ if isset .Params "caption" }}
+        <strong>Figure {{ index $this "ordinal" }}:</strong> {{ index .Params "caption" }}
         {{ if isset .Params "attr" }}
-	<br />{{ index .Params "attr" | markdownify }}
+        <br />{{ index .Params "attr" | markdownify }}
         {{ end }}
-      {{ else }}
-      <strong>Figure {{ .Ordinal }}</strong>
-      {{ end }}
+        {{ else }}
+        <strong>Figure {{ index $this "ordinal" }}:</strong>
+        {{ end }}
     </figcaption>
 </figure>

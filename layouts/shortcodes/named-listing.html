@@ -1,13 +1,19 @@
+{{ $mdmeta_file := .Page.Scratch.Get "mdmeta_file" | os.Stat }}
+{{ $mdmeta := .Page.Scratch.Get "mdmeta" }}
+{{ $shortcodes := index $mdmeta "named-shortcode" }}
+{{ $namedimages := index $shortcodes "named-listing" }}
+{{ $this := index $namedimages (index .Params "name") }}
+
 <figure id="{{ index .Params "name" }}">
     <pre {{ if isset .Params "lang" }}data-lang="{{ index .Params "lang" }}"{{ end }}>{{ .Inner }}</pre>
     <figcaption>
-      {{ if isset .Params "caption" }}
-      <strong>Listing {{ .Ordinal }}:</strong> {{ index .Params "caption" }}
+        {{ if isset .Params "caption" }}
+        <strong>Listing {{ index $this "ordinal" }}:</strong> {{ index .Params "caption" }}
         {{ if isset .Params "attr" }}
-	<br />{{ index .Params "attr" | markdownify }}
+        <br />{{ index .Params "attr" | markdownify }}
         {{ end }}
-      {{ else }}
-      <strong>Listing {{ .Ordinal }}</strong>
-      {{ end }}
+        {{ else }}
+        <strong>Listing {{ index $this "ordinal" }}</strong>
+        {{ end }}
     </figcaption>
 </figure>

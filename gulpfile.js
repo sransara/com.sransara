@@ -1,19 +1,19 @@
 const cp = require("child_process");
+const fs = require("fs");
 
 const del = require("del");
 const gulp = require("gulp");
 const gulpChanged = require("gulp-changed");
 const gulpPlumber = require("gulp-plumber");
-const pluginError = require("plugin-error");
-const through = require("through2");
-const vinyl = require("vinyl");
-
-const unified = require('unified');
-const parse = require('remark-parse');
-const shortcodes = require('remark-shortcodes');
 
 function mdPreprocessor() {
-  PLUGIN_NAME = "md-preprocessor";
+  const _ = require("lodash");
+  const through = require("through2");
+  const vinyl = require("vinyl");
+  const unified = require("unified");
+  const parse = require("remark-parse");
+  const shortcodes = require("remark-shortcodes");
+  const visit = require("unist-util-visit");
 
   return through.obj(function(file, enc, cb) {
     if (file.isNull()) {
@@ -28,25 +28,51 @@ function mdPreprocessor() {
       return cb();
     }
 
-    nfile = file.clone();
-    nfile.path = nfile.path.replace(/index.md$/, "index.json");
+    file.path = file.path.replace(/index.md$/, "index.json");
+    mdsrc = file.contents.toString(enc);
+    gstream = this;
 
     var tree = unified()
       .use(parse)
-      .use(shortcodes, {startBlock: "{{<", endBlock: ">}}", inlineMode: true})
-      .parse(file.contents.toString(enc))
+      .use(shortcodes, { startBlock: "{{<", endBlock: ">}}", inlineMode: true })
+      .parse(mdsrc);
 
-    console.dir(tree, {depth: null});
-
-    return cb(null, nfile);
-  })
+    var meta = {};
+    file.contents = Buffer.from(JSON.stringify(meta));
+    visit(tree, "shortcode", function(node) {
+      if (node.identifier.indexOf("named-") == 0) {
+        if (
+          _.has(meta, [
+            "named-shortcode",
+            node.identifier,
+            node.attributes.name
+          ])
+        ) {
+          gstream.emit(
+            "error",
+            `File: ${file.path}\n  shortcode: ${node.identifier}\n  conflicting names "${node.attributes.name}"`
+          );
+        }
+        _.set(
+          meta,
+          ["named-shortcode", node.identifier, node.attributes.name],
+          {
+            ordinal:
+              _.size(_.get(meta, ["named-shortcode", node.identifier], {})) + 1
+          }
+        );
+      }
+    });
+    file.contents = Buffer.from(JSON.stringify(meta));
+    return cb(null, file);
+  });
 }
 
 function mdxBuild() {
   return gulp
     .src("./content/**/index.md", { base: "." })
     .pipe(gulpPlumber())
-    .pipe(gulpChanged("./transient/"))
+    .pipe(gulpChanged("./transient/", { extension: ".json" }))
     .pipe(mdPreprocessor())
     .pipe(gulp.dest("./transient/"));
 }
@@ -98,6 +124,8 @@ function transientWatch() {
     { delay: 500 },
     styleBuild
   );
+
+  gulp.watch(["./content/**/index.md"], { delay: 500 }, mdxBuild);
 }
 
 function siteServe() {

@@ -143,17 +143,16 @@ interfacing can be achieved using <mark>pointer-to-snapshot</mark>.
 
 {{<named-listing
 name="commit-code-outline">}}
-function create-content-snapshot:
-parameters: dir-content
-returns: pointer-to-snapshot
+# function create-content-snapshot: 
+#   params:   dir-content
+#   returns:  pointer-to-snapshot
 
-function extend-commit-history-graph:
-parameters: commit-history-graph, pointer-to-snapshot
-returns: commit-history-graph
+# function extend-commit-history-graph:
+#   params:   commit-history-graph, pointer-to-snapshot
+#   returns:  commit-history-graph 
 
 # and then
-
-commit = extend-history-graph( create-content-snapshot( ... ), ... )
+commit = extend-history-graph( ... , create-content-snapshot( ... ) )
 {{</named-listing>}}
 
 On each `commit`, `create-content-snapshot` function creates a new snapshot and feeds it to the
@@ -203,6 +202,7 @@ project/ $ sheep commit -a -m "Second"
 {{</named-listing>}}
 
 And how they can be represented in the graph:
+
 {{<named-image
 name="commits-ab-0"
 src="commits-ab-0.png"
@@ -239,18 +239,13 @@ We will see about this in the branching section).
 {{<named-listing
 name="extend-commit-history-graph-code">}}
 define function extend-commit-history-graph:
-
-# The current HEAD will be the parent commit for the new commit
-
-p = get value at HEAD
-s = create-content-snapshot(...)
-m = { read metadata from user environment }
-c = create-new-commit-object with (p, s, m)
-
-# give a unique name to 'c' and save it in the repo (./sheep/objects/)
-
-# now update HEAD to c (we will revise this last step later on)
-
+  # The current HEAD will be the parent commit for the new commit
+  p = get value at HEAD 
+  s = create-content-snapshot(...)
+  m = { read metadata from user environment }
+  c = create-new-commit-object with (p, s, m)
+  # give a unique name to 'c' and save it in the repo (./sheep/objects/)
+  # now update HEAD to c (we will revise this last step later on)
 {{</named-listing>}}
 
 Now if we were to implement `sheep log`, it's simply a matter of traversing the pointers towards the ancestors
@@ -271,8 +266,8 @@ To fix the bug user will just follow their intents.
 
 {{<named-listing
 name="cmds-checkout-example">}}
-project/ $ # user is at commit D now (1)
-project/ $ sheep checkout C # (2)
+project/ $ # user is at commit D now                # (1)
+project/ $ sheep checkout C                         # (2)
 project/ $ vim test/main.c
 project/ $ sheep commit -a -m "Update tests"
 project/ $ vim quake.c
@@ -281,6 +276,7 @@ project/ $ sheep commit -a -m "Fix super nasty bug" # (3)
 {{</named-listing>}}
 
 And how it's represented internally at (1), (2), (3) instances above:
+
 {{<named-image
 name="commits-abcd-ef-0"
 src="commits-abcd-ef-0.png"
@@ -292,14 +288,14 @@ In implementation, `checkout` is simply to <mark>update the HEAD to a given comm
 ## Branches
 
 **Why do we need to support a branching workflow?**
-In figure 4 visually we can see the branch out at commit C.
+In {{<ref-image name="commits-abcd-ef-0">}} visually we can see the branch out at commit C.
 We need to support this kind of workflow because not all changes are sequential. One of our goals from the
 first section was to: let contributors work independently without synchronization at every commit.
 
-As figure 4 shows, the system that we have discussed up to this point can already support a branching workflow.
+As {{<ref-image name="commits-abcd-ef-0">}} shows, the system that we have discussed up to this point can already support a branching workflow.
 Is there more to be done? Yes there is. But not much.
 
-If we look at figure 4 again, we can see that there are two branches that has D and F as their tips.
+If we look at {{<ref-image name="commits-abcd-ef-0">}} again, we can see that there are two branches that has D and F as their tips.
 If the user wants to switch between the latest commit of each branch, with our current system they have to remember
 their exact commit name. But we can do better, with a simple layer of indirection.
 
@@ -314,23 +310,19 @@ as <mark>heads</mark> with in refs.
 
 {{<named-listing
 name="cmd-branch-workflow">}}
-$ sheep checkout -b < some-branch-name > 
-# sheep branch < branch >; sheep checkout < branch >
-
-# Updates the HEAD pointer to point
-# to a branch (a local head in refs) that points to a commit
-# ... and follow same procedure as before
-
+$ sheep checkout -b < some-branch-name >
+# Updates the HEAD pointer to point 
+#    to a branch (a local head in refs) that points to a commit
+#    ... and follow same procedure as before
 $
 $ <... make some changes ...>
 $
 $ sheep commit -a -m "Super duper changes"
-
 # Revise our pseudo function: extend-commit-history-graph so that it
-# looks at the HEAD and follows the pointer to the
-# branch which points to a commit.
-# Uses that value as the parent commit,
-# and update that value with the name of the new commit
+#    looks at the HEAD and follows the pointer to the 
+#    branch which points to a commit.
+#    Uses that value as the parent commit, 
+#    and update that value with the name of the new commit
 {{</named-listing>}}
 
 {{<named-image
@@ -392,12 +384,12 @@ Read up on `git reflog` to see how Git tries to circumvent this.
 **Are we still staying compatible with Git? I thought `git rebase` rewrites history.**
 Yes, we are still being compatible with Git.
 Commands like `git commit --amend`, `git rebase` rewrites history by recreating the commits.
-Using commit history from figure 5, let's see the end result of doing `rebase` hot-fix branch onto master branch.
+Using commit history from {{<ref-image name="commits-abcd-ef-1">}}, let's see the end result of doing `rebase` hot-fix branch onto master branch.
 
 {{<named-image
 name="commits-abcd-ef-2"
 src="commits-abcd-ef-2.png"
-caption="Figure 6: After rebasing hot-fix on master">}}
+caption="After rebasing hot-fix on master">}}
 
 G and H is E and F respectively after being reapplied on the tip of master branch.
 Since E and F becomes detached heads they will eventually be garbage collected.
@@ -487,29 +479,26 @@ With the extra knowledge we gathered, we need to revise our algorithm for `exten
 {{<named-listing
 name="revised-extend-commit-history-graph">}}
 define function extend-commit-history-graph:
+  # The current HEAD will be the parent commit for the new commit
+  # HEAD can either be a commit or a ref
+  if HEAD is a branch ref:
+    pc = get value at branch ref
+  else:
+    pc = get value at HEAD 
 
-# The current HEAD will be the parent commit for the new commit
+  s = create-content-snapshot(...)
+  m = { read metadata from user environment }
+  c = create-new-commit-object with (pc, s, m)
 
-# HEAD can either be a commit or a ref
+  commit_name = crypto-hash(c)
+  write-file(directory="./sheep/objects/", filename=commit_name, content=serialize(c))
 
-if HEAD is a branch ref:
-pc = get value at branch ref
-else:
-pc = get value at HEAD
-
-s = create-content-snapshot(...)
-m = { read metadata from user environment }
-c = create-new-commit-object with (pc, s, m)
-
-commit_name = crypto-hash(c)
-write-file(directory="./sheep/objects/", filename=commit_name, content=serialize(c))
-
-if HEAD is a branch ref:
-update the value of branch ref to --> commit_name
-else:
-update the value of HEAD to --> commit_name
-
-return commit_name
+  if HEAD is a branch ref:
+    update the value of branch ref to --> commit_name
+  else:
+    update the value of HEAD to --> commit_name
+  
+  return commit_name
 {{</named-listing>}}
 
 Next up is implementing `create-content-snapshot`.
@@ -620,7 +609,7 @@ name="persistent-trie-0"
 src="persistent-trie-0.png"
 caption="Changing README file and adding game.py to V0 snapshot leading to V1 snapshot">}}
 
-In figure 10 we can see that in V1 snapshot has made a copy of the path to README because README file was changed
+In {{<ref-image name="persistent-trie-1">}} we can see that in V1 snapshot has made a copy of the path to README because README file was changed
 in this snapshot. Meanwhile "tests" directory and "setup.py" were kept as is, so those pointers are reused.
 
 One more example to show off path copying in action:
@@ -708,21 +697,21 @@ Let's write some pseudo code:
 {{<named-listing
 name="revised-create-content-snapshot">}}
 define function create-content-snapshot:
-s = empty tree
+  s = empty tree
 
-for each change marked on the index:
-update s with adding the path by looking at the content in working dir
-store the new objects in the content addressable storage
+  for each change marked on the index:
+    update s with adding the path by looking at the content in working dir
+    store the new objects in the content addressable storage
 
-for each all other entries on the index:
-update s by reusing the same pointers
+  for each all other entries on the index:
+    update s by reusing the same pointers
 
-key = hash(s)
-include this key and s in the content addressable storage
+  key = hash(s) 
+  include this key and s in the content addressable storage
 
-update the index so that all entries are marked as unchanged
+  update the index so that all entries are marked as unchanged
 
-return the key # to be used when creating the new commit
+  return the key # to be used when creating the new commit
 {{</named-listing>}}
 
 With the completion of `create-content-snapshot` we now have completed the full puzzle of sheep commit.
@@ -788,7 +777,7 @@ For `sheep` will chose two do three way merge following the path of Git.
 3-way merge means, the user gets access to two conflicting pieces of content and the base content where they
 both were derived from.
 
-Let's see how to achieve this in `sheep merge` as seen on figure 11.
+Let's see how to achieve this in `sheep merge` as seen on {{<ref-image name="commits-abcd-ef-g">}}.
 
 ### LCA
 
@@ -827,8 +816,8 @@ name="trie-merge"
 src="trie-merge.png"
 caption="View of the snapshots at commits C, D and F.">}}
 
-Figure 12 shows the view of the snapshots being used in the following merge example.
-Asterisks / stars (*) are used to visually show which content were actually changed from C.
+{{<ref-image name="trie-merge">}} shows the view of the snapshots being used in the following merge example.
+Asterisks / stars (\*) are used to visually show which content were actually changed from C.
 
 We do a diff of the C's commit snapshot against D's to see what has changed from C to D.
 Then we do a diff of C's commit snapshot against F's to see what has changed from C to F.
@@ -836,9 +825,9 @@ These diff we will call <mark>patches</mark>. Now we use merge algorithm to auto
 
 For example:
 
-- *1, *2 and *3 only changed on 'master' branch therefore we can <mark>auto merge</mark>
+- *1, *2 and \*3 only changed on 'master' branch therefore we can <mark>auto merge</mark>
   these changes in to the final snapshot.
-- *6 only changed on the 'hot-fix' hence we can auto merge this change into the final snapshot as well.
+- \*6 only changed on the 'hot-fix' hence we can auto merge this change into the final snapshot as well.
 - *4 and *5 shows that README was changed in both branches: hence a conflict on that file.
 - Think about how we should handle auto merges for: deletes and renames
 
@@ -872,3 +861,17 @@ More importantly while building the concepts step by step, we tried to build up 
 at each step of the way.
 
 If you are hungry for more VCS concepts: look into [Pijul](https://pijul.org/model/).
+
+> The main difference between Pijul and Git is that
+> Pijul deals with changes (or patches), whereas Git
+> deals only with snapshots (or versions).
+>
+> There are several advantages to using patches.
+> First, patches are the intuitive atomic unit of work.
+> As such, they are easier to understand than commits.
+> And actually, Git users often reason in terms of patches,
+> displaying commits as differences between snapshots.
+>
+> Patches can be merged according to intuitive formal axioms ...
+>
+> An excerpt from https://pijul.org/manual/why_pijul.html
