@@ -13,8 +13,11 @@
     "gulp-postcss": "^8.0.0",
     "meta-shortcodes": "^1.0.3",
     "plugin-error": "^1.0.1",
+    "remark-parse": "^7.0.2",
+    "remark-shortcodes": "^0.2.1",
     "tailwindcss": "^1.1.4",
-    "through2": "^3.0.1"
+    "through2": "^3.0.1",
+    "unified": "^8.4.2"
   },
   "devDependencies": {
     "gulp-changed": "^4.0.2"

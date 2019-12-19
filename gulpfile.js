@@ -8,32 +8,46 @@ const pluginError = require("plugin-error");
 const through = require("through2");
 const vinyl = require("vinyl");
 
+const unified = require('unified');
+const parse = require('remark-parse');
+const shortcodes = require('remark-shortcodes');
+
+function mdPreprocessor() {
+  PLUGIN_NAME = "md-preprocessor";
+
+  return through.obj(function(file, enc, cb) {
+    if (file.isNull()) {
+      return cb(null, file);
+    }
+
+    if (file.isStream()) {
+      this.emit(
+        "error",
+        new pluginError(PLUGIN_NAME, "Streams are unsupported")
+      );
+      return cb();
+    }
+
+    nfile = file.clone();
+    nfile.path = nfile.path.replace(/index.md$/, "index.json");
+
+    var tree = unified()
+      .use(parse)
+      .use(shortcodes, {startBlock: "{{<", endBlock: ">}}", inlineMode: true})
+      .parse(file.contents.toString(enc))
+
+    console.dir(tree, {depth: null});
+
+    return cb(null, nfile);
+  })
+}
+
 function mdxBuild() {
   return gulp
     .src("./content/**/index.md", { base: "." })
     .pipe(gulpPlumber())
     .pipe(gulpChanged("./transient/"))
-    .pipe(
-      through.obj(function(file, enc, cb) {
-        PLUGIN_NAME = "index-md-json";
-        if (file.isNull()) {
-          return cb(null, file);
-        }
-        if (file.isStream()) {
-          this.emit(
-            "error",
-            new pluginError(PLUGIN_NAME, "Streams are unsupported")
-          );
-          return cb();
-        }
-        nfile = file.clone();
-        nfile.path = nfile.path.replace(/index.md$/, "index.json");
-        console.log(
-          file.contents.toString(enc).matchAll(/{{<named-(\w+).*?>}}/m)
-        );
-        return cb(null, nfile);
-      })
-    )
+    .pipe(mdPreprocessor())
     .pipe(gulp.dest("./transient/"));
 }
 
