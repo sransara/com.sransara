@@ -179,7 +179,7 @@ We'll call this a <mark>commit object</mark>.
 
 ### Commit history graph
 
-Commit History Graph is the data structure that holds the lineage information of each and every commit.
+Commit History Graph is the data structure that holds the lineage information of every commit.
 Basically it's the life blood of our VCS. In implementation, Commit history graph is just the relative ordering
 created by bunch of commit objects that connect to each other like a chain.
 
@@ -338,7 +338,7 @@ Later on Git garbage collector will sweep off these detached commits (commits no
 
 # Distributed-ness
 
-Until now we have only focused on local operations and not focussed about the Distributed-ness of our VCS.
+Until now we have only focused on local operations and not focused about the Distributed-ness of our VCS.
 That is because our plan is to have a symmetric view from the point of branches. Simply put we view
 a remote repo as a namespaced collection of branches.
 
