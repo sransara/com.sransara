@@ -16,18 +16,21 @@ function mdPreprocessor() {
   const visit = require("unist-util-visit");
 
   return through.obj(function(file, enc, cb) {
+    gstream = this;
+
     if (file.isNull()) {
       return cb(null, file);
     }
 
     if (file.isStream()) {
-      this.emit("error", new pluginError(PLUGIN_NAME, "Streams are unsupported"));
+      gstream.emit("error",
+                `File: ${file.path}\n`+
+                `  Streams are unsupported`);
       return cb();
     }
 
     file.path = file.path.replace(/index.md$/, "index.json");
     mdsrc = file.contents.toString(enc);
-    gstream = this;
 
     var tree = unified()
       .use(parse)
@@ -110,12 +113,13 @@ function mdxClean() {
   return del("./transient/content/**");
 }
 
-const transientBuild = gulp.parallel(
+const depBuild = gulp.parallel(
   gulp.series(stylesClean, stylesBuild),
+  gulp.series(scriptsClean, scriptsBuild),
   gulp.series(mdxClean, mdxBuild)
 );
 
-function transientWatch() {
+function depWatch() {
   gulp.watch(["./assets/styles/**", "layouts/**/*.html"], { delay: 500 }, stylesBuild);
   gulp.watch(["./content/**/index.md"], { delay: 0 }, mdxBuild);
 }
@@ -134,7 +138,7 @@ function siteBuild() {
 
 gulp.task(
   "serve",
-  gulp.series(transientBuild, gulp.parallel(siteServe, transientWatch))
+  gulp.series(depBuild, gulp.parallel(siteServe, depWatch))
 );
 
-gulp.task("publish", gulp.series(transientBuild, siteBuild));
+gulp.task("publish", gulp.series(depBuild, siteBuild));
