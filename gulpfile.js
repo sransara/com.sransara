@@ -37,12 +37,16 @@ function mdPreprocessor() {
     var meta = {};
     file.contents = Buffer.from(JSON.stringify(meta));
     visit(tree, "shortcode", function(node) {
-      if (node.identifier.indexOf("named-") == 0) {
-        if ( _.has(meta, ["named-shortcode", node.identifier, node.attributes.name])) {
-          gstream.emit( "error", `File: ${file.path}\n  shortcode: ${node.identifier}\n  conflicting names "${node.attributes.name}"`);
+      if (node.identifier === "figure" || node.identifier === "listing") {
+        var name = node.attributes.name || node.position.start.offset;
+        if ( _.has(meta, ["ref-db", node.identifier, name])) {
+          gstream.emit( "error",
+                        `File: ${file.path}\n` +
+                        `  shortcode: ${node.identifier}\n`+
+                        `  conflicting names "${name}"`);
         }
-        _.set( meta, ["named-shortcode", node.identifier, node.attributes.name], {
-            ordinal: _.size(_.get(meta, ["named-shortcode", node.identifier], {})) + 1
+        _.set( meta, ["ref-db", node.identifier, name], {
+            ordinal: _.size(_.get(meta, ["ref-db", node.identifier], {})) + 1
         });
       }
     });
@@ -112,13 +116,8 @@ const transientBuild = gulp.parallel(
 );
 
 function transientWatch() {
-  gulp.watch(
-    ["./assets/styles/**", "layouts/**/*.html"],
-    { delay: 500 },
-    stylesBuild
-  );
-
-  gulp.watch(["./content/**/index.md"], { delay: 500 }, mdxBuild);
+  gulp.watch(["./assets/styles/**", "layouts/**/*.html"], { delay: 500 }, stylesBuild);
+  gulp.watch(["./content/**/index.md"], { delay: 0 }, mdxBuild);
 }
 
 function siteServe() {

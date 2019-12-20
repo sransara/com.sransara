@@ -50,9 +50,14 @@ a {
 
   blockquote {
     @apply bg-gray-200 border-l-4 border-gray-500 m-0 p-2;
+
+    p:last-child {
+      @apply mb-2;
+    }
   }
 
-  code {
+  :not(pre) > code,
+  > code {
     @apply bg-gray-600 font-mono px-1 rounded text-gray-300 text-sm;
   }
 
@@ -82,7 +87,7 @@ a {
 
     pre {
       tab-size: 2;
-      @apply bg-gray-800 font-mono p-2 overflow-x-auto text-gray-300 text-xs;
+      @apply bg-gray-800 font-mono m-0 p-2 overflow-x-auto text-gray-300 text-xs;
     }
 
     img {
@@ -90,7 +95,7 @@ a {
     }
 
     figcaption {
-      @apply border-t font-sans p-1 text-center text-gray-700 text-xs;
+      @apply bg-gray-200 border-t font-sans p-1 text-center text-gray-700 text-xs;
     }
   }
 

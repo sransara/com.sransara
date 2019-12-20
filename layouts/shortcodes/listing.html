@@ -1,0 +1,26 @@
+{{ $mdmeta_file := .Page.Scratch.Get "mdmeta_file" | os.Stat }}
+{{ $mdmeta := .Page.Scratch.Get "mdmeta" }}
+{{ $refdb := index $mdmeta "ref-db" }}
+{{ $listings := index $refdb "listing" }}
+{{ $id := "nil" }}
+{{ if .Get "name" }}
+{{ $id = .Get "name" }}
+{{ else }}
+{{ $id = printf "%d" .Position.Offset }}
+{{ end }}
+{{ $this := index $listings $id }}
+{{ $ordinal := index $this "ordinal" }}
+
+<figure id="listing:{{ $ordinal }}{{ if .Get "name"}}:{{ .Get "name" }}{{ end }}">
+    {{ highlight (trim .Inner "\n") (default "" (.Get "lang")) (default "" (.Get "options")) }}
+    <figcaption>
+        {{ if .Get "caption" }}
+        <strong>Listing {{ $ordinal }}:</strong> {{ .Get "caption" | markdownify }}
+        {{ if .Get "attr" }}
+        <br />{{ .Get "attr" | markdownify }}
+        {{ end }}
+        {{ else }}
+        <strong>Listing {{ $ordinal }}</strong>
+        {{ end }}
+    </figcaption>
+</figure>
