@@ -6,31 +6,42 @@ const gulp = require("gulp");
 const gulpChanged = require("gulp-changed");
 const gulpPlumber = require("gulp-plumber");
 
-function mdPreprocessor() {
+function contentPreprocessor() {
   const _ = require("lodash");
   const through = require("through2");
   const vinyl = require("vinyl");
-  const unified = require("unified");
-  const parse = require("remark-parse");
-  const shortcodes = require("remark-shortcodes");
-  const visit = require("unist-util-visit");
 
   return through.obj(function(file, enc, cb) {
-    gstream = this;
+    var stream = this;
 
     if (file.isNull()) {
       return cb(null, file);
     }
 
     if (file.isStream()) {
-      gstream.emit("error",
+      stream.emit("error",
                 `File: ${file.path}\n`+
                 `  Streams are unsupported`);
       return cb();
     }
 
-    file.path = file.path.replace(/index.md$/, "index.json");
-    mdsrc = file.contents.toString(enc);
+    file.path = file.path.replace(/index([.]md|[.]org)$/, "index.json");
+    var src = file.contents.toString(enc);
+    file.contents = Buffer.from("{}");
+
+    const tagstart = "{{<";
+    const tagend = ">}}";
+
+    var shortcodes = [];
+    var shortcode = {};
+    var curr = 0;
+
+    while(curr !== -1) {
+      var start = src.indexOf(tagstart, curr);
+      curr = start + tagstart.length;
+      var end = src.indexOf(tagend, curr);
+      curr = end + tagend.length;
+    }
 
     var tree = unified()
       .use(parse)
@@ -38,12 +49,12 @@ function mdPreprocessor() {
       .parse(mdsrc);
 
     var meta = {};
-    file.contents = Buffer.from(JSON.stringify(meta));
+
     visit(tree, "shortcode", function(node) {
       if (node.identifier === "figure" || node.identifier === "listing") {
         var name = node.attributes.name || node.position.start.offset;
         if ( _.has(meta, ["ref-db", node.identifier, name])) {
-          gstream.emit( "error",
+          stream.emit( "error",
                         `File: ${file.path}\n` +
                         `  shortcode: ${node.identifier}\n`+
                         `  conflicting names "${name}"`);
@@ -53,14 +64,15 @@ function mdPreprocessor() {
         });
       }
     });
+
     file.contents = Buffer.from(JSON.stringify(meta));
     return cb(null, file);
   });
 }
 
-function mdxBuild() {
+function contentBuild() {
   return gulp
-    .src("./content/**/index.md", { base: "." })
+    .src("./content/**/index.{md,org}", { base: "." })
     .pipe(gulpPlumber())
     .pipe(gulpChanged("./transient/", { extension: ".json" }))
     .pipe(mdPreprocessor())
@@ -109,19 +121,19 @@ function stylesClean() {
   return del("./transient/assets/styles/**");
 }
 
-function mdxClean() {
+function contentClean() {
   return del("./transient/content/**");
 }
 
 const depBuild = gulp.parallel(
   gulp.series(stylesClean, stylesBuild),
   gulp.series(scriptsClean, scriptsBuild),
-  gulp.series(mdxClean, mdxBuild)
+  gulp.series(contentClean, contentBuild)
 );
 
 function depWatch() {
   gulp.watch(["./assets/styles/**", "layouts/**/*.html"], { delay: 500 }, stylesBuild);
-  gulp.watch(["./content/**/index.md"], { delay: 0 }, mdxBuild);
+  gulp.watch(["./content/**/index.{md,org}"], { delay: 0 }, contentBuild);
 }
 
 function siteServe() {

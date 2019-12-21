@@ -1,21 +1,29 @@
+{{ define "header" }}
+{{ if (or (.Page.HasShortcode "maths") (.Page.HasShortcode "mathb")) }}
+<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+{{ end }}
+{{ end }}
+
 {{ define "main" }}
 {{ $mdmeta_file := printf "transient/content/%s/index.json" .File.Dir }}
 {{ $mdmeta_file | .Scratch.Set "mdmeta_file"  }}
 {{ .Scratch.Get "mdmeta_file" | readFile | transform.Unmarshal | .Scratch.Set "mdmeta"  }}
-
 <main class="container leading-normal max-w-2xl mx-auto p-3">
-  {{ partial "breadcrumbs.html" . }}
-  <h1 class="mb-2 text-3xl font-bold">{{ .Title }}</h1>
-  <h5 class="mb-2 text-gray-500 text-xs">
-    Published
-    by <span class="text-gray-800">Samodya R. Abeysiriwardane</span>
-    on <span class="text-gray-800">{{ .Date.Format "Jan 02, 2006" }}</span>
-    / <a target="_blank" rel="noopener noreferrer" href="https://github.com/sransara/sransara-com/tree/master/content/{{ .File.Dir }}">Source</a>
-  </h5>
-  <hr class="my-2 border-2 border-gray-700" />
-  <div class="classless">
-      {{ .Content }}
-  </div>
-  <hr class="my-2 border-2 border-gray-700" />
+    {{ partial "breadcrumbs.html" . }}
+    <h1 class="mb-2 text-3xl font-bold">{{ .Title }}</h1>
+    <h5 class="mb-2 text-gray-500 text-xs">
+        Published
+        by <span class="text-gray-800">Samodya R. Abeysiriwardane</span>
+        on <span class="text-gray-800">{{ .Date.Format "Jan 02, 2006" }}</span>
+        / <a target="_blank" rel="noopener noreferrer" href="https://github.com/sransara/sransara-com/tree/master/content/{{ .File.Dir }}">Source</a>
+    </h5>
+    <hr class="my-2 border-2 border-gray-700" />
+    <div class="classless">
+        {{ .Content }}
+    </div>
+    <hr class="my-2 border-2 border-gray-700" />
+    <script src="https://utteranc.es/client.js" repo="sransara/sransara-com" issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async></script>
 </main>
 {{ end }}
+

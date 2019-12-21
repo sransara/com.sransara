@@ -12,12 +12,8 @@
     "gulp-plumber": "^1.2.1",
     "gulp-postcss": "^8.0.0",
     "lodash": "^4.17.15",
-    "remark-parse": "^7.0.2",
-    "remark-shortcodes": "^0.2.1",
     "tailwindcss": "^1.1.4",
-    "through2": "^3.0.1",
-    "unified": "^8.4.2",
-    "unist-util-visit": "^2.0.1"
+    "through2": "^3.0.1"
   },
   "devDependencies": {
     "gulp-changed": "^4.0.2"

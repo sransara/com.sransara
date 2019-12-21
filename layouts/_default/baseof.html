@@ -6,7 +6,7 @@
 		<title>{{- block "title" . -}} {{ .Title }} &mdash; {{ .Site.Title }} {{- end -}}</title>
 		{{ $style := resources.Get "styles/main.css" }}
 		<link rel="stylesheet" href="{{ $style.Permalink }}">
-		{{- block "head" . -}}
+		{{- block "header" . -}}
 		{{- end -}}
 	</head>
 	<body>
@@ -14,6 +14,5 @@
 		{{- end -}}
 		{{- block "footer" . -}}
 		{{- end -}}
-		<!-- End of Statcounter Code -->
 	</body>
 </html>
