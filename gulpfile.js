@@ -25,7 +25,7 @@ function contentPreprocessor() {
       return cb();
     }
 
-    file.path = file.path.replace(/index([.]md|[.]org)$/, "index.json");
+    file.path = file.path.replace(/index[.]md$/, "index.json");
     var src = file.contents.toString(enc);
     file.contents = Buffer.from("{}");
 
@@ -87,7 +87,7 @@ function contentPreprocessor() {
 
 function contentBuild() {
   return gulp
-    .src("./content/**/index.{md,org}", { base: "." })
+    .src("./content/**/*index.md", { base: "." })
     .pipe(gulpPlumber())
     .pipe(gulpChanged("./transient/", { extension: ".json" }))
     .pipe(contentPreprocessor())

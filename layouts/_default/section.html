@@ -1,4 +1,9 @@
 {{ define "main" }}
+
+{{ $metaf := printf "transient/content/%s/%s.json" .File.Dir .File.BaseFileName }}
+{{ $metaf | .Scratch.Set "metaf"  }}
+{{ .Scratch.Get "metaf" | readFile | transform.Unmarshal | .Scratch.Set "meta"  }}
+
 <main class="container leading-normal max-w-2xl mx-auto p-3">
   {{ partial "breadcrumbs.html" . }}
   <h1 class="mt-6 mb-3 font-bold">{{ .Title }}</h1>

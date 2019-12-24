@@ -1,6 +1,6 @@
-{{ $mdmeta_file := .Page.Scratch.Get "mdmeta_file" | os.Stat }}
-{{ $mdmeta := .Page.Scratch.Get "mdmeta" }}
-{{ $shortcodes := index $mdmeta .Name }}
+{{ $metaf := .Page.Scratch.Get "metaf" | os.Stat }}
+{{ $meta := .Page.Scratch.Get "meta" }}
+{{ $shortcodes := index $meta .Name }}
 {{ $id := .Get "name" }}
 {{ $this := index $shortcodes $id }}
 {{ $ordinal := index $this "ordinal" }}
