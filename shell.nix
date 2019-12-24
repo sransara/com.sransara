@@ -5,7 +5,8 @@ with import <nixpkgs> {};
 
 pkgs.mkShell {
   buildInputs = [
-      unstable.hugo
+    unstable.hugo
+    image_optim
   ];
   shellHook = ''
     export NODEBIN="$HOME/Wenv/node/bin"

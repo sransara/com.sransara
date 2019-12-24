@@ -1,17 +1,16 @@
 {{ $mdmeta_file := .Page.Scratch.Get "mdmeta_file" | os.Stat }}
 {{ $mdmeta := .Page.Scratch.Get "mdmeta" }}
-{{ $refdb := index $mdmeta "ref-db" }}
-{{ $figures := index $refdb "figure" }}
+{{ $shortcodes := index $mdmeta .Name }}
 {{ $id := "nil" }}
 {{ if .Get "name" }}
     {{ $id = .Get "name" }}
 {{ else }}
-    {{ $id = printf "%d" .Position.Offset }}
+    {{ $id = printf "%s:%d" .Name .Position.Offset }}
 {{ end }}
-{{ $this := index $figures $id }}
+{{ $this := index $shortcodes $id }}
 {{ $ordinal := index $this "ordinal" }}
 
-<figure id="figure:{{ $ordinal }}{{ if .Get "name"}}:{{ .Get "name" }}{{ end }}">
+<figure id="{{ .Name }}:{{ $ordinal }}{{ if .Get "name"}}:{{ .Get "name" }}{{ end }}">
     <img src="{{ .Get "src" }}" {{ if .Get "caption" }}alt="{{ .Get "caption"}}"{{ end }} />
     <figcaption>
         {{ if .Get "caption" }}
@@ -20,7 +19,7 @@
         <br />{{ .Get "attr" | markdownify }}
         {{ end }}
         {{ else }}
-        <strong>Figure {{ $ordinal }}:</strong>
+        <strong>Figure {{ $ordinal }}</strong>
         {{ end }}
     </figcaption>
 </figure>

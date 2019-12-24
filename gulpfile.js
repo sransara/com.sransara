@@ -29,43 +29,58 @@ function contentPreprocessor() {
     var src = file.contents.toString(enc);
     file.contents = Buffer.from("{}");
 
-    const tagstart = "{{<";
-    const tagend = ">}}";
-
-    var shortcodes = [];
-    var shortcode = {};
+    const tagOpener = "{{<";
+    const tagCloser = ">}}";
+    var shortcodes = {};
+    var cshortcode = {};
+    var startTagOpener = 0;
+    var endTagOpener = 0;
+    var startTagCloser = 0;
+    var endTagCloser = 0;
     var curr = 0;
+    while((startTagOpener = src.indexOf(tagOpener, curr)) != -1) {
+      endTagOpener = startTagOpener + tagOpener.length;
+      curr = endTagOpener;
 
-    while(curr !== -1) {
-      var start = src.indexOf(tagstart, curr);
-      curr = start + tagstart.length;
-      var end = src.indexOf(tagend, curr);
-      curr = end + tagend.length;
-    }
-
-    var tree = unified()
-      .use(parse)
-      .use(shortcodes, { startBlock: "{{<", endBlock: ">}}", inlineMode: true })
-      .parse(mdsrc);
-
-    var meta = {};
-
-    visit(tree, "shortcode", function(node) {
-      if (node.identifier === "figure" || node.identifier === "listing") {
-        var name = node.attributes.name || node.position.start.offset;
-        if ( _.has(meta, ["ref-db", node.identifier, name])) {
-          stream.emit( "error",
-                        `File: ${file.path}\n` +
-                        `  shortcode: ${node.identifier}\n`+
-                        `  conflicting names "${name}"`);
-        }
-        _.set( meta, ["ref-db", node.identifier, name], {
-            ordinal: _.size(_.get(meta, ["ref-db", node.identifier], {})) + 1
-        });
+      if(src[endTagOpener] === "/") {
+        cshortcode["inner"] = src.substring(endTagCloser, startTagOpener).trim();
+        continue
       }
-    });
 
-    file.contents = Buffer.from(JSON.stringify(meta));
+      startTagCloser = src.indexOf(tagCloser, curr);
+      endTagCloser = startTagCloser + tagCloser.length;
+      curr = endTagCloser;
+
+      cshortcode = {};
+      if(src[startTagCloser - 1] === "/") {
+        cshortcode["inner"] = "";
+        startTagCloser -= 1;
+      }
+
+      var tagstr = src.substring(endTagOpener, startTagCloser);
+      var tagstrparts = tagstr.match(/(?:[^\s"]+|"[^"]*")+/g); 
+      var tag = tagstrparts[0];
+      var offset = startTagOpener;
+      cshortcode["tag"] = tag;
+      cshortcode["offset"] = offset;
+      cshortcode["ordinal"] = _.size(_.get(shortcodes, [tag], {})) + 1;
+      cshortcode["attributes"] = {};
+      tagstrparts.slice(1).forEach(function(item, index) {
+        var attrparts = item.split("=");
+        if(attrparts.length == 2) {
+          cshortcode["attributes"][attrparts[0]] = attrparts[1].slice(1, -1);
+        }
+        else {
+          cshortcode["attributes"][attrparts[0]] = "";
+        }
+      });
+      var name = cshortcode["attributes"]["name"] || `${tag}:${offset}`;
+      if(!shortcodes[tag]) {
+        shortcodes[tag] = {};
+      }
+      shortcodes[tag][name] = cshortcode;
+    }
+    file.contents = Buffer.from(JSON.stringify(shortcodes));
     return cb(null, file);
   });
 }
@@ -75,7 +90,7 @@ function contentBuild() {
     .src("./content/**/index.{md,org}", { base: "." })
     .pipe(gulpPlumber())
     .pipe(gulpChanged("./transient/", { extension: ".json" }))
-    .pipe(mdPreprocessor())
+    .pipe(contentPreprocessor())
     .pipe(gulp.dest("./transient/"));
 }
 

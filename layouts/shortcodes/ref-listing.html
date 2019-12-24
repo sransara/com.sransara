@@ -1,8 +1,8 @@
 {{ $mdmeta_file := .Page.Scratch.Get "mdmeta_file" | os.Stat }}
 {{ $mdmeta := .Page.Scratch.Get "mdmeta" }}
-{{ $refdb := index $mdmeta "ref-db" }}
-{{ $listings := index $refdb "listing" }}
-{{ $this := index $listings (.Get "name") }}
+{{ $shortcodes := index $mdmeta .Name }}
+{{ $id := .Get "name" }}
+{{ $this := index $shortcodes $id }}
 {{ $ordinal := index $this "ordinal" }}
 
 <a href='#listing:{{ $ordinal }}:{{ .Get "name" }}'>Listing {{ $ordinal }}</a>

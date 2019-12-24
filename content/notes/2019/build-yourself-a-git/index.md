@@ -28,8 +28,6 @@ and the [README](https://github.com/git/git/blob/e83c5163316f89bfbde7d9ab23ca2e2
 of Git from 2005. The fundamental data structures chosen at its inception has
 stood the test of time.
 
-{{<maths>}}
-
 > If you wish to make an apple pie from scratch, you must first invent the universe.
 >
 > &mdash; Carl Sagan

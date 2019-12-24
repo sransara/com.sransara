@@ -6,9 +6,11 @@
 {{ end }}
 
 {{ define "main" }}
+
 {{ $mdmeta_file := printf "transient/content/%s/index.json" .File.Dir }}
 {{ $mdmeta_file | .Scratch.Set "mdmeta_file"  }}
 {{ .Scratch.Get "mdmeta_file" | readFile | transform.Unmarshal | .Scratch.Set "mdmeta"  }}
+
 <main class="container leading-normal max-w-2xl mx-auto p-3">
     {{ partial "breadcrumbs.html" . }}
     <h1 class="mb-2 text-3xl font-bold">{{ .Title }}</h1>
