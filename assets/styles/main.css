@@ -91,7 +91,7 @@ a {
     }
 
     img {
-      @apply mx-auto my-2;
+      @apply mx-auto my-2 p-1;
     }
 
     figcaption {

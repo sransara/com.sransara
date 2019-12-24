@@ -1,8 +1,10 @@
 {{ define "header" }}
+
 {{ if (or (.Page.HasShortcode "maths") (.Page.HasShortcode "mathb")) }}
-<script type="text/x-mathjax-config">MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"></script>
+<script>MathJax = {tex: {inlineMath: [['[maths]','[/maths]']], displayMath: [['[mathp]','[/mathp]']], processEscapes: false, processEnvironments: false, processRefs: false, tags: 'ams',},};</script>
+<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js"></script>
 {{ end }}
+
 {{ end }}
 
 {{ define "main" }}
@@ -21,11 +23,34 @@
         / <a target="_blank" rel="noopener noreferrer" href="https://github.com/sransara/sransara-com/tree/master/content/{{ .File.Dir }}">Source</a>
     </h5>
     <hr class="my-2 border-2 border-gray-700" />
-    <div class="classless">
+    <div id="article" class="classless">
         {{ .Content }}
     </div>
     <hr class="my-2 border-2 border-gray-700" />
     <script src="https://utteranc.es/client.js" repo="sransara/sransara-com" issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async></script>
 </main>
+
 {{ end }}
 
+{{ define "footer" }}
+
+<script>
+function makePermalinkHeaders() {
+    var article = document.getElementById('article');
+    var headings = article.querySelectorAll('h1, h2, h3, h4');
+    headings.forEach(function (heading){
+        if (!heading.id) { return; }
+        var a = document.createElement('a');
+        a.innerHTML = '#';
+        a.href = '#' + heading.id;
+        a.className = 'mr-1 no-underline';
+        heading.insertBefore(a, heading.firstChild);
+    });
+}
+
+(function (){
+     makePermalinkHeaders();
+})();
+</script>
+
+{{ end }}
