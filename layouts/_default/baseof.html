@@ -6,6 +6,7 @@
 		<title>{{- block "title" . -}} {{ .Title }} &mdash; {{ .Site.Title }} {{- end -}}</title>
 		{{ $style := resources.Get "styles/main.css" }}
 		<link rel="stylesheet" href="{{ $style.Permalink }}">
+		<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;600;700&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet"> 
 		{{ with .OutputFormats.Get "rss" -}}
 		{{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
 		{{ end -}}

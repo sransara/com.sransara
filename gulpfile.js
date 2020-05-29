@@ -19,9 +19,7 @@ function contentPreprocessor() {
     }
 
     if (file.isStream()) {
-      stream.emit("error",
-                `File: ${file.path}\n`+
-                `  Streams are unsupported`);
+      stream.emit("error", `File: ${file.path}\n streams are unsupported`);
       return cb();
     }
 

@@ -34,18 +34,18 @@ a {
 }
 
 .classless {
-  @apply font-serif leading-normal text-gray-800;
+  @apply leading-normal text-gray-800;
 
   h1, h2, h3 {
-    @apply border-b mt-4 mb-2 leading-tight text-black;
+    @apply font-serif border-b mt-4 mb-2 leading-tight text-black;
   }
 
   h4, h5 {
-    @apply leading-tight mt-4 mb-2 text-black;
+    @apply font-serif leading-tight mt-4 mb-2 text-black;
   }
 
   h6 {
-    @apply font-semibold leading-normal mb-2 mt-2; 
+    @apply font-serif font-semibold leading-normal mb-2 mt-2; 
   }
 
   blockquote {

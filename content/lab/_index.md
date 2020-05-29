@@ -1,5 +1,5 @@
 ---
-title: Projects
+title: Lab
 ---
 This page is under construction.
 
