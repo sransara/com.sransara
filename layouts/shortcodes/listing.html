@@ -14,9 +14,9 @@
     {{ highlight (trim .Inner "\n") (default "" (.Get "lang")) (default "" (.Get "options")) }}
     <figcaption>
         {{ if .Get "caption" }}
-        <strong>Listing {{ $ordinal }}:</strong> {{ .Get "caption" | markdownify }}
+        <strong>Listing {{ $ordinal }}:</strong> {{ .Get "caption" | .Page.RenderString }}
         {{ if .Get "attr" }}
-        <br />{{ .Get "attr" | markdownify }}
+        <br />{{ .Get "attr" | .Page.RenderString }}
         {{ end }}
         {{ else }}
         <strong>Listing {{ $ordinal }}</strong>

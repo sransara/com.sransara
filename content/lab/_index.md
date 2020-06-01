@@ -1,6 +1,6 @@
 ---
 title: Lab
 ---
-This page is under construction.
+Sorry, this page is still under construction.
 
-In the mean time please checkout my [github profile](//github.com/sransara/).
+In the meantime please checkout my [github profile](//github.com/sransara/).

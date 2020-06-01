@@ -1,0 +1,1 @@
+<a href="{{ .Destination | safeURL }}" {{ if not (hasPrefix .Destination "https://sransara.com") }}target="_blank"{{ end }}>{{ .Text }}</a>

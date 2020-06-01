@@ -14,9 +14,9 @@
     <img src="{{ .Get "src" }}" {{ if .Get "caption" }}alt="{{ .Get "caption"}}"{{ end }} />
     <figcaption>
         {{ if .Get "caption" }}
-        <strong>Figure {{ $ordinal }}:</strong> {{ .Get "caption" | markdownify }}
+        <strong>Figure {{ $ordinal }}:</strong> {{ .Get "caption" | .Page.RenderString }}
         {{ if .Get "attr" }}
-        <br />{{ .Get "attr" | markdownify }}
+        <br />{{ .Get "attr" | .Page.RenderString }}
         {{ end }}
         {{ else }}
         <strong>Figure {{ $ordinal }}</strong>

@@ -10,7 +10,7 @@ revision lineage and version backups.
 
 <!--more-->
 
-**tldr**: It's all about the [directed acyclic graphs](https://en.wikipedia.org/wiki/Directed_acyclic_graph),
+**TLDR**: It's all about the [directed acyclic graphs](https://en.wikipedia.org/wiki/Directed_acyclic_graph),
 [fully persistent tries](https://en.wikipedia.org/wiki/Persistent_data_structure) and
 [layers of indirection](https://en.wikipedia.org/wiki/Fundamental_theorem_of_software_engineering)
 wrapped in [everything is a file](https://en.wikipedia.org/wiki/Everything_is_a_file).
@@ -114,7 +114,7 @@ attr="[from Git basics](https://git-scm.com/book/en/v1/Getting-Started-Git-Basic
 
 **So where is the branching work flow?** It's simply a matter of executing `sheep checkout <checkpoint>`
 to go back to a checkpoint; then `sheep branch <name>` to give the new branch a name.
-And follow it up by `sheep add` and `sheep commit` workflow in {{<ref-image name="git-basics-staging">}}.
+And follow it up by `sheep add` and `sheep commit` workflow in {{<ref-figure name="git-basics-staging">}}.
 Later on we will see how this is handled internally.
 
 There is few other important intents/commands (diff, merge, fetch, push) that we will discuss as we go along.
@@ -283,14 +283,14 @@ In implementation, `checkout` is simply to <mark>update the HEAD to a given comm
 ## Branches
 
 **Why do we need to support a branching workflow?**
-In {{<ref-image name="commits-abcd-ef-0">}} visually we can see the branch out at commit C.
+In {{<ref-figure name="commits-abcd-ef-0">}} visually we can see the branch out at commit C.
 We need to support this kind of workflow because not all changes are sequential. One of our goals from the
 first section was to: let contributors work independently without synchronization at every commit.
 
-As {{<ref-image name="commits-abcd-ef-0">}} shows, the system that we have discussed up to this point can already support a branching workflow.
+As {{<ref-figure name="commits-abcd-ef-0">}} shows, the system that we have discussed up to this point can already support a branching workflow.
 Is there more to be done? Yes there is. But not much.
 
-If we look at {{<ref-image name="commits-abcd-ef-0">}} again, we can see that there are two branches that has D and F as their tips.
+If we look at {{<ref-figure name="commits-abcd-ef-0">}} again, we can see that there are two branches that has D and F as their tips.
 If the user wants to switch between the latest commit of each branch, with our current system they have to remember
 their exact commit name. But we can do better, with a simple layer of indirection.
 
@@ -383,7 +383,7 @@ Read up on `git reflog` to see how Git tries to circumvent this.
 **Are we still staying compatible with Git? I thought `git rebase` rewrites history.**
 Yes, we are still being compatible with Git.
 Commands like `git commit --amend`, `git rebase` rewrites history by recreating the commits.
-Using commit history from {{<ref-image name="commits-abcd-ef-1">}}, let's see the end result of doing `rebase` hot-fix branch onto master branch.
+Using commit history from {{<ref-figure name="commits-abcd-ef-1">}}, let's see the end result of doing `rebase` hot-fix branch onto master branch.
 
 {{<figure
 name="commits-abcd-ef-2"
@@ -452,7 +452,7 @@ name="hash-tree"
 src="hash-tree.png"
 caption="Viewing Commit History DAG as a Merkle tree">}}
 
-{{<ref-image name="hash-tree">}} shows that if an attacker tries to modify history by falsifying a commit (C2) they will end up
+{{<ref-figure name="hash-tree">}} shows that if an attacker tries to modify history by falsifying a commit (C2) they will end up
 creating a new branch out instead. As long as 'a' and 'e' are different C2 and C2<sub>evil</sub> will have two different
 commit hashes. By using a cryptographic hashing mechanism we can ensure that it will be hard for an attacker
 to falsify an 'e' that matches the hash with 'a'.
@@ -607,7 +607,7 @@ name="persistent-trie-0"
 src="persistent-trie-0.png"
 caption="Changing README file and adding game.py to V<sub>0</sub> snapshot leading to V<sub>1</sub> snapshot">}}
 
-In {{<ref-image name="persistent-trie-1">}} we can see that in V<sub>1</sub> snapshot has made a copy of the path to README because README file was changed
+In {{<ref-figure name="persistent-trie-1">}} we can see that in V<sub>1</sub> snapshot has made a copy of the path to README because README file was changed
 in this snapshot. Meanwhile "tests" directory and "setup.py" were kept as is, so those pointers are reused.
 
 One more example to show off path copying in action:
@@ -774,7 +774,7 @@ For `sheep` will chose two do three way merge following the path of Git.
 3-way merge means, the user gets access to two conflicting pieces of content and the base content where they
 both were derived from.
 
-Let's see how to achieve this in `sheep merge` as seen on {{<ref-image name="commits-abcd-ef-g">}}.
+Let's see how to achieve this in `sheep merge` as seen on {{<ref-figure name="commits-abcd-ef-g">}}.
 
 ### LCA
 
@@ -813,7 +813,7 @@ name="trie-merge"
 src="trie-merge.png"
 caption="View of the snapshots at commits C, D and F.">}}
 
-{{<ref-image name="trie-merge">}} shows the view of the snapshots being used in the following merge example.
+{{<ref-figure name="trie-merge">}} shows the view of the snapshots being used in the following merge example.
 I have used (\*) stars to mark which content were actually changed from C.
 
 We do a diff of the C's commit snapshot against D's to see what has changed from C to D.

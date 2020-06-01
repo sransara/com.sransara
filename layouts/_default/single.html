@@ -21,6 +21,7 @@
         by <span class="text-gray-800">Samodya R. Abeysiriwardane</span>
         on <span class="text-gray-800">{{ .Date.Format "Jan 02, 2006" }}</span>
         / <a target="_blank" rel="noopener noreferrer" href="https://github.com/sransara/sransara-com/tree/master/content/{{ .File.Dir }}">Source</a>
+        / <a href="{{.Permalink}}">Permalink</a>
     </h5>
     <hr class="my-2 border-2 border-gray-700" />
     <div id="article" class="classless">
@@ -33,21 +34,7 @@
 {{ define "footer" }}
 
 <script>
-function makePermalinkHeaders() {
-    var article = document.getElementById('article');
-    var headings = article.querySelectorAll('h1, h2, h3, h4');
-    headings.forEach(function (heading){
-        if (!heading.id) { return; }
-        var a = document.createElement('a');
-        a.innerHTML = '#';
-        a.href = '#' + heading.id;
-        a.className = 'mr-1 no-underline';
-        heading.insertBefore(a, heading.firstChild);
-    });
-}
-
 (function (){
-     makePermalinkHeaders();
 })();
 </script>
 
