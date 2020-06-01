@@ -3,7 +3,7 @@ title: Notes from project — lay-zers v0
 date: 2020-05-26
 ---
 
-I made a thing over the weekend, [lay-zers](https://lab.sransara.com/lay-zers): a "laser" playground for the imaginative.
+I made a thing over the weekend; [lay-zers](https://lab.sransara.com/lay-zers): a "laser" playground for the imaginative.
 Here I will try to compile my notes and retrospective thoughts for future reference.
 
 <!--more-->
@@ -13,7 +13,7 @@ Here I will try to compile my notes and retrospective thoughts for future refere
     - Produce the best effort output with in self allocated time → get feedback → iterate
     - Any rabbit hole ideas can be noted down and followed up later
 - Have a plan on how to handle asymmetry of input events across different device types
-- Write thoughts to gain clarity
+- Write to gain clarity of thoughts
 - [Pixi.js](https://github.com/pixijs/pixi.js) and [Typescript](https://www.typescriptlang.org) are cool
 
 # Backstory
@@ -167,7 +167,7 @@ As the tag lines says: I've left the playground for the users's imagination to c
     - Produce the best effort output with in self allocated time → get feedback → iterate
     - Any rabbit hole ideas can be noted down and followed up later
 - Have a plan on how to handle asymmetry of input events across different device types
-- Write thoughts to gain clarity
+- Write to gain clarity of thoughts
 - [Pixi.js](https://github.com/pixijs/pixi.js) and [Typescript](https://www.typescriptlang.org) are cool
 
 All in all, I would say this weekend challenge was a success. 
