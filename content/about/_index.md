@@ -7,7 +7,7 @@ My name is Samodya 'Sam' Abeysiriwardane.
 Have a peek at my:
 
 - [Github](//github.com/sransara/)
-- [Projects](/projects/)
+- [Projects](/lab/)
 - [Resume](//files.sransara.com/resume/index.pdf)
 
 Say hello through:
