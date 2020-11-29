@@ -1,8 +1,0 @@
-{{ $metaf := .Page.Scratch.Get "metaf" | os.Stat }}
-{{ $meta := .Page.Scratch.Get "meta" }}
-{{ $shortcodes := index $meta "listing" }}
-{{ $id := .Get "name" }}
-{{ $this := index $shortcodes $id }}
-{{ $ordinal := index $this "ordinal" }}
-
-<a href='#listing:{{ $ordinal }}:{{ .Get "name" }}'>Listing {{ $ordinal }}</a>

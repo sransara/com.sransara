@@ -1,17 +1,8 @@
 {{ define "header" }}
 
-{{ if (or (.Page.HasShortcode "maths") (.Page.HasShortcode "mathb")) }}
-<script>MathJax = {tex: {inlineMath: [['[maths]','[/maths]']], displayMath: [['[mathp]','[/mathp]']], processEscapes: false, processEnvironments: false, processRefs: false, tags: 'ams',},};</script>
-<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js"></script>
-{{ end }}
-
 {{ end }}
 
 {{ define "main" }}
-
-{{ $metaf := printf "transient/content/%s/%s.json" .File.Dir .File.BaseFileName }}
-{{ $metaf | .Scratch.Set "metaf"  }}
-{{ .Scratch.Get "metaf" | readFile | transform.Unmarshal | .Scratch.Set "meta"  }}
 
 <main class="container leading-normal max-w-2xl mx-auto p-3">
     {{ partial "breadcrumbs.html" . }}
