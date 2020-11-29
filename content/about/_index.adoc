@@ -1,0 +1,17 @@
+---
+title: About
+---
+
+My name is Samodya 'Sam' Abeysiriwardane.
+
+Have a peek at my:
+
+* link://github.com/sransara/[Github]
+* link:/lab/[Projects]
+* link://files.sransara.com/resume/index.pdf[Resume]
+
+Say hello through:
+
+* Email &mdash; hello@sransara.com
+* Twitter &mdash; link://twitter.com/sransara[@sransara]
+* link://www.linkedin.com/in/samodya-abeysiriwardane-b01866133/[LinkedIn]

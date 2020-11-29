@@ -25,9 +25,9 @@ This is a trick to alleviate my tendency to chase down rabbit holes in personal 
 > &mdash; Douglas Adams
 
 I needed a stepping stone project idea to get the hang of some basics for a future project idea brewing in my mind. 
-Coming in near future to a browser near you: A pixel playground to experiment with the water as electricity analogy ({{<ref-figure name="water-as-electricity">}}).
+Coming in near future to a browser near you: A pixel playground to experiment with the water as electricity analogy ({-{<ref-figure name="water-as-electricity">}}).
 
-{{<figure
+{-{<figure
 name="water-as-electricity"
 src="water-as-electricity.png"
 caption="Water as electricity analogy"
@@ -49,7 +49,7 @@ With these goals in check, lay-zers was born.
 
 In [lay-zers](https://lab.sransara.com/lay-zers/), you get a canvas to plop down *layzers* and see how they interact with each other in an [additive color model](https://en.wikipedia.org/wiki/Additive_color) just like real lasers.
 
-{{<figure
+{-{<figure
 name="layzers-screenshot"
 src="layzers-screenshot.png"
 caption="lay-zers playground in action">}}
@@ -130,9 +130,9 @@ It let me put down the thoughts, doubts and feelings that I had from this weeken
 **Writing helps to bring clarity to my fleeting thoughts and ideas**.
 
 Only while doing this write-up I realized a glaring bug in lay-zers.
-See if you can notice something fishy in {{<ref-figure name="old-layzers-screenshot">}}.
+See if you can notice something fishy in {-{<ref-figure name="old-layzers-screenshot">}}.
 
-{{<figure
+{-{<figure
 name="old-layzers-screenshot"
 src="old-layzers-screenshot.png"
 caption="lay-zers with a glaring bug">}}

@@ -4,13 +4,12 @@ disableKinds = ["taxonomy", "taxonomyTerm"]
 languageCode = "en-us"
 title = "sransara"
 
-[markup]
-  [markup.goldmark]
-   [markup.goldmark.extensions]
-      footnote = false
-      typographer = false
-    [markup.goldmark.renderer]
-      unsafe = true
-
 [permalinks]
   notes = "/:sections/:title/"
+
+[markup.asciidocExt]
+    extensions = ["asciidoctor-diagram", "asciidoctor-bibtex", "asciidoctor-latex"]
+    workingFolderCurrent = true
+    safeMode = "unsafe"
+    sectionNumbers = true
+    [markup.asciidocExt.attributes]

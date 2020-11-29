@@ -1,6 +1,11 @@
 const cp = require("child_process");
 const del = require("del");
 const gulp = require("gulp");
+const gulpPlumber = require("gulp-plumber");
+
+function publicClean() {
+  return del("./public/**");
+}
 
 function scriptsBuild() {
   return gulp
@@ -18,23 +23,12 @@ function stylesBuild() {
     .pipe(gulpPlumber())
     .pipe(
       require("gulp-postcss")([
-        require("tailwindcss")("./assets/styles/tailwind.config.js"),
-        require("postcss-nested")(),
-        require("@fullhuman/postcss-purgecss")({
-          content: ["layouts/**/*.html"],
-          extractors: [
-            {
-              extractor: class TailwindExtractor {
-                static extract(content) {
-                  return content.match(/[A-Za-z0-9-_:\/]+/g) || [];
-                }
-              },
-              extensions: ["html"]
-            }
-          ],
-          fontFace: true
+        require("postcss-import")(),
+        require("postcss-nested")({
+          bubble: ["media", "supports", "screen"],
         }),
-        require("autoprefixer")()
+        require("tailwindcss")("./assets/styles/tailwind.config.js"),
+        require("autoprefixer")(),
       ])
     )
     .pipe(gulp.dest("./transient/"));
@@ -46,28 +40,40 @@ function stylesClean() {
 
 const depBuild = gulp.parallel(
   gulp.series(stylesClean, stylesBuild),
-  gulp.series(scriptsClean, scriptsBuild),
+  gulp.series(scriptsClean, scriptsBuild)
 );
 
 function depWatch() {
-  gulp.watch(["./assets/styles/**", "layouts/**/*.html"], { delay: 500 }, stylesBuild);
+  gulp.watch(
+    ["./assets/styles/**", "layouts/**/*.html"],
+    { delay: 500 },
+    stylesBuild
+  );
 }
 
 function siteServe() {
-  return cp.spawn("hugo", ["server", "--minify"], { stdio: "inherit" });
+  return cp.spawn("hugo", ["server", "--minify", "--destination", "public"], {
+    stdio: "inherit",
+  });
 }
 
 function siteBuild() {
   return cp.spawn(
     "hugo",
-    ["--minify", "--templateMetrics", "--templateMetricsHints"],
+    [
+      "--minify",
+      "--destination",
+      "public",
+      "--templateMetrics",
+      "--templateMetricsHints",
+    ],
     { stdio: "inherit" }
   );
 }
 
 gulp.task(
   "serve",
-  gulp.series(depBuild, gulp.parallel(siteServe, depWatch))
+  gulp.series(publicClean, depBuild, gulp.parallel(siteServe, depWatch))
 );
 
-gulp.task("publish", gulp.series(depBuild, siteBuild));
+gulp.task("publish", gulp.series(publicClean, depBuild, siteBuild));

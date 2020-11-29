@@ -8,6 +8,7 @@ unstable.mkShell {
     unstable.hugo
 
     (unstable.callPackage ./nix/asciidoctor/default.nix {})
+    unstable.kramdown-asciidoc
     # asciidoctor-diagram dependencies
     unstable.graphviz
     unstable.nodePackages.mermaid-cli
