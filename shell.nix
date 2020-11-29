@@ -1,15 +1,20 @@
 let
-  unstable = import <nixpkgs-unstable> {};
+  sources = import ./nix/sources.nix;
+  unstable = import sources.nixunstable {};
 in
-with import <nixpkgs> {};
 
-pkgs.mkShell {
+unstable.mkShell {
   buildInputs = [
     unstable.hugo
-    image_optim
+
+    (unstable.callPackage ./nix/asciidoctor/default.nix {})
+    # asciidoctor-diagram dependencies
+    unstable.graphviz
+    unstable.nodePackages.mermaid-cli
+
+    unstable.image_optim
+    unstable.nodePackages.svgo
   ];
   shellHook = ''
-    export NODEBIN="$HOME/Wenv/node/bin"
-    export PATH="$NODEBIN:$PATH"
   '';
 }
