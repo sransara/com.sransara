@@ -1,45 +1,29 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    asciidoctor (1.5.8)
-    asciidoctor-bibtex (0.4.1)
-      asciidoctor (>= 1.5.0, < 3.0.0)
-      bibtex-ruby (~> 4)
+    asciidoctor (2.0.12)
+    asciidoctor-bibtex (0.8.0)
+      asciidoctor (~> 2.0)
+      bibtex-ruby (~> 5.1)
       citeproc-ruby (~> 1)
       csl-styles (~> 1)
       latex-decode (~> 0.2)
     asciidoctor-diagram (2.0.5)
       asciidoctor (>= 1.5.7, < 3.x)
-    asciidoctor-latex (1.5.0.17.dev)
-      asciidoctor (~> 1.5, >= 1.5.2)
-      htmlentities (~> 4.3)
-      opal (~> 0.6.3)
-    bibtex-ruby (4.4.7)
+    bibtex-ruby (5.1.5)
       latex-decode (~> 0.0)
     citeproc (1.0.10)
       namae (~> 1.0)
     citeproc-ruby (1.1.13)
       citeproc (~> 1.0, >= 1.0.9)
       csl (~> 1.5)
-    concurrent-ruby (1.1.7)
     csl (1.5.2)
       namae (~> 1.0)
     csl-styles (1.0.1.10)
       csl (~> 1.0)
-    htmlentities (4.3.4)
-    json (2.3.1)
     latex-decode (0.3.2)
     namae (1.0.1)
-    opal (0.6.3)
-      source_map
-      sprockets
-    rack (2.2.3)
     rouge (3.25.0)
-    source_map (3.0.1)
-      json
-    sprockets (4.0.2)
-      concurrent-ruby (~> 1.0)
-      rack (> 1, < 3)
 
 PLATFORMS
   ruby
@@ -48,7 +32,6 @@ DEPENDENCIES
   asciidoctor
   asciidoctor-bibtex
   asciidoctor-diagram
-  asciidoctor-latex
   rouge
 
 BUNDLED WITH

@@ -8,7 +8,7 @@ title = "sransara"
   notes = "/:sections/:title/"
 
 [markup.asciidocExt]
-    extensions = ["asciidoctor-diagram", "asciidoctor-bibtex", "asciidoctor-latex"]
+    extensions = ["asciidoctor-diagram", "asciidoctor-bibtex"]
     workingFolderCurrent = true
     safeMode = "unsafe"
     sectionNumbers = true

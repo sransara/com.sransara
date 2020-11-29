@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 gem 'asciidoctor'
 gem 'asciidoctor-diagram'
-gem 'asciidoctor-latex'
 gem 'asciidoctor-bibtex'
 gem 'rouge'
