@@ -25,13 +25,11 @@ This is a trick to alleviate my tendency to chase down rabbit holes in personal 
 > &mdash; Douglas Adams
 
 I needed a stepping stone project idea to get the hang of some basics for a future project idea brewing in my mind. 
-Coming in near future to a browser near you: A pixel playground to experiment with the water as electricity analogy ({-{<ref-figure name="water-as-electricity">}}).
+Coming in near future to a browser near you: A pixel playground to experiment with the water as electricity analogy (<<water-as-electricity>>).
 
-{-{<figure
-name="water-as-electricity"
-src="water-as-electricity.png"
-caption="Water as electricity analogy"
-attr="[Sparkfun: Voltage, Current, Resistance, and Ohm's Law](https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law)">}}
+[#water-as-electricity]
+.Water as electricity analogy [from Sparkfun: Voltage, Current, Resistance, and Ohm's Law](https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law)
+![](water-as-electricity.png)
 
 Sounds cool? Yes! (to me at least). 
 Well, back in the real wold I needed to set some goals for the weekend's stepping stone project.
@@ -49,10 +47,9 @@ With these goals in check, lay-zers was born.
 
 In [lay-zers](https://lab.sransara.com/lay-zers/), you get a canvas to plop down *layzers* and see how they interact with each other in an [additive color model](https://en.wikipedia.org/wiki/Additive_color) just like real lasers.
 
-{-{<figure
-name="layzers-screenshot"
-src="layzers-screenshot.png"
-caption="lay-zers playground in action">}}
+[#layzers-screenshot]
+.lay-zers playground in action
+![](layzers-screenshot.png)
 
 # Lessons learned along the way
 By the end of the weekend I was able to get the *thing* out in to the world. 
@@ -130,12 +127,11 @@ It let me put down the thoughts, doubts and feelings that I had from this weeken
 **Writing helps to bring clarity to my fleeting thoughts and ideas**.
 
 Only while doing this write-up I realized a glaring bug in lay-zers.
-See if you can notice something fishy in {-{<ref-figure name="old-layzers-screenshot">}}.
+See if you can notice something fishy in <<old-layzers-screenshot>>.
 
-{-{<figure
-name="old-layzers-screenshot"
-src="old-layzers-screenshot.png"
-caption="lay-zers with a glaring bug">}}
+[#old-layzers-screenshot]
+.lay-zers with a glaring bug
+![](old-layzers-screenshot.png)
 
 For a playground of lasers, the colors blends looks like paint mixing, not like light mixing.
 This is because of different modes of color mixing: 
