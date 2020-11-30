@@ -1,5 +1,9 @@
-= Build yourself a Git
-:date: 2019-02-28
+---
+title: Build yourself a Git
+date: 2019-02-28
+---
+:xrefstyle: short
+:listing-caption: Listing
 
 Have you ever thought of building your own version control system? In this note
 we will incrementally build a version control system while taking inspiration
@@ -24,11 +28,9 @@ and the https://github.com/git/git/blob/e83c5163316f89bfbde7d9ab23ca2e25604af290
 of Git from 2005. The fundamental data structures chosen at its inception has
 stood the test of time.
 
-____
+[quote, Carl Sagan]
 If you wish to make an apple pie from scratch, you must first invent the universe.
 
-&mdash; Carl Sagan
-____
 
 == What is a Version Control System?
 
@@ -46,7 +48,7 @@ In addition to these basics, a realworld VCS ought to be scalable in:
 * handling revisions from developers #distributed# around the globe
 
 Being the Linux kernel maintainer, this was certainly the requirements for Linus
-Torvalds in his implementation of a VCS, #[Git](https://en.wikipedia.org/wiki/Git)#.
+Torvalds in his implementation of a VCS, #https://en.wikipedia.org/wiki/Git[Git]#.
 Git takes capability for distributed workflow step further by providing a
 #decentralized# distributed workflow.
 
@@ -108,9 +110,9 @@ the version history is extended with the new checkpoint. We will see more about 
 
 Following image shows the basic Git (and hence Sheep) workflow, that essentially combines the above commands.
 
-[#git-basics-staging]
 .Basic local Git workflow https://git-scm.com/book/en/v1/Getting-Started-Git-Basics[from Git basics]
-image:git-basics-staging.png[]
+[#git-basics-staging]
+image::git-basics-staging.png[]
 
 *So where is the branching work flow?* It's simply a matter of executing `sheep checkout <checkpoint>`
 to go back to a checkpoint; then `sheep branch <name>` to give the new branch a name.
@@ -140,8 +142,8 @@ is a way to find the snapshot created by `create-content-snapshot`. See
 the <<commit-code-outline>> to see how this
 interfacing can be achieved using #pointer-to-snapshot#.
 
+.Outline of commit code
 [#commit-code-outline]
-
 [source,python]
 ----
 function create-content-snapshot:
@@ -204,9 +206,9 @@ project/ $ sheep commit -a -m "Second"
 
 And how they can be represented in the graph:
 
-[#commits-ab-0]
 .First two commits in the Commit History
-image:commits-ab-0.png[]
+[#commits-ab-0]
+image::commits-ab-0.png[]
 
 We'll name the commits A, B in sequence for first and second commit.
 
@@ -225,9 +227,9 @@ will be a #Directed Acyclic Graph# (DAG).
 
 Let's put in few more commits to our history:
 
-[#commits-abcd-0]
 .Linear commit history
-image:commits-abcd-0.png[]
+[#commits-abcd-0]
+image::commits-abcd-0.png[]
 
 Visually we can see that repo was at commit B, and then added commit C and then commit D.
 In implementation this can simply be achieved by having a pointer that always point to the currently active commit.
@@ -276,9 +278,9 @@ project/ $ sheep commit -a -m "Fix super nasty bug" # (3)
 
 And how it's represented internally at (1), (2), (3) instances above:
 
-[#commits-abcd-ef-0]
 .Checkout and extend
-image:commits-abcd-ef-0.png[]
+[#commits-abcd-ef-0]
+image::commits-abcd-ef-0.png[]
 
 In implementation, `checkout` is simply to #update the HEAD to a given commit# and
 #recreate the directory content using the snapshot pointer# in that commit.
@@ -323,9 +325,9 @@ $ sheep commit -a -m "Super duper changes"
 #    and update that value with the name of the new commit
 ----
 
-[#commits-abcd-ef-1]
 .With branch heads
-image:commits-abcd-ef-1.png[]
+[#commits-abcd-ef-1]
+image::commits-abcd-ef-1.png[]
 
 Heads or branches are the entry points to our commit-history-graph. That's why in Git,
 if you `git checkout <random-commit>`, it warns about #detached head#.
@@ -364,7 +366,7 @@ And hence:
 
 are shared.
 
-As a globally shared data structure we want our #commit history graph to be a [persistent data structure](https://en.wikipedia.org/wiki/Persistent_data_structure)#.
+As a globally shared data structure we want our #commit history graph to be a https://en.wikipedia.org/wiki/Persistent_data_structure[persistent data structure]#.
 
 *Why?* Because if it was an ephemeral data structure we will need to complicate our implementation with synchronization
 primitives so that information about commits are not lost. For a thorough explanation,
@@ -389,9 +391,9 @@ Yes, we are still being compatible with Git.
 Commands like `git commit --amend`, `git rebase` rewrites history by recreating the commits.
 Using commit history from <<commits-abcd-ef-1>>, let's see the end result of doing `rebase` hot-fix branch onto master branch.
 
-[#commits-abcd-ef-2]
 .After rebasing hot-fix on master
-image:commits-abcd-ef-2.png[]
+[#commits-abcd-ef-2]
+image::commits-abcd-ef-2.png[]
 
 E~2~ and F~2~ is E and F respectively after being reapplied on the tip of master branch.
 Since E and F becomes detached heads they will eventually be garbage collected.
@@ -450,9 +452,9 @@ If we use cryptographic hashing, we are able to attain the Security goal of Git 
 By using #cryptographic content hashing# we are feeding two birds with one little grain.
 Observe the similarities of our commit history graph to a https://en.wikipedia.org/wiki/Merkle_tree[Merkle tree].
 
-[#hash-tree]
 .Viewing Commit History DAG as a Merkle tree
-image:hash-tree.png[]
+[#hash-tree]
+image::hash-tree.png[]
 
 <<hash-tree>> shows that if an attacker tries to modify history by falsifying a commit (C2) they will end up
 creating a new branch out instead. As long as 'a' and 'e' are different C2 and C2~evil~ will have two different
@@ -584,9 +586,9 @@ We have to model our file system into a data structure.
 For that if we view the file system as a key-value storage where the keys have a hierarchical structure, then
 the https://en.wikipedia.org/wiki/Trie[Trie] data structure naturally fits in as a data structure of choice.
 
-[#trying-trie]
 .Project directory tree on the left. Trie on the right.
-image:trying-trie.png[]
+[#trying-trie]
+image::trying-trie.png[]
 
 In our implementation the project tree trie can be viewed as a recursive data structure:
 #a rooted tree where the tree can hold tree objects or blobs#. #Tree object represents a directory#
@@ -608,18 +610,18 @@ other techniques.
 
 Path copying means we copy the path only for the values that changed.
 
-[#persistent-trie-0]
 .Changing README file and adding game.py to V~0~ snapshot leading to V~1~ snapshot
-image:persistent-trie-0.png[]
+[#persistent-trie-0]
+image::persistent-trie-0.png[]
 
 In <<persistent-trie-1>> we can see that in V~1~ snapshot has made a copy of the path to README because README file was changed
 in this snapshot. Meanwhile "tests" directory and "setup.py" were kept as is, so those pointers are reused.
 
 One more example to show off path copying in action:
 
-[#persistent-trie-1]
 .Changing tests/camera.py file from V~1~ snapshot leading to V~2~ snapshot
-image:persistent-trie-1.png[]
+[#persistent-trie-1]
+image::persistent-trie-1.png[]
 
 As we can see this solves our duplication problem in `create-content-snapshot`, because we can reuse the pointer for
 any trees/blobs objects that were not changed.
@@ -737,16 +739,13 @@ For easier diffing Git choses to store tree objects sort and store the pointer l
 diff will only be of O(n) worst case time complexity. We have no way of controlling the blob diffs because the
 structure of that content is considered opaque from our VCS standpoint.
 
+[quote, E.W. Myers, Algorithmica "An O(ND) difference algorithm and its variations" (1986)]
 ____
 The first implementation simply leveraged the system diff executable via a call to popen in show-diff.c.
 diff is a very famous and ubiquitous tool in the Linux world originally developed in the early 1970 for Unix.
 Its first version used Hunt--McIlroy algorithm. The core algorithm was later notoriously improved thanks to the
 work of Eugene W. Myers and Webb Miller, work extensively document in the papers: An O(ND) Difference Algorithm
 and its Variations by Eugene W. Myers and A File Comparison Program by Webb Miller and Myers.
-
-An excerpt from https://fabiensanglard.net/git_code_review/diff.php
-
-Myers, E.W. Algorithmica "An O(ND) difference algorithm and its variations" (1986) https://doi.org/10.1007/BF01840446
 ____
 
 For the basic implementation we can just reuse the builtin Unix diff, but we have to keep in mind there's
@@ -767,9 +766,9 @@ https://git-scm.com/docs/git-merge#_true_merge[true merges] in this note.
 
 First let's look at how a merge looks like in our commit history graph.
 
-[#commits-abcd-ef-g]
 .Merging 'hot-fix' on to 'master' branch. G is a merge commit.
-image:commits-abcd-ef-g.png[]
+[#commits-abcd-ef-g]
+image::commits-abcd-ef-g.png[]
 
 G is a merge commit. It's special only in the sense that it has #two parent commits#.
 Everything else that we know about commits apply here.
@@ -789,8 +788,9 @@ Let's see how to achieve this in `sheep merge` as seen on <<commits-abcd-ef-g>>.
 We are trying to merge 'hot-fix' branch (commit F) into 'master' branch (commit D).
 Visually we can see that commit C is the base commit that derived both F and D.
 But more formally this commit C is defined as the
-#[Lowest Common Ancestor](https://en.wikipedia.org/wiki/Lowest_common_ancestor) of the commit history DAG#.
+#https://en.wikipedia.org/wiki/Lowest_common_ancestor[Lowest Common Ancestor] of the commit history DAG#.
 
+[quote, Lowest common ancestors in trees and directed acyclic graphs (2005)]
 ____
 Naive algorithm for finding LCA:
 
@@ -800,10 +800,6 @@ Naive algorithm for finding LCA:
 that intersection is LCA. if there are multiple intersections then the earliest one added is the LCA.
 . Repeat from step 3, with aSet now the parents of everything in aSet, and bSet the parents of everything in bSet
 . If there are no more parents to descend to then there is no LCA
-
-An excerpt from https://jgrapht.org/javadoc/org/jgrapht/alg/NaiveLcaFinder.html
-
-"Lowest common ancestors in trees and directed acyclic graphs" (2005) https://doi.org/10.1016/j.jalgor.2005.08.001
 ____
 
 When there are crisscross merges involved, there can be multiple LCAs. The default solution to this problem
@@ -817,9 +813,9 @@ Once we have a base commit and the two conflicting commits, we are ready to do t
 We can think of trie merge as a merge function for key value storage, because trie is basically a key value storage
 where keys have a hierarchy.
 
-[#trie-merge]
 .View of the snapshots at commits C, D and F.
-image:trie-merge.png[]
+[#trie-merge]
+image::trie-merge.png[]
 
 <<trie-merge>> shows the view of the snapshots being used in the following merge example.
 I have used (*) stars to mark which content were actually changed from C.
@@ -867,6 +863,7 @@ at each step of the way.
 
 If you are hungry for more VCS concepts: look into https://pijul.org/model/[Pijul].
 
+[quote, https://pijul.org/manual/why_pijul.html]
 ____
 The main difference between Pijul and Git is that
 Pijul deals with changes (or patches), whereas Git
@@ -879,6 +876,4 @@ And actually, Git users often reason in terms of patches,
 displaying commits as differences between snapshots.
 
 Patches can be merged according to intuitive formal axioms ...
-
-An excerpt from https://pijul.org/manual/why_pijul.html
 ____

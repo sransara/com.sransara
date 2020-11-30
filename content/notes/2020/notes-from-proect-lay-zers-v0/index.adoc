@@ -1,15 +1,15 @@
-= Notes from project — lay-zers v0
-:date: 2020-05-26
+---
+title: Notes from project — lay-zers v0
+date: 2020-05-26
+---
 
 I made a thing over the weekend; https://lab.sransara.com/lay-zers[lay-zers]: a "laser" playground for the imaginative.
 Here I will try to compile my notes and retrospective thoughts for future reference.
 
-// more
-
 *TLDR*:
 
 * Pick a project that's been lingering in the mind for far too long
- ** Produce the best effort output with in self allocated time → get feedback → iterate
+ ** Produce the best effort output with in self allocated time -> get feedback -> iterate
  ** Any rabbit hole ideas can be noted down and followed up later
 * Have a plan on how to handle asymmetry of input events across different device types
 * Write to gain clarity of thoughts
@@ -20,18 +20,15 @@ Here I will try to compile my notes and retrospective thoughts for future refere
 This last long weekend I sat down for a programming project with a personal challenge: start a project and see its way through to something usable by the end of weekend.
 This is a trick to alleviate my tendency to chase down rabbit holes in personal projects.
 
-____
+[quote, Douglas Adams]
 I love deadlines. I like the whooshing sound they make as they fly by.
-
-&mdash; Douglas Adams
-____
 
 I needed a stepping stone project idea to get the hang of some basics for a future project idea brewing in my mind.
 Coming in near future to a browser near you: A pixel playground to experiment with the water as electricity analogy (<<water-as-electricity>>).
 
-[#water-as-electricity]
 .Water as electricity analogy https://learn.sparkfun.com/tutorials/voltage-current-resistance-and-ohms-law[from Sparkfun: Voltage, Current, Resistance, and Ohm's Law]
-image:water-as-electricity.png[]
+[#water-as-electricity]
+image::water-as-electricity.png[]
 
 Sounds cool? Yes! (to me at least).
 Well, back in the real wold I needed to set some goals for the weekend's stepping stone project.
@@ -49,9 +46,9 @@ With these goals in check, lay-zers was born.
 
 In https://lab.sransara.com/lay-zers/[lay-zers], you get a canvas to plop down _layzers_ and see how they interact with each other in an https://en.wikipedia.org/wiki/Additive_color[additive color model] just like real lasers.
 
-[#layzers-screenshot]
 .lay-zers playground in action
-image:layzers-screenshot.png[]
+[#layzers-screenshot]
+image::layzers-screenshot.png[]
 
 == Lessons learned along the way
 
@@ -137,9 +134,9 @@ It let me put down the thoughts, doubts and feelings that I had from this weeken
 Only while doing this write-up I realized a glaring bug in lay-zers.
 See if you can notice something fishy in <<old-layzers-screenshot>>.
 
-[#old-layzers-screenshot]
 .lay-zers with a glaring bug
-image:old-layzers-screenshot.png[]
+[#old-layzers-screenshot]
+image::old-layzers-screenshot.png[]
 
 For a playground of lasers, the colors blends looks like paint mixing, not like light mixing.
 This is because of different modes of color mixing:
