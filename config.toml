@@ -12,4 +12,9 @@ title = "sransara"
     workingFolderCurrent = true
     safeMode = "unsafe"
     sectionNumbers = true
+    
     [markup.asciidocExt.attributes]
+      xrefstyle = "short"
+      listing-caption = "Listing"
+      sectanchors = true
+      sectlinks = true
