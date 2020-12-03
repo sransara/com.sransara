@@ -2,11 +2,11 @@
   {{ with .Parent }}
     {{ template "breadcrumb" . }}
       <span class="whitespace-no-wrap inline-block">
-        / <a href="{{ .RelPermalink }}">
+        / <a class="underline text-blue-500 hover:text-blue-800" href="{{ .RelPermalink }}">
           {{ if .IsHome }}
-          home/sransara
+            home/sransara
           {{ else }}
-          {{ path.Base .File.Dir }}
+            {{ path.Base .File.Dir }}
           {{ end }}
         </a>
       </span>

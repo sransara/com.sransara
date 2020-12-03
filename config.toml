@@ -4,6 +4,13 @@ disableKinds = ["taxonomy", "taxonomyTerm"]
 languageCode = "en-us"
 title = "sransara"
 
+[outputs]
+  home = ["HTML", "RSS"]
+  page = ["HTML"]
+  section = ["HTML"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
+
 [permalinks]
   notes = "/:sections/:title/"
 
@@ -17,4 +24,7 @@ title = "sransara"
       xrefstyle = "short"
       listing-caption = "Listing"
       sectanchors = true
-      sectlinks = true
+      idprefix = "id:"
+      idseparator = "-"
+      source-highlighter = "rouge"
+      stem = "latexmath"

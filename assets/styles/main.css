@@ -1,3 +1,139 @@
+@import "tango.css";
+
 @tailwind base;
 @tailwind components;
-@tailwind utilities
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 18px;
+  }
+}
+
+.asciidoc {
+  a {
+    @apply text-blue-500 hover:text-blue-800;
+    @apply underline;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    a.anchor::before {
+      content: "#";
+    }
+
+    a.anchor {
+      @apply mr-1;
+      @apply no-underline;
+    }
+  }
+
+  h2 {
+    @apply text-4xl;
+    @apply mt-6 mb-2;
+    @apply text-red-900;
+    @apply border-b border-red-900;
+  }
+
+  h3 {
+    @apply text-3xl;
+    @apply mt-4 mb-1;
+    @apply text-red-900;
+  }
+
+  h4 {
+    @apply text-2xl;
+    @apply mt-2;
+    @apply text-red-900;
+  }
+
+  h5 {
+    @apply text-xl;
+    @apply mt-2;
+    @apply text-red-900;
+  }
+
+  h6 {
+    @apply text-lg;
+    @apply mt-2;
+    @apply text-red-900;
+  }
+
+  .paragraph {
+    @apply mt-2 mb-4;
+  }
+
+  ul {
+    list-style-type: square;
+
+    ul {
+      list-style-type: circle;
+    }
+  }
+
+  ol {
+    list-style-type: decimal;
+    
+    ol {
+      list-style-type: lower-alpha;
+    }
+  }
+
+  ul,
+  ol {
+    @apply mb-4;
+    @apply pl-4 py-0;
+  }
+
+  ul ul,
+  ol ol {
+    @apply mb-0;
+  }
+
+  li {
+    @apply my-2;
+  }
+
+  :not(pre) > code {
+    @apply text-sm px-0.5 rounded;
+    @apply border border-gray-300;
+    @apply bg-gray-100;
+  }
+
+  .listingblock {
+    @apply my-4 mx-0;
+    @apply border-2 border-gray-300;
+
+    .title {
+      @apply text-sm text-center;
+      @apply p-1 bg-gray-300;
+    }
+
+    pre {
+      tab-size: 2;
+      @apply bg-gray-100;
+      @apply font-mono m-0 p-1 overflow-x-auto text-xs;
+    }
+  }
+
+  .imageblock {
+    @apply my-4 mx-0;
+    @apply border-2 border-gray-300;
+
+    .title {
+      @apply text-sm text-center;
+      @apply p-1 bg-gray-300;
+    }
+
+    .content {
+      @apply p-2;
+
+      img {
+        @apply mx-auto;
+      }
+    }
+  }
+}
