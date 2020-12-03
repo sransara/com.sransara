@@ -20,7 +20,10 @@ function scriptsClean() {
 function stylesBuild() {
   return gulp
     .src("./assets/styles/main.css", { base: "." })
-    .pipe(gulpPlumber())
+    .pipe(gulpPlumber(function (error) {
+      this.emit('end');
+      this.destroy();
+    }))
     .pipe(
       require("gulp-postcss")([
         require("postcss-import")(),

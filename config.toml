@@ -19,6 +19,7 @@ title = "sransara"
     workingFolderCurrent = true
     safeMode = "unsafe"
     sectionNumbers = true
+    preserveTOC = true
     
     [markup.asciidocExt.attributes]
       xrefstyle = "short"
