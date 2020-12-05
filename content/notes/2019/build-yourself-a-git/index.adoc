@@ -25,9 +25,10 @@ Consider this note an origin point for deeper rabbit holes to follow on implemen
 Have a look at Linus Torvalds' first https://github.com/git/git/tree/e83c5163316f89bfbde7d9ab23ca2e25604af290[commit^] and the https://github.com/git/git/blob/e83c5163316f89bfbde7d9ab23ca2e25604af290/README[README^] of Git from 2005.
 The fundamental data structures chosen at its inception has stood the test of time.
 
+toc::[]
+
 [quote, Carl Sagan]
 If you wish to make an apple pie from scratch, you must first invent the universe.
-
 
 == What is a Version Control System?
 
@@ -242,16 +243,16 @@ To fix the bug user will just follow their intents.
 
 [source, shell, title=""]
 ----
-project/ $ # user is at commit D now                # (1)
-project/ $ sheep checkout C                         # (2)
+project/ $ # user is at commit D now <1>
+project/ $ sheep checkout C <2>
 project/ $ vim test/main.c
 project/ $ sheep commit -a -m "Update tests"
 project/ $ vim quake.c
 project/ $ vim CHANGELOG
-project/ $ sheep commit -a -m "Fix super nasty bug" # (3)
+project/ $ sheep commit -a -m "Fix super nasty bug" <3>
 ----
 
-And how it's represented internally at (1), (2), (3) instances above:
+In <<image:commits-abcd-ef-0>> we can see how it's represented internally at each (1), (2), (3) instances above:
 
 .Checkout and extend
 [#image:commits-abcd-ef-0]
@@ -416,6 +417,8 @@ image::hash-tree.png[]
 <<image:hash-tree>> shows that if an attacker tries to modify history by falsifying a commit (C2) they will end up creating a new branch out instead.
 As long as 'a' and 'e' are different C2 and C2~evil~ will have two different commit hashes.
 By using a cryptographic hashing mechanism we can ensure that it will be hard for an attacker to falsify an 'e' that matches the hash with 'a'.
+Implying that C3 and C3~new~ will have different hashes.
+So we can detect any corruption just by observing at the tip of the branch.
 
 === Back to: fetching
 
@@ -572,7 +575,7 @@ One more example to show off path copying in action:
 [#image:persistent-trie-1]
 image::persistent-trie-1.png[]
 
-As we can see this solves our duplication problem in `create-content-snapshot`, because we can reuse the pointer for any trees/blobs objects that were not changed.
+As we can see this solves our duplication problem in `create-content-snapshot`, because we can reuse the pointer for any tree/blob objects that were not changed.
 
 ==== Objects and Pointers of the trie
 
@@ -753,14 +756,17 @@ See https://git-scm.com/docs/git-merge-base[documentation for git-merge-base^].
 
 Once we have a base commit and the two conflicting commits, we are ready to do the merge of directory content.
 
-We can think of trie merge as a merge function for key value storage, because trie is basically a key value storage where keys have a hierarchy.
+We can think of trie merge as a merge function for key value storage, because trie is basically a key value storage where keys have a hierarchy. 
+
+To investiage this let's zoom in on commits C, D and F in <<image:commits-abcd-ef-g>>.
+C is the common ancestor. 
+D is the current tip of `master` branch; F is the current tip of `hot-fix` branch.
+Let's see how the merged commit G can be derived from C, D and F.
+I have used (*) stars to mark which content were actually changed from C.
 
 .View of the snapshots at commits C, D and F.
 [#image:trie-merge]
 image::trie-merge.png[]
-
-<<image:trie-merge>> shows the view of the snapshots being used in the following merge example.
-I have used (*) stars to mark which content were actually changed from C.
 
 We do a diff of the C's commit snapshot against D's to see what has changed from C to D.
 Then we do a diff of C's commit snapshot against F's to see what has changed from C to F.
@@ -768,21 +774,25 @@ These diff we will call *patches*. Now we use merge algorithm to auto merge cont
 
 For example in <<image:trie-merge>>:
 
-* pass:[*]1, pass:[*]2 and pass:[*]3 only changed on 'master' branch therefore we can *auto merge* these changes in to the final snapshot.
-* pass:[*]6 only changed on the 'hot-fix' hence we can auto merge this change into the final snapshot as well.
-* pass:[*]4 and pass:[*]5 shows that README was changed in both branches: hence a conflict on that file.
+* pass:[*]1, pass:[*]2 only changed on 'master' branch therefore we can *auto merge* these changes in to the final snapshot.
+* pass:[*]5 only changed on the 'hot-fix' hence we can *auto merge* this change into the final snapshot as well.
+* pass:[*]3 and pass:[*]4 shows that README was changed in both branches: hence a conflict on that file.
 * Think about how we should handle auto merges for: deletes and renames
 
 At a conflict, `merge` will pause the merge and do a diff and put helper markers to identify the base, ours (current branch) and theirs (merging branch) changes.
 Once the merge conflicts are resolved, merge will resume to make a commit with this new snapshot view and this commit will point to the two parent commits.
 
+.View of the snapshots at the merged commit G.
+image::trie-merged.png[]
+
 Read into https://git-scm.com/docs/git-merge[git merge documentation^] to see the extra functionalities that it brings to the table.
 
 With that we have reached the end of essential commands we planned out for `sheep`.
 
+== Final remarks
+
 Say no more to `rm -rf .git`. Say hello to `rm -rf .sheep`.
 
-== Final remarks
 
 === Bird's-eye view
 

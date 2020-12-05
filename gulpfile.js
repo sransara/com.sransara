@@ -30,7 +30,7 @@ function stylesBuild() {
         require("postcss-nested")({
           bubble: ["media", "supports", "screen"],
         }),
-        require("tailwindcss")("./assets/styles/tailwind.config.js"),
+        require("tailwindcss")("./tailwind.config.js"),
         require("autoprefixer")(),
       ])
     )
@@ -79,4 +79,4 @@ gulp.task(
   gulp.series(publicClean, depBuild, gulp.parallel(siteServe, depWatch))
 );
 
-gulp.task("publish", gulp.series(publicClean, depBuild, siteBuild));
+gulp.task("build", gulp.series(publicClean, depBuild, siteBuild));

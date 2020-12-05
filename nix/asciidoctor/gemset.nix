@@ -37,10 +37,10 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0fm5gndi76wwxshspyvaw4jilxf8c28hq2fk7py943jnw7zgn23n";
+      sha256 = "0adh2x935r69nm8qmns5fjsjw034xlyaqddzza2jr2npvf41g34r";
       type = "gem";
     };
-    version = "5.1.5";
+    version = "5.1.6";
   };
   citeproc = {
     dependencies = ["namae"];

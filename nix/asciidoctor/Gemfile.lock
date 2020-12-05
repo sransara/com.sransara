@@ -10,7 +10,7 @@ GEM
       latex-decode (~> 0.2)
     asciidoctor-diagram (2.0.5)
       asciidoctor (>= 1.5.7, < 3.x)
-    bibtex-ruby (5.1.5)
+    bibtex-ruby (5.1.6)
       latex-decode (~> 0.0)
     citeproc (1.0.10)
       namae (~> 1.0)

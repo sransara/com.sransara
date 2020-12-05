@@ -10,9 +10,10 @@
   }
 }
 
+/* purgecss start ignore */
 .asciidoc {
   a {
-    @apply text-blue-500 hover:text-blue-800;
+    @apply text-blue-800 hover:text-blue-500;
     @apply underline;
   }
 
@@ -64,6 +65,11 @@
 
   .paragraph {
     @apply mt-2 mb-4;
+
+    .title {
+      @apply text-red-900;
+      @apply font-semibold;
+    }
   }
 
   ul {
@@ -85,7 +91,7 @@
   ul.disc {
     list-style-type: disc;
   }
-  
+
   ul.no-bullet {
     list-style: none;
   }
@@ -105,9 +111,13 @@
   ol.lowerroman {
     list-style-type: lower-roman;
   }
-  
+
   ol.upperroman {
     list-style-type: upper-roman;
+  }
+
+  ol.lowergreek {
+    list-style-type: lower-greek;
   }
 
   ul,
@@ -118,11 +128,11 @@
 
   ul ul,
   ol ol {
-    @apply mb-0;
+    @apply m-0;
   }
 
   li {
-    @apply my-2;
+    @apply my-1;
   }
 
   dl {
@@ -131,22 +141,55 @@
 
   dt {
     @apply font-semibold;
-    @apply mt-2;
+    @apply mt-1;
   }
 
   dd {
-    @apply mb-2 mt-0 mx-0;
+    @apply mb-1 mt-0 mx-0;
     @apply pl-4 pr-0 py-0;
   }
-  
+
+  .toc {
+    @apply bg-yellow-50;
+    @apply border;
+    @apply my-4 py-2;
+
+    .title {
+      @apply pl-4;
+      @apply text-xl;
+      @apply text-red-900;
+    }
+
+    ul {
+      @apply m-0 pl-4;
+      @apply list-none;
+    }
+  }
+
   .quoteblock {
     @apply bg-gray-200;
     @apply border-l-4 border-gray-500;
     @apply py-1 px-4;
 
     .attribution {
-      @apply mt-2 mb-4;
+      @apply mt-2 mb-2;
     }
+  }
+
+  .conum[data-value] {
+    @apply text-sm rounded-full;
+    @apply px-2 mr-1;
+    @apply bg-gray-900;
+    @apply text-white;
+    @apply font-mono;
+
+    + b {
+      @apply hidden;
+    }
+  }
+
+  .conum[data-value]::after {
+    content: attr(data-value);
   }
 
   :not(pre) > code {
@@ -164,10 +207,15 @@
       @apply p-1 bg-gray-300;
     }
 
+    .conum[data-value] {
+      @apply text-xs;
+    }
+
     pre {
       tab-size: 2;
       @apply bg-gray-100;
-      @apply font-mono m-0 p-1 overflow-x-auto text-xs;
+      @apply m-0 p-1 overflow-x-auto;
+      @apply font-mono text-xs;
     }
   }
 
@@ -189,3 +237,4 @@
     }
   }
 }
+/* purgecss end ignore */

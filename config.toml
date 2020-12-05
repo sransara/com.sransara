@@ -24,8 +24,10 @@ title = "sransara"
     [markup.asciidocExt.attributes]
       xrefstyle = "short"
       listing-caption = "Listing"
-      sectanchors = true
+      sectanchors = ""
       idprefix = "id:"
       idseparator = "-"
       source-highlighter = "rouge"
+      icons = "font"
       stem = "latexmath"
+      toc = "macro"

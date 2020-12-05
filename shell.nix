@@ -5,13 +5,13 @@ in
 
 unstable.mkShell {
   buildInputs = [
+    unstable.nodejs
+    unstable.netlify-cli
     unstable.hugo
 
     (unstable.callPackage ./nix/asciidoctor/default.nix {})
-    unstable.kramdown-asciidoc
     # asciidoctor-diagram dependencies
     unstable.graphviz
-    unstable.nodePackages.mermaid-cli
 
     unstable.image_optim
     unstable.nodePackages.svgo
