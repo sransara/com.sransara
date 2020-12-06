@@ -18,7 +18,7 @@ title = "sransara"
     extensions = ["asciidoctor-diagram", "asciidoctor-bibtex"]
     workingFolderCurrent = true
     safeMode = "unsafe"
-    sectionNumbers = true
+    sectionNumbers = false
     preserveTOC = true
     
     [markup.asciidocExt.attributes]
