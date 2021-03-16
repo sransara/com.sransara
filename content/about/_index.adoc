@@ -8,7 +8,7 @@ Have a peek at my:
 
 * link://github.com/sransara/[Github]
 * link:/lab/[Projects]
-* link://files.sransara.com/resume/index.pdf[Resume]
+* link://files.sransara.com/resume.pdf[Resume]
 
 Say hello through:
 
