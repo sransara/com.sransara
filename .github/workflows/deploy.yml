@@ -10,8 +10,6 @@ jobs:
 
     env:
       NIXPKGS_ALLOW_UNFREE: 1
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
     
     steps:
       - name: Checkout code
@@ -28,16 +26,28 @@ jobs:
       - name: Install npm dependencies
         run: nix-shell --command "npm install"
       
-      - name: Build and deploy draft
-        if: github.ref == 'refs/heads/draft'
-        run: |
-          nix-shell --command "npm run gulp build"
-          nix-shell --command "netlify deploy --dir=public --alias=draft"
+      - name: Build develop
+        if: github.ref == 'refs/heads/develop'
+        run: nix-shell --command "npm run gulp build"
         env:
-          HUGO_BASEURL: https://draft--sransara-com.netlify.app/
+          HUGO_BASEURL: https://develop-build--sransara-com.netlify.app/
 
-      - name: Build and deploy prod
+      - name: Deploy develop
+        if: github.ref == 'refs/heads/develop'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: develop-build
+          publish_dir: ./public
+
+      - name: Build master
         if: github.ref == 'refs/heads/master'
-        run: |
-          nix-shell --command "npm run gulp build"
-          nix-shell --command "netlify deploy --dir=public --prod"
+        run: nix-shell --command "npm run gulp build"
+        
+      - name: Deploy master
+        if: github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: master-build
+          publish_dir: ./public
