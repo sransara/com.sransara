@@ -39,6 +39,13 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: develop-build
           publish_dir: ./public
+        
+      - name: Merge develop to master
+        if: github.ref == 'refs/heads/develop'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          title: Merge develop to master
+          branch: master
 
       - name: Build master
         if: github.ref == 'refs/heads/master'
