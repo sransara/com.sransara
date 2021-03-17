@@ -42,10 +42,10 @@ jobs:
         
       - name: Merge develop to master
         if: github.ref == 'refs/heads/develop'
-        uses: peter-evans/create-pull-request@v3
+        uses: repo-sync/pull-request@v2
         with:
-          title: Merge develop to master
-          branch: master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          destination_branch: master
 
       - name: Build master
         if: github.ref == 'refs/heads/master'
