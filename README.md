@@ -1,4 +1,9 @@
-```
+## Update dependencies
+```sh
+# update nix sources in nix/sources.nix
+niv update
+
+# update asciidoctor gems in nix/asciidoctor
 nix-shell -E '
 let
     sources = import ../sources.nix;
@@ -12,7 +17,8 @@ in
     }
 ' --run 'bundler update; bundler lock; bundler package --no-install --path vendor; bundix; rm -rf vendor'
 ```
-References:
-https://nixos.org/manual/nixpkgs/stable/#sec-language-ruby
-https://nathan.gs/2019/04/19/using-jekyll-and-nix-to-blog/
-https://github.com/NixOS/nixpkgs/blob/master/pkgs/tools/typesetting/asciidoctor/default.nix
+
+## Optimize images
+```sh
+image_optim -r content/ static/ assets/
+```
