@@ -12,6 +12,8 @@
 
 /* purgecss start ignore */
 .asciidoc {
+  text-align: justify;
+
   a {
     @apply text-blue-800 hover:text-blue-500;
     @apply underline;
@@ -22,6 +24,8 @@
   h4,
   h5,
   h6 {
+    text-align: left;
+
     a.anchor::before {
       content: "#";
     }
