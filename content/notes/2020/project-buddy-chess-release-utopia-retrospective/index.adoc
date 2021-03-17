@@ -1,0 +1,42 @@
+---
+title: Project Buddy Chess — release utopia retrospective
+date: 2020-12-10
+tags: ['project', 'buddy-chess']
+---
+
+I made a thing over the last few weeks; https://utopia.buddychess.com/[Buddy Chess  (utopia)^]: A friendly place for your https://en.wikipedia.org/wiki/Bughouse_chess[bughouse chess^] needs.
+Here I will try to compile my notes and retrospective thoughts for future reference.
+
+[discrete]
+=== TLDR
+
+== A friendly bughouse chess server: Buddy Chess (utopia)
+
+.Buddy Chess (utopia) in action
+[#image:buddy-chess-utopia-screenshot]
+image::buddy-chess-utopia-screenshot.png[]
+
+=== What is bughouse chess?
+
+____
+Bughouse is the _funnest_ of chess variations (citation not needed).
+
+Breaking the solitary mold of chess, bughouse is a chess variation that lets you team up with a buddy for a fast paced chess game where you use your superior strategy and communication to slip through the cracks of opponents defenses.
+
+-- https://utopia.buddychess.com/[Buddy Chess  (utopia)^]
+____
+
+Bughouse is usually played in teams of two. In the seating layout (<<image:bughouse-seating-layout>>), your team mate sits to your side and holds the same color pieces as your opponent.
+
+.Bughouse seating layout
+[#image:bughouse-seating-layout]
+image::bughouse-seating-layout.png[]
+
+Two main twists are introduced to the usual chess rules.
+
+1. All pieces that you capture on your board will be passed to your team mate. You can think of it as these pieces go to your team mate's spare piece stash.
+2. On your turn you can drop a piece from your spare stash on to your board (Pawns cannot be dropped on the first or last rank).
+
+That's pretty much it. Read more thoroughly about https://en.wikipedia.org/wiki/Bughouse_chess[bughouse on wikipedia^].
+
+== Backstory
