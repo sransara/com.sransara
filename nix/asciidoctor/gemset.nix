@@ -21,15 +21,35 @@
     version = "0.8.0";
   };
   asciidoctor-diagram = {
-    dependencies = ["asciidoctor"];
+    dependencies = ["asciidoctor" "asciidoctor-diagram-ditaamini" "asciidoctor-diagram-plantuml" "rexml"];
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "1yl4p0gxijmqfzs4nfwygkgcnnv7mjgkf206adcs1gi70h55maha";
+      sha256 = "1fh73k306q1x4rzsly2fy1rdq1kpkdvs3r1084hgk0sh516ksc0s";
       type = "gem";
     };
-    version = "2.0.5";
+    version = "2.1.0";
+  };
+  asciidoctor-diagram-ditaamini = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "08jwpyklcplmfcxs4z9z0b0la6xdwrnf9bk6c02y54502228bg6b";
+      type = "gem";
+    };
+    version = "0.13.1";
+  };
+  asciidoctor-diagram-plantuml = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "0bxlkq3k775lhhnbs85cx8cbixhw7p70hnxrqnnig470h6jhmj0b";
+      type = "gem";
+    };
+    version = "1.2021.0";
   };
   bibtex-ruby = {
     dependencies = ["latex-decode"];
@@ -101,19 +121,29 @@
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "00w0dgvmdy8lw2b5q9zvhqd5k98a192vdmka96qngi9cvnsh5snw";
+      sha256 = "0xqihvyk2b3mfc9icnb4xp8vvfgikggzcgz09hhhgkrshi955axd";
       type = "gem";
     };
-    version = "1.0.1";
+    version = "1.0.2";
+  };
+  rexml = {
+    groups = ["default"];
+    platforms = [];
+    source = {
+      remotes = ["https://rubygems.org"];
+      sha256 = "1mkvkcw9fhpaizrhca0pdgjcrbns48rlz4g6lavl5gjjq3rk2sq3";
+      type = "gem";
+    };
+    version = "3.2.4";
   };
   rouge = {
     groups = ["default"];
     platforms = [];
     source = {
       remotes = ["https://rubygems.org"];
-      sha256 = "0yvcv901lrh5rfnk1h4h56hf2m6n9pd6w8n96vag74aakgz3gaxn";
+      sha256 = "0b4b300i3m4m4kw7w1n9wgxwy16zccnb7271miksyzd0wq5b9pm3";
       type = "gem";
     };
-    version = "3.25.0";
+    version = "3.26.0";
   };
 }

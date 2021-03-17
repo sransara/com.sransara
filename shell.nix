@@ -1,5 +1,6 @@
 let
   sources = import ./nix/sources.nix;
+  stable = import sources.nixpkgs {};
   unstable = import sources.nixunstable {};
 in
 
@@ -13,7 +14,7 @@ unstable.mkShell {
     # asciidoctor-diagram dependencies
     unstable.graphviz
 
-    unstable.image_optim
+    stable.image_optim
     unstable.nodePackages.svgo
   ];
   shellHook = ''

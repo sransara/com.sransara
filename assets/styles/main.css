@@ -36,7 +36,6 @@
     @apply text-4xl;
     @apply mt-6 mb-2;
     @apply text-red-900;
-    @apply border-b border-red-900;
   }
 
   h3 {
@@ -120,6 +119,10 @@
     list-style-type: lower-greek;
   }
 
+  ol li {
+    @apply pl-2;
+  }
+
   ul,
   ol {
     @apply my-4;
@@ -134,7 +137,7 @@
   li {
     @apply my-1;
   }
-
+  
   dl {
     @apply my-4;
   }
@@ -200,7 +203,7 @@
 
   .listingblock {
     @apply my-4 mx-0;
-    @apply border-2 border-gray-300;
+    @apply border border-gray-300;
 
     .title {
       @apply text-sm text-center;
@@ -221,7 +224,7 @@
 
   .imageblock {
     @apply my-4 mx-0;
-    @apply border-2 border-gray-300;
+    @apply border border-gray-300;
 
     .title {
       @apply text-sm text-center;
