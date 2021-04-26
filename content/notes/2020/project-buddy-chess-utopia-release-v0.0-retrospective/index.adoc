@@ -1,14 +1,11 @@
 ---
-title: Project Buddy Chess — release utopia retrospective
+title: Project Buddy Chess (utopia) — release v0.0 retrospective
 date: 2020-12-10
 tags: ['project', 'buddy-chess']
 ---
 
 I made a thing over the last few weeks; https://utopia.buddychess.com/[Buddy Chess  (utopia)^]: A friendly place for your https://en.wikipedia.org/wiki/Bughouse_chess[bughouse chess^] needs.
 Here I will try to compile my notes and retrospective thoughts for future reference.
-
-[discrete]
-=== TLDR
 
 == A friendly bughouse chess server: Buddy Chess (utopia)
 
@@ -35,7 +32,7 @@ image::bughouse-seating-layout.png[]
 Two main twists are introduced to the usual chess rules.
 
 1. All pieces that you capture on your board will be passed to your team mate. You can think of it as these pieces go to your team mate's spare piece stash.
-2. On your turn you can drop a piece from your spare stash on to your board (Pawns cannot be dropped on the first or last rank).
+2. On your turn you can drop a piece from your spare stash on to your board.
 
 That's pretty much it. Read more thoroughly about https://en.wikipedia.org/wiki/Bughouse_chess[bughouse on wikipedia^].
 
@@ -87,13 +84,35 @@ Learn a thing or two along the way::
 * It is a side project after all
 
 
-== Mission plan
+== Plan and execution
 
 . Build an invitational game room system
 . Use P2P message passing for communication and reduce reliance on a central server
 . Extend chess library with bughouse rules
 . Put together bughouse chess board user interface
 . Stitch everything together into a cohesive system
+. Reaching out to the community
+
+== Notes
+
+How to design a website that inevitably needs a lot of horizontal real estate?::
+- For bughouse it is important to be able to view both chess boards in a single screen preferrably with out the need to scroll around.
+- My current solution is by making bold assumptions about the screen ratios.
+- I need to look in to how other games that support different screen ratios pull this off, especially for mobile UI.
+
+Should I have had tried to keep server costs at $0?::
+- *Cons:* In hind sight I realize that I had cut too many corners in the name of keeping costs down.
+I did get to play around with technology like WebRTC.
+But at the end of the day players are coming to play bughouse chess and not WebRTC.
+- *Pros:* Let me validate the idea, get an idea about the problem space and get some feedback. 
+Staying true to the initial goal of keeping costs at $0, this version can be kept alive even in the case that I lose steam behind the project.
+
+Multiplayer player base::
+- As a multiplayer game, it is crucial to have an active player base.
+- Question yet to be answered is if the online bughouse player base is big enough.
+- Before working on a next release, I need to survey current active community to undrestand what are their needs. With this release in my showcase, hopefully I do have some credibility on the matter.
+- We also do have to consider that any casual online chess player is a potential bughouse player.
+
 
 == Built on shoulders of giants
 
@@ -104,15 +123,33 @@ I had a hard time understanding themes and css styles.
 But there is enough examples provided to experiment and prototype.
 
 Original chess rules - https://github.com/jhlywa/chess.js[chess.js^]::
+We need to extend traditional chess rules with bughouse chess rules.
+More specifically piece drop conditions and mating conditions.
+Another good option that I didn't get to evaluate is https://github.com/veloce/scalachessjs[schala-chess^] by the lichess team. 
+
 WebRTC: for P2P - https://github.com/feross/simple-peer[simple-peer^]::
+After spending many hours on an iteration using the pure WebRTC API, I ran into browser compatibility quirks.
+So I decided to use a library that provides a nice abstraction on top of the WebRTC API.
+
 Firebase: for peer discovery and signaling - https://firebase.google.com[firebase^]::
+To initiate a WebRTC connection between two peers we need a medium for them to communicate their handshake messages (known as signaling in WebRTC speak).
+This is probably the cheaper choice (stay within $0 budget), but the more sensible choice would have been to use a backend with websockets for real time communication.
+
 Assymetric encryption for public channels - https://github.com/dchest/tweetnacl-js[tweetnacl-js^]::
+Handshake messages contains sensitive information like IP address and device capabilities.
+Many online tutorials that I saw on using firebase as a signaling server seemed to gloss over this privacy leakage.
+My solution to this problem was to use assymetric encryption using transient private-public keys for each player session.
+
 Frontend - https://svelte.dev/[svelte^] and https://tailwindcss.com/[tailwind-css^]::
 I have used this combination for couple of projects now, so I have gotten comfortable with them.
 At the moment I prefer the svelte's approach to reactive front end as it keeps development simple.
-I do like the premise of tailwind css as a utility toolkit.
+I also like the premise of tailwind's utility first functional css approach.
 
 Github actions: for continous deployment - https://github.com/features/actions[github actions^]::
-Github actions is free for light usage and easy enough to setup, so it would not be wise to ignore it as a tool.
+Github actions is free for light usage and easy enough to setup.
 
-== Interesting ideas in the backend
+
+
+
+
+
