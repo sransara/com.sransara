@@ -113,6 +113,11 @@ Multiplayer player base::
 - Before working on a next release, I need to survey current active community to undrestand what are their needs. With this release in my showcase, hopefully I do have some credibility on the matter.
 - We also do have to consider that any casual online chess player is a potential bughouse player.
 
+Matchmaking::
+Matchmaking is a major pain point for the players.
+Both in terms of finding opponents and also in finding good partners.
+For this release I side stepped the problem by letting the players do the match making work themselves.
+But if we are to get serious matchmaking is problem that needs to be addresssed properly.
 
 == Built on shoulders of giants
 
