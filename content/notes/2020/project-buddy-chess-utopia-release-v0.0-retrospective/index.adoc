@@ -152,9 +152,3 @@ I also like the premise of tailwind's utility first functional css approach.
 
 Github actions: for continous deployment - https://github.com/features/actions[github actions^]::
 Github actions is free for light usage and easy enough to setup.
-
-
-
-
-
-
