@@ -15,19 +15,23 @@ title = "sransara"
   notes = "/:sections/:title/"
 
 [markup.asciidocExt]
-    extensions = ["asciidoctor-diagram", "asciidoctor-bibtex"]
-    workingFolderCurrent = true
-    safeMode = "unsafe"
-    sectionNumbers = false
-    preserveTOC = true
+  extensions = ["asciidoctor-diagram", "asciidoctor-bibtex"]
+  workingFolderCurrent = true
+  safeMode = "unsafe"
+  sectionNumbers = false
+  preserveTOC = true
     
-    [markup.asciidocExt.attributes]
-      xrefstyle = "short"
-      listing-caption = "Listing"
-      sectanchors = ""
-      idprefix = "id:"
-      idseparator = "-"
-      source-highlighter = "rouge"
-      icons = "font"
-      stem = "latexmath"
-      toc = "macro"
+  [markup.asciidocExt.attributes]
+    xrefstyle = "short"
+    listing-caption = "Listing"
+    sectanchors = ""
+    idprefix = "id:"
+    idseparator = "-"
+    source-highlighter = "rouge"
+    icons = "font"
+    stem = "latexmath"
+    toc = "macro"
+
+[security]
+  [security.exec]
+    allow = ['^asciidoctor']
