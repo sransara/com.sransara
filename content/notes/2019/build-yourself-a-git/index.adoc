@@ -763,7 +763,7 @@ To investiage this let's zoom in on commits C, D and F in <<image:commits-abcd-e
 C is the common ancestor. 
 D is the current tip of `master` branch; F is the current tip of `hot-fix` branch.
 Let's see how the merged commit G can be derived from C, D and F.
-I have used (*) stars to mark which content were actually changed from C.
+Stars (✳) denote which content were actually changed from C.
 
 .View of the snapshots at commits C, D and F.
 [#image:trie-merge]
@@ -775,10 +775,10 @@ These diff we will call *patches*. Now we use merge algorithm to auto merge cont
 
 For example in <<image:trie-merge>>:
 
-* pass:[*]1, pass:[*]2 only changed on 'master' branch therefore we can *auto merge* these changes in to the final snapshot.
-* pass:[*]5 only changed on the 'hot-fix' hence we can *auto merge* this change into the final snapshot as well.
-* pass:[*]3 and pass:[*]4 shows that README was changed in both branches: hence a conflict on that file.
-* Think about how we should handle auto merges for: deletes and renames
+* ✳1, ✳2 only changed on 'master' branch therefore we can *auto merge* these changes in to the final snapshot.
+* ✳5 only changed on the 'hot-fix' hence we can *auto merge* this change into the final snapshot as well.
+* ✳3 and ✳4 shows that README was changed in both branches: hence a conflict on that file.
+* (Note to reader™: Think about how we should handle auto merges for: deletes and renames)
 
 At a conflict, `merge` will pause the merge and do a diff and put helper markers to identify the base, ours (current branch) and theirs (merging branch) changes.
 Once the merge conflicts are resolved, merge will resume to make a commit with this new snapshot view and this commit will point to the two parent commits.

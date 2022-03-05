@@ -13,6 +13,7 @@
 		{{ with .OutputFormats.Get "rss" -}}
 		{{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
 		{{ end -}}
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism.min.css" />
 		{{- block "header" . -}}
 		{{- end -}}
 	</head>

@@ -15,7 +15,7 @@ title = "sransara"
   notes = "/:sections/:title/"
 
 [markup.asciidocExt]
-  extensions = ["asciidoctor-diagram", "asciidoctor-bibtex"]
+  extensions = ["asciidoctor-katex", "asciidoctor-prism-extension", "asciidoctor-kroki"]
   workingFolderCurrent = true
   safeMode = "unsafe"
   sectionNumbers = false
@@ -27,7 +27,8 @@ title = "sransara"
     sectanchors = ""
     idprefix = "id:"
     idseparator = "-"
-    source-highlighter = "rouge"
+    source-highlighter = "prism"
+    prism-languages = "python, bash"
     icons = "font"
     stem = "latexmath"
     toc = "macro"

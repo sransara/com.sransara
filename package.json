@@ -4,6 +4,11 @@
   "description": "com",
   "repository": "http://github.com/sransara/sransara-com",
   "dependencies": {
+    "@asciidoctor/cli": "^3.5.0",
+    "asciidoctor": "^2.2.5",
+    "asciidoctor-prism-extension": "^2.0.7",
+    "asciidoctor-katex": "^0.3.2",
+    "asciidoctor-kroki": "^0.14.0",
     "autoprefixer": "^10.1.0",
     "del": "^4.1.1",
     "gulp": "^4.0.2",
@@ -16,7 +21,6 @@
   "optionalDependencies": {
     "fsevents": "^2.2.1"
   },
-  "devDependencies": {},
   "scripts": {
     "gulp": "gulp"
   },

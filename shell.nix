@@ -10,7 +10,7 @@ unstable.mkShell {
     unstable.netlify-cli
     unstable.hugo
 
-    (unstable.callPackage ./nix/asciidoctor/default.nix {})
+    # (unstable.callPackage ./nix/asciidoctor/default.nix {})
     # asciidoctor-diagram dependencies
     unstable.graphviz
 
