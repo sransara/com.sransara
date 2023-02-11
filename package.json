@@ -14,6 +14,8 @@
     "@astrojs/solid-js": "^2.0.2",
     "@astrojs/tailwind": "^3.0.1",
     "@typescript-eslint/parser": "^5.50.0",
+    "asciidoctor": "^2.2.6",
+    "asciidoctor-html5s": "^0.5.1",
     "astro": "^2.0.6",
     "eslint": "^8.33.0",
     "eslint-plugin-astro": "^0.23.0",
