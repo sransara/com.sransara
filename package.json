@@ -14,6 +14,7 @@
   "dependencies": {
     "@astrojs/solid-js": "^2.0.2",
     "@astrojs/tailwind": "^3.0.1",
+    "@types/node": "^18.13.0",
     "@typescript-eslint/parser": "^5.50.0",
     "asciidoctor": "^2.2.6",
     "asciidoctor-html5s": "^0.5.1",
