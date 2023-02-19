@@ -23,9 +23,9 @@ interface AstroConfigSetupHookOptions {
 
 const extensions = ['.adocx.astro', '.adoc.astro'];
 
-export function asciidoctorx(asciidoctorConfig: Asciidoctor.ProcessorOptions): AstroIntegration {
+export function adocx(asciidoctorConfig: Asciidoctor.ProcessorOptions): AstroIntegration {
   return {
-    name: '@sransara/astro-asciidoctorx',
+    name: '@sransara/astro-adocx',
     hooks: {
       'astro:config:setup': async ({ addWatchFile, updateConfig }: AstroConfigSetupHookOptions) => {
         for (const templateDir of asciidoctorConfig.template_dirs || []) {
