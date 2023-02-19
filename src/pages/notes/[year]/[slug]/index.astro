@@ -1,7 +1,37 @@
 ---
+import type { AstroInstance } from 'astro';
+import type { Metadata } from '@src/lib/types/notes';
 import BaseLayout from '@src/layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
+  const pathPattern = /^\/src\/text\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/metadata.ts$/;
+  return Object.entries(metadataPaths).map(([path]) => {
+    const match = path.match(pathPattern);
+    if (!match || !match.groups) {
+      throw new Error('Invalid path globbed.');
+    }
+    return {
+      params: {
+        year: match.groups.year,
+        slug: match.groups.slug
+      }
+    };
+  });
+}
+
+const { year, slug } = Astro.params;
+const { metadata } = (await import(
+  `../../../../../src/text/notes/${year}/${slug}/metadata.ts`
+)) as { metadata: Metadata };
+if (!metadata.publishedDate.startsWith(year || '0000')) {
+  throw new Error("metadata.publishedDate and path year doesn't match");
+}
+const AstroEmbed = (await import(
+  `../../../../../src/text/notes/${year}/${slug}/index.adoc.astro`
+)) as AstroInstance;
 ---
 
 <BaseLayout title="Home Page">
-  <p>My page content, wrapped in a layout!</p>
+  <AstroEmbed.default />
 </BaseLayout>
