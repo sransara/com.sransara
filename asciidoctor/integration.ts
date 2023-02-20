@@ -78,7 +78,7 @@ export function adocx(
 
                   const converted = document.convert();
                   let [componentScript, convertedHtml] = astroComponentParts(converted);
-                  componentScript = `${adocxConfig.astroComponentScript}\n${componentScript}`;
+                  componentScript = `${adocxConfig.astroComponentScript.trim()}\n${componentScript.trim()}`;
                   convertedHtml = await transform(convertedHtml);
 
                   const astroComponent = `---\n${componentScript}\n---\n\n${convertedHtml}`;
