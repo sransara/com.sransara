@@ -8,6 +8,8 @@ import asciidoctor, { Asciidoctor } from 'asciidoctor';
 import { deepmerge } from 'deepmerge-ts';
 import fglob from 'fast-glob';
 
+import { transform } from './transform';
+
 interface AstroConfigSetupHookOptions {
   config: AstroConfig;
   command: 'dev' | 'build' | 'preview';
@@ -27,13 +29,15 @@ const asciidoctorEngine = asciidoctor();
 
 const extensions = ['.adocx.astro', '.adoc.astro'];
 
-function prependAstroComponentScript(text: string, componentScript: string) {
-  let fence = /^[\r\n]+---/;
-  if (text.match(fence)) {
-    const textWithoutFenceStart = text.replace(fence, '');
-    return `---\n${componentScript}\n${textWithoutFenceStart}`;
+function astroComponentParts(text: string) {
+  let fence = /^---$(?<fenced>[\s\S]+?)^---$/m;
+  const match = text.match(fence);
+  if (match) {
+    const componentScript = match.groups?.fenced || '';
+    const textWithoutFence = text.replace(fence, '');
+    return [componentScript, textWithoutFence];
   } else {
-    return `---\n${componentScript}\n---\n${text}`;
+    return ['', text];
   }
 }
 
@@ -71,13 +75,16 @@ export function adocx(
                       }
                     })
                   );
-                  let converted = document.convert();
-                  converted = prependAstroComponentScript(
-                    converted,
-                    adocxConfig.astroComponentScript
-                  );
+
+                  const converted = document.convert();
+                  let [componentScript, convertedHtml] = astroComponentParts(converted);
+                  componentScript = `${adocxConfig.astroComponentScript}\n${componentScript}`;
+                  convertedHtml = await transform(convertedHtml);
+
+                  const astroComponent = `---\n${componentScript}\n---\n\n${convertedHtml}`;
+                  // await fs.writeFile(`${path.dirname(fileId)}/out._astro`, astroComponent);
                   return {
-                    code: converted
+                    code: astroComponent
                   };
                 }
               }
