@@ -31,14 +31,9 @@ function prependAstroComponentScript(text: string, componentScript: string) {
   let fence = /^[\r\n]+---/;
   if (text.match(fence)) {
     const textWithoutFenceStart = text.replace(fence, '');
-    return `---
-${componentScript}
-${textWithoutFenceStart}`;
+    return `---\n${componentScript}\n${textWithoutFenceStart}`;
   } else {
-    return `---
-${componentScript}
----
-${text}`;
+    return `---\n${componentScript}\n---\n${text}`;
   }
 }
 
