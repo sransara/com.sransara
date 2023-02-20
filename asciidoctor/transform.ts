@@ -1,13 +1,5 @@
 // @ts-nocheck
 import posthtml from 'posthtml';
-import { closingSingleTagOptionEnum, render as posthtmlRender } from 'posthtml-render';
-
-function render(tree) {
-  return posthtmlRender(tree, {
-    singleTags: [/^[A-Z][\w+]/],
-    closingSingleTag: closingSingleTagOptionEnum.slash
-  });
-}
 
 function setExprAttr(node, attr, value) {
   delete node.attrs[attr];
@@ -30,6 +22,6 @@ export async function transform(html) {
           return node;
         });
       })
-      .process(html, { render })
+      .process(html)
   ).html;
 }
