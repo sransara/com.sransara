@@ -1,0 +1,33 @@
+---
+import AsciiMathParser from 'asciimath2tex';
+import katex, { KatexOptions } from 'katex';
+import 'katex/dist/katex.min.css';
+
+interface Props {
+  block?: boolean;
+  lang?: 'tex' | 'asciimath';
+}
+
+const { block = false, lang = 'tex' } = Astro.props;
+
+let content: string = await Astro.slots.render('default');
+content = lang == 'asciimath' ? new AsciiMathParser().parse(content) : content;
+
+const throwOnError: boolean = import.meta.env.DEV;
+const options: KatexOptions = {
+  displayMode: block,
+  throwOnError,
+  fleqn: true,
+  output: 'html'
+};
+---
+
+<style is:global>
+  .katex-display > .katex > .katex-html > .tag {
+    position: absolute;
+    right: auto;
+    left: -1.8em;
+  }
+</style>
+
+<Fragment set:html={katex.renderToString(content, options)} />
