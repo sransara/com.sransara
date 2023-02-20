@@ -17,16 +17,6 @@ krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
 export const asciidoctorConfig = {
   safe: 'server',
   backend: 'html5s',
-  template_dirs: ['./asciidoctor/templates'],
-  template_cache: false,
-  template_engine_options: {
-    nunjucks: {
-      tags: {
-        variableStart: '{$',
-        variableEnd: '$}'
-      }
-    }
-  },
   standalone: false,
   attributes: {
     xrefstyle: 'short',
