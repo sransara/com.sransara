@@ -1,17 +1,14 @@
 import { defineConfig } from 'astro/config';
-
-// https://astro.build/config
+import image from '@astrojs/image';
 import solidJs from '@astrojs/solid-js';
-
-// https://astro.build/config
 import tailwind from '@astrojs/tailwind';
 
 import { adocx } from './asciidoctor/integration';
-import asciidoctorConfig from './asciidoctor.config.mjs';
+import { adocxConfig, asciidoctorConfig } from './adocx.config.mjs';
 
 export default defineConfig({
   integrations: [
-    adocx(asciidoctorConfig),
+    adocx(adocxConfig, asciidoctorConfig),
     image({
       serviceEntryPoint: '@astrojs/image/sharp'
     }),

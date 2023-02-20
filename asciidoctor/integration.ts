@@ -8,8 +8,6 @@ import asciidoctor, { Asciidoctor } from 'asciidoctor';
 import { deepmerge } from 'deepmerge-ts';
 import fglob from 'fast-glob';
 
-const asciidoctorEngine = asciidoctor();
-
 interface AstroConfigSetupHookOptions {
   config: AstroConfig;
   command: 'dev' | 'build' | 'preview';
@@ -21,9 +19,33 @@ interface AstroConfigSetupHookOptions {
   // injectRoute: (injectRoute: InjectedRoute) => void;
 }
 
+interface AdocxOptions {
+  astroComponentScript: string;
+}
+
+const asciidoctorEngine = asciidoctor();
+
 const extensions = ['.adocx.astro', '.adoc.astro'];
 
-export function adocx(asciidoctorConfig: Asciidoctor.ProcessorOptions): AstroIntegration {
+function prependAstroComponentScript(text: string, componentScript: string) {
+  let fence = /^[\r\n]+---/;
+  if (text.match(fence)) {
+    const textWithoutFenceStart = text.replace(fence, '');
+    return `---
+${componentScript}
+${textWithoutFenceStart}`;
+  } else {
+    return `---
+${componentScript}
+---
+${text}`;
+  }
+}
+
+export function adocx(
+  adocxConfig: AdocxOptions,
+  asciidoctorConfig: Asciidoctor.ProcessorOptions
+): AstroIntegration {
   return {
     name: '@sransara/astro-adocx',
     hooks: {
@@ -54,7 +76,11 @@ export function adocx(asciidoctorConfig: Asciidoctor.ProcessorOptions): AstroInt
                       }
                     })
                   );
-                  const converted = document.convert();
+                  let converted = document.convert();
+                  converted = prependAstroComponentScript(
+                    converted,
+                    adocxConfig.astroComponentScript
+                  );
                   return {
                     code: converted
                   };

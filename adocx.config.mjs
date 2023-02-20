@@ -1,13 +1,20 @@
 import asciidoctor from 'asciidoctor';
-const asciidoctorEngine = asciidoctor();
-
 import { register as html5sBackendRegisterHandle } from 'asciidoctor-html5s';
-html5sBackendRegisterHandle(asciidoctorEngine.Extensions);
-
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
+
+const astroComponentScript = `
+import { Image, Picture } from '@astrojs/image/components';
+`;
+
+export const adocxConfig = {
+  astroComponentScript
+};
+
+const asciidoctorEngine = asciidoctor();
+html5sBackendRegisterHandle(asciidoctorEngine.Extensions);
 krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
 
-const config = {
+export const asciidoctorConfig = {
   safe: 'server',
   backend: 'html5s',
   template_dirs: ['./asciidoctor/templates'],
@@ -25,5 +32,3 @@ const config = {
     'kroki-fetch-diagram': true
   }
 };
-
-export default config;
