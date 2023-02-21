@@ -18,6 +18,7 @@ export async function transform(html) {
         });
 
         tree.match({ tag: 'code' }, (node) => {
+          if (!node.attrs) node.attrs = {};
           node.attrs['is:raw'] = true;
           return node;
         });
