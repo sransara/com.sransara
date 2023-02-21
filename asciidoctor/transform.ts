@@ -1,9 +1,22 @@
 // @ts-nocheck
 import posthtml from 'posthtml';
 
-function setExprAttr(node, attr, value) {
-  delete node.attrs[attr];
-  node.attrs[`${attr}={${value}}`] = true;
+function getAttr(node, key, default_) {
+  if (!node.attrs) node.attrs = {};
+  return node.attrs[key] || default_;
+}
+
+function setAttrExpr(node, key, value) {
+  const old = getAttr(node, key);
+  delete node.attrs[key];
+  node.attrs[`${key}={${value}}`] = true;
+  return old;
+}
+
+function setAttr(node, key, value) {
+  const old = getAttr(node, key);
+  node.attrs[key] = value;
+  return old;
 }
 
 export async function transform(html) {
@@ -12,14 +25,24 @@ export async function transform(html) {
       .use((tree) => {
         tree.match({ tag: 'img' }, (node) => {
           node.tag = 'Image';
-          const src = node.attrs['src'];
-          setExprAttr(node, 'src', `import("${src}")`);
+          const src = getAttr(node, 'src');
+          setAttrExpr(node, 'src', `import("${src}")`);
           return node;
         });
 
         tree.match({ tag: 'code' }, (node) => {
-          if (!node.attrs) node.attrs = {};
-          node.attrs['is:raw'] = true;
+          setAttr(node, 'is:raw', true);
+          return node;
+        });
+
+        tree.match({ tag: 'pre' }, (node) => {
+          if (getAttr(node, 'class', '').includes('highlight')) {
+            const code = node.content[0];
+            setAttr(node, 'lang', getAttr(code, 'data-lang', 'python'));
+            node.content = code.content;
+            node.tag = 'Shiki';
+          }
+          setAttr(node, 'is:raw', true);
           return node;
         });
 
@@ -29,16 +52,15 @@ export async function transform(html) {
             { tag: 'div', attrs: { class: 'math' } }
           ],
           (node) => {
-            node.attrs['block'] = node.tag == 'div';
+            setAttr(node, 'block', node.tag == 'div');
             node.tag = 'Katex';
-            delete node.attrs['class'];
-            const lang = node.attrs['data-lang'];
-            delete node.attrs['data-lang'];
-            node.attrs['lang'] = lang;
-            node.attrs['is:raw'] = true;
+            setAttr(node, 'lang', getAttr(node, 'data-lang', 'tex'));
+
             // remove stem delimitters added by the backend
             const content = (node.content || ['\\(\\)'])[0];
             node.content = [content.slice(2, content.length - 2)];
+
+            setAttr(node, 'is:raw', true);
             return node;
           }
         );

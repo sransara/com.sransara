@@ -5,6 +5,7 @@ import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 const astroComponentScript = `
 import { Image, Picture } from '@astrojs/image/components';
 import Katex from '@src/lib/astro/katex/Katex.astro';
+import Shiki from '@src/lib/astro/shiki/Shiki.astro';
 `;
 
 export const adocxConfig = {
