@@ -1,5 +1,6 @@
 ---
 import AsciiMathParser from 'asciimath2tex';
+import { decode as decodeHtmlEntities } from 'html-entities';
 import katex, { KatexOptions } from 'katex';
 import 'katex/dist/katex.min.css';
 
@@ -11,6 +12,7 @@ interface Props {
 const { block = false, lang = 'tex' } = Astro.props;
 
 let content: string = await Astro.slots.render('default');
+content = decodeHtmlEntities(content);
 content = lang == 'asciimath' ? new AsciiMathParser().parse(content) : content;
 
 const throwOnError: boolean = import.meta.env.DEV;
