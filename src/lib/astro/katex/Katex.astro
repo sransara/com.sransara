@@ -22,6 +22,8 @@ const options: KatexOptions = {
   fleqn: true,
   output: 'html'
 };
+
+const output = katex.renderToString(content, options);
 ---
 
 <style is:global>
@@ -32,4 +34,4 @@ const options: KatexOptions = {
   }
 </style>
 
-<Fragment set:html={katex.renderToString(content, options)} />
+<Fragment set:html={output} />
