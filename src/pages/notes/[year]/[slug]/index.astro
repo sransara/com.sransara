@@ -2,7 +2,7 @@
 import type { AstroInstance } from 'astro';
 
 import type { Metadata } from '@src/lib/types/notes';
-import BaseLayout from '@src/layouts/BaseLayout.astro';
+import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
 
 export function getStaticPaths() {
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');

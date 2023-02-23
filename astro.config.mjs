@@ -13,6 +13,11 @@ export default defineConfig({
       serviceEntryPoint: '@astrojs/image/sharp'
     }),
     solidJs(),
-    tailwind()
+    tailwind({
+      config: {
+        // Applied manually in BaseLayout.astro
+        applyBaseStyles: false
+      }
+    })
   ]
 });
