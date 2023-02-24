@@ -33,6 +33,9 @@ const AstroEmbed = (await import(
 )) as AstroInstance;
 ---
 
-<BaseLayout title="Home Page">
-  <AstroEmbed.default />
+<BaseLayout title={metadata.title}>
+  <Fragment slot="head"></Fragment>
+  <Fragment slot="body">
+    <AstroEmbed.default />
+  </Fragment>
 </BaseLayout>
