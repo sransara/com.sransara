@@ -4,6 +4,8 @@ import type { AstroInstance } from 'astro';
 import type { Metadata } from '@src/lib/types/notes';
 import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
 
+import './asciidoc.css';
+
 export function getStaticPaths() {
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
   const pathPattern = /^\/src\/text\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/metadata.ts$/;
@@ -36,6 +38,29 @@ const AstroEmbed = (await import(
 <BaseLayout title={metadata.title}>
   <Fragment slot="head"></Fragment>
   <Fragment slot="body">
-    <AstroEmbed.default />
+    <article class="container mx-auto max-w-2xl p-3 leading-normal">
+      <h1 class="mb-2 text-5xl font-bold">{metadata.title}</h1>
+      <span class="mb-2 text-xs text-gray-500">
+        Published by
+        <span class="text-gray-800">Samodya R. Abeysiriwardane</span>
+        on
+        <span class="text-gray-800">{metadata.publishedDate}</span>
+        &nbsp;/&nbsp;
+        <a
+          class="text-blue-800 underline hover:text-blue-500"
+          target="_blank"
+          rel="noopener noreferrer"
+          href={`https://github.com/sransara/sransara.com/tree/master/src/text/notes/${year}/${slug}/`}
+        >
+          Source
+        </a>
+        &nbsp;/&nbsp;
+        <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
+      </span>
+      <hr class="my-2 border-2 border-gray-700" />
+      <main class="asciidoc">
+        <AstroEmbed.default />
+      </main>
+    </article>
   </Fragment>
 </BaseLayout>
