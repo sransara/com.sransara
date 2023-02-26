@@ -70,6 +70,7 @@ export function adocx(
                 name: 'astro-adoc',
                 enforce: 'pre',
                 async load(fileId) {
+                  fileId = fileId.split('?')[0];
                   if (!extensions.some((ext) => fileId.endsWith(ext))) {
                     return;
                   }
