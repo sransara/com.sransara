@@ -8,13 +8,16 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const highlighter = await getHighlighter({ theme: 'nord' });
+const highlighter = await getHighlighter({ theme: 'dark-plus' });
 
 let content: string = await Astro.slots.render('default');
-content = content.replace(/<b class="conum">(\d+)<\/b>/g, '\u0D82$1\u0D83');
+content = content.replace(
+  /<i class="conum" data-value="\d+"><\/i><b>\((\d+)\)<\/b>/g,
+  '\u0D82$1\u0D83'
+);
 content = decodeHtmlEntities(content);
 let output = highlighter.codeToHtml(content, { lang });
-output = output.replace(/\u0D82(\d+)\u0D83/g, '<b class="conum">$1</b>');
+output = output.replace(/\u0D82(\d+)\u0D83/g, '<i class="conum" data-value="$1"></i><b>$1</b>');
 ---
 
 <Fragment set:html={output} />

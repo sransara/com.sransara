@@ -46,24 +46,26 @@ export async function transform(html) {
           return node;
         });
 
-        tree.match(
-          [
-            { tag: 'span', attrs: { class: 'math' } },
-            { tag: 'div', attrs: { class: 'math' } }
-          ],
-          (node) => {
-            setAttr(node, 'block', node.tag == 'div');
-            node.tag = 'Katex';
-            setAttr(node, 'lang', getAttr(node, 'data-lang', 'tex'));
+        tree.match({ tag: 'span', attrs: { class: 'math' } }, (node) => {
+          node.tag = 'Katex';
+          setAttr(node, 'lang', getAttr(node, 'data-lang', 'latexmath'));
+          setAttr(node, 'is:raw', true);
+          return node;
+        });
 
-            // remove stem delimitters added by the backend
-            const content = (node.content || ['\\(\\)'])[0];
-            node.content = [content.slice(2, content.length - 2)];
+        tree.match({ tag: 'div', attrs: { class: 'stemblock' } }, (node) => {
+          const mathNode = node.content?.find((node) => node.attrs?.class == 'content');
+          mathNode.tag = 'Katex';
 
-            setAttr(node, 'is:raw', true);
-            return node;
-          }
-        );
+          // remove stem delimitters added by the backend
+          const content = (mathNode.content || ['\\(\\)'])[0];
+          const match = content.match(/^\s*(?<delim>\\[\[$])(?<mathContent>[\s\S]*)\\[\]$]\s*$/);
+          mathNode.content = [match.groups['mathContent']];
+
+          setAttr(mathNode, 'lang', match.groups['delim'] == '[' ? 'latexmath' : 'asciimath');
+          setAttr(mathNode, 'is:raw', true);
+          return node;
+        });
       })
       .process(html)
   ).html;

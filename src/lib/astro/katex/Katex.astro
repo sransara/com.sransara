@@ -6,10 +6,10 @@ import 'katex/dist/katex.min.css';
 
 interface Props {
   block?: boolean;
-  lang?: 'tex' | 'asciimath';
+  lang?: 'latexmath' | 'asciimath';
 }
 
-const { block = false, lang = 'tex' } = Astro.props;
+const { block = false, lang = 'latexmath' } = Astro.props;
 
 let content: string = await Astro.slots.render('default');
 content = decodeHtmlEntities(content);

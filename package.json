@@ -20,7 +20,6 @@
     "@types/node": "^18.13.0",
     "@typescript-eslint/parser": "^5.50.0",
     "asciidoctor": "^2.2.6",
-    "asciidoctor-html5s": "^0.5.1",
     "asciidoctor-kroki": "^0.16.0",
     "asciimath2tex": "^1.4.0",
     "astro": "^2.0.6",

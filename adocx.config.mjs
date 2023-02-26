@@ -1,5 +1,6 @@
 import asciidoctor from 'asciidoctor';
-import { register as html5sBackendRegisterHandle } from 'asciidoctor-html5s';
+
+import { register as converterRegisterHandle } from './asciidoctor/converter';
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 
 const astroComponentScript = `
@@ -13,12 +14,12 @@ export const adocxConfig = {
 };
 
 const asciidoctorEngine = asciidoctor();
-html5sBackendRegisterHandle(asciidoctorEngine.Extensions);
+converterRegisterHandle(asciidoctorEngine);
 krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
 
 export const asciidoctorConfig = {
   safe: 'server',
-  backend: 'html5s',
+  backend: 'html5',
   standalone: false,
   attributes: {
     xrefstyle: 'short',
