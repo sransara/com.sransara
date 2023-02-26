@@ -55,6 +55,13 @@ export function adocx(
             addWatchFile(dependency);
           }
         }
+        const cwd = path.dirname('');
+        const adocxFiles = path.join(cwd, 'asciidoctor', '**/*.ts');
+        const adocxConfigFile = path.join(cwd, 'adocx.config.mjs');
+        const dependencies = fglob.sync([adocxFiles, adocxConfigFile], { absolute: true });
+        for (const dependency of dependencies) {
+          addWatchFile(dependency);
+        }
 
         updateConfig({
           vite: {
