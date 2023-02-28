@@ -8,7 +8,7 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const highlighter = await getHighlighter({ theme: 'dark-plus' });
+const highlighter = await getHighlighter({ theme: 'github-light' });
 
 let content: string = await Astro.slots.render('default');
 content = content.replace(
