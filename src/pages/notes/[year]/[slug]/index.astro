@@ -3,8 +3,7 @@ import type { AstroInstance } from 'astro';
 
 import type { Metadata } from '@src/lib/types/notes';
 import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
-
-import './asciidoc.css';
+import Asciidoc from '@src/lib/astro/asciidoc/Asciidoc.astro';
 
 export function getStaticPaths() {
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
@@ -58,9 +57,9 @@ const AstroEmbed = (await import(
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
       </span>
       <hr class="my-2 border-2 border-gray-700" />
-      <main class="asciidoc">
+      <Asciidoc>
         <AstroEmbed.default />
-      </main>
+      </Asciidoc>
     </article>
   </Fragment>
 </BaseLayout>
