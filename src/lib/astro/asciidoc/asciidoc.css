@@ -170,22 +170,6 @@
     }
   }
 
-  .conum[data-value] {
-    @apply rounded-full text-sm;
-    @apply mr-1 px-2;
-    @apply bg-gray-900;
-    @apply text-white;
-    @apply font-mono;
-
-    + b {
-      @apply hidden;
-    }
-  }
-
-  .conum[data-value]::after {
-    content: attr(data-value);
-  }
-
   :not(pre) > code {
     @apply rounded px-0.5 text-sm;
     @apply border border-gray-300;
@@ -230,6 +214,26 @@
       width: 0.5rem;
       height: 0.5rem;
     }
+  }
+
+  .listingblock + .colist {
+    @apply -mt-4;
+  }
+
+  .conum[data-value] {
+    @apply rounded-full text-sm;
+    @apply mr-1 px-2;
+    @apply bg-gray-900;
+    @apply text-white;
+    @apply font-mono;
+
+    + b {
+      @apply hidden;
+    }
+  }
+
+  .conum[data-value]::after {
+    content: attr(data-value);
   }
 
   .imageblock {
