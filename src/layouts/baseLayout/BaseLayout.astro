@@ -21,7 +21,7 @@ const siteTagLine = 'True randomness';
     <title>{title ? `${title} — ${siteName}` : `${siteName} — ${siteTagLine}`}</title>
     <slot name="head" />
   </head>
-  <body>
+  <body class="container mx-auto max-w-2xl p-3 leading-normal">
     <slot name="body" />
   </body>
 </html>
