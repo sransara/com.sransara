@@ -171,7 +171,8 @@
   }
 
   :not(pre) > code {
-    @apply rounded px-0.5 text-sm;
+    @apply rounded px-0.5;
+    @apply align-bottom text-sm;
     @apply border border-gray-300;
     @apply bg-gray-100;
   }
@@ -218,11 +219,15 @@
 
   .listingblock + .colist {
     @apply -mt-4;
+    @apply mb-4;
+    .conum[data-value] {
+      @apply mr-1;
+    }
   }
 
   .conum[data-value] {
-    @apply rounded-full text-sm;
-    @apply mr-1 px-2;
+    @apply rounded-full px-2;
+    @apply align-middle text-sm;
     @apply bg-gray-900;
     @apply text-white;
     @apply font-mono;
