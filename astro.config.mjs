@@ -7,6 +7,7 @@ import { adocx } from './asciidoctor/integration';
 import { adocxConfig, asciidoctorConfig } from './adocx.config.mjs';
 
 export default defineConfig({
+  site: 'https://sransara.com',
   integrations: [
     adocx(adocxConfig, asciidoctorConfig),
     image({
