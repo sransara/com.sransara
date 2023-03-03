@@ -35,7 +35,7 @@ if (!metadata.publishedDate.startsWith(year || '0000')) {
 }
 const AstroEmbed = (await import(
   `../../../../../src/text/notes/${year}/${slug}/index.adoc.astro`
-)) as AstroInstance;
+)) as AstroInstance & { docattrs: any };
 
 const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`);
 ---
@@ -45,7 +45,7 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
   <Fragment slot="body">
     <NavBar url={Astro.url} pageType="leaf" />
     <article>
-      <h1 class="text-5xl font-bold underline">{metadata.title}</h1>
+      <h1 class="font-serif text-5xl font-bold underline">{metadata.title}</h1>
       <div class="my-2 text-xs text-gray-500">
         Published by
         <a class="text-blue-800 underline hover:text-blue-500" href="/about">
@@ -67,9 +67,14 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
         &nbsp;/&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
       </div>
-      <div class="flex justify-center bg-gray-600 px-5">
+      <div class="my-2 flex justify-center bg-gray-600 px-5">
         <Image src={poster} alt="Poster" />
       </div>
+      {
+        AstroEmbed.docattrs.title && (
+          <div class="font-serif text-lg font-bold">{AstroEmbed.docattrs.title}</div>
+        )
+      }
       <Asciidoc>
         <AstroEmbed.default />
       </Asciidoc>
