@@ -61,8 +61,9 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
           rel="noopener noreferrer"
           href={`https://github.com/sransara/sransara.com/tree/master/src/text/notes/${year}/${slug}/`}
         >
-          Source
-        </a>
+          <!-- prettier-ignore  -->
+          Source</a
+        >
         &nbsp;/&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
       </div>
@@ -72,7 +73,8 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
       <Asciidoc>
         <AstroEmbed.default />
       </Asciidoc>
-      <div class="my-4 border-yellow-900 bg-yellow-200 p-5 text-sm">
+      <hr class="my-4 border-2 border-gray-600" />
+      <div class="bg-yellow-200 p-5 text-sm">
         Published by
         <span class="text-gray-800">Samodya R. Abeysiriwardane</span>
         on
@@ -84,8 +86,8 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
           rel="noopener noreferrer"
           href={`https://github.com/sransara/sransara.com/tree/master/src/text/notes/${year}/${slug}/`}
         >
-          Source
-        </a>
+          Source</a
+        >
         &nbsp;/&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
       </div>
