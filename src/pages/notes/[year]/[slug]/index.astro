@@ -2,8 +2,11 @@
 import type { AstroInstance } from 'astro';
 
 import type { Metadata } from '@src/lib/types/notes';
+import { Image } from '@astrojs/image/components';
+
 import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
 import Asciidoc from '@src/lib/astro/asciidoc/Asciidoc.astro';
+import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
 
 export function getStaticPaths() {
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
@@ -23,6 +26,7 @@ export function getStaticPaths() {
 }
 
 const { year, slug } = Astro.params;
+
 const { metadata } = (await import(
   `../../../../../src/text/notes/${year}/${slug}/metadata.ts`
 )) as { metadata: Metadata };
@@ -32,14 +36,43 @@ if (!metadata.publishedDate.startsWith(year || '0000')) {
 const AstroEmbed = (await import(
   `../../../../../src/text/notes/${year}/${slug}/index.adoc.astro`
 )) as AstroInstance;
+
+const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`);
 ---
 
 <BaseLayout title={metadata.title}>
   <Fragment slot="head"></Fragment>
   <Fragment slot="body">
-    <article class="container mx-auto max-w-2xl p-3 leading-normal">
-      <h1 class="mb-2 text-5xl font-bold">{metadata.title}</h1>
-      <span class="mb-2 text-xs text-gray-500">
+    <NavBar url={Astro.url} pageType="leaf" />
+    <article>
+      <h1 class="text-5xl font-bold underline">{metadata.title}</h1>
+      <div class="my-2 text-xs text-gray-500">
+        Published by
+        <a class="text-blue-800 underline hover:text-blue-500" href="/about">
+          <!-- prettier-ignore  -->
+          Samodya R. Abeysiriwardane</a
+        >
+        on
+        <span class="text-gray-800">{metadata.publishedDate}</span>
+        &nbsp;/&nbsp;
+        <a
+          class="text-blue-800 underline hover:text-blue-500"
+          target="_blank"
+          rel="noopener noreferrer"
+          href={`https://github.com/sransara/sransara.com/tree/master/src/text/notes/${year}/${slug}/`}
+        >
+          Source
+        </a>
+        &nbsp;/&nbsp;
+        <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
+      </div>
+      <div class="flex justify-center bg-gray-600 px-5">
+        <Image src={poster} alt="Poster" />
+      </div>
+      <Asciidoc>
+        <AstroEmbed.default />
+      </Asciidoc>
+      <div class="my-4 border-yellow-900 bg-yellow-200 p-5 text-sm">
         Published by
         <span class="text-gray-800">Samodya R. Abeysiriwardane</span>
         on
@@ -55,11 +88,7 @@ const AstroEmbed = (await import(
         </a>
         &nbsp;/&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
-      </span>
-      <hr class="my-2 border-2 border-gray-700" />
-      <Asciidoc>
-        <AstroEmbed.default />
-      </Asciidoc>
+      </div>
     </article>
   </Fragment>
 </BaseLayout>
