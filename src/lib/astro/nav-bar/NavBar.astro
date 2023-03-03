@@ -1,0 +1,36 @@
+---
+interface Props {
+  url: URL;
+  pageType: 'collection' | 'leaf';
+}
+
+const { url, pageType } = Astro.props;
+let urlPathParts = url.pathname.split('/').filter((p) => p.length);
+urlPathParts = urlPathParts.slice(
+  0,
+  pageType == 'leaf' ? urlPathParts.length - 1 : urlPathParts.length
+);
+
+function urlPathPartsToPath(pathParts: string[]) {
+  return '/' + pathParts.join('/');
+}
+---
+
+<div class="mb-6 font-mono text-sm">
+  <span class="whitespace-no-wrap inline-block">
+    /
+    <a class="text-blue-800 underline hover:text-blue-500" href="/">home/sransara</a>
+  </span>
+  {
+    urlPathParts.map((p, i) => (
+      <span class="whitespace-no-wrap inline-block">
+        / {/* prettier-ignore */}
+        <a class="text-blue-800 underline hover:text-blue-500" href={urlPathPartsToPath(urlPathParts.slice(0, i + 1))}>{p}</a>
+      </span>
+    ))
+  }
+  <span class="whitespace-no-wrap inline-block">
+    / $
+    <span class="inline-block text-gray-600">cat /dev/urandom</span>
+  </span>
+</div>
