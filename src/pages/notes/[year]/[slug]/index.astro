@@ -47,14 +47,22 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
     <article>
       <h1 class="font-serif text-5xl font-bold underline">{metadata.title}</h1>
       <div class="my-2 text-xs text-gray-500">
-        Published by
+        Note by
         <a class="text-blue-800 underline hover:text-blue-500" href="/about">
           <!-- prettier-ignore  -->
           Samodya R. Abeysiriwardane</a
         >
-        on
+        &nbsp;|&nbsp; Published
         <span class="text-gray-800">{metadata.publishedDate}</span>
-        &nbsp;/&nbsp;
+        {
+          metadata.updatedDate && (
+            <Fragment>
+              &nbsp;|&nbsp;&nbsp;Updated
+              <span class="text-gray-800">{metadata.updatedDate}</span>
+            </Fragment>
+          )
+        }
+        &nbsp;|&nbsp;
         <a
           class="text-blue-800 underline hover:text-blue-500"
           target="_blank"
@@ -64,7 +72,7 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
           <!-- prettier-ignore  -->
           Source</a
         >
-        &nbsp;/&nbsp;
+        &nbsp;|&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
       </div>
       <div class="my-2 flex justify-center bg-gray-600 px-5">
