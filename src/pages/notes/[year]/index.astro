@@ -1,0 +1,72 @@
+---
+import { format, parseISO } from 'date-fns';
+
+import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
+import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
+import type { Metadata } from '@src/lib/types/notes';
+
+export function getStaticPaths() {
+  const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
+  const pathPattern = /^\/src\/text\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/metadata.ts$/;
+  let years = Object.entries(metadataPaths).map(([path]) => {
+    const match = path.match(pathPattern);
+    if (!match || !match.groups) {
+      throw new Error('Invalid path globbed.');
+    }
+    return match.groups.year;
+  });
+  years = [...new Set(years)];
+  return years.map((year) => ({
+    params: {
+      year
+    }
+  }));
+}
+
+const { year } = Astro.params;
+if (!year) throw new Error('Invalid route');
+
+const notes: { [key: string]: { route: string; metadata: Metadata }[] } = {};
+const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts', { import: 'metadata' });
+const pathPattern = /^\/src\/text\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/metadata.ts$/;
+for (const [path, metadataT] of Object.entries(metadataPaths)) {
+  const match = path.match(pathPattern);
+  if (!match || !match.groups) {
+    throw new Error('Invalid path globbed.');
+  }
+  const pathYear = match.groups.year;
+  if (pathYear !== year) continue;
+  if (!notes[pathYear]) notes[pathYear] = [];
+  const metadata = (await metadataT()) as Metadata;
+  notes[pathYear].push({
+    route: `/notes/${pathYear}/${match.groups.slug}`,
+    metadata
+  });
+}
+---
+
+<BaseLayout title={`Notes from ${year}`}>
+  <Fragment slot="head"></Fragment>
+  <Fragment slot="body">
+    <NavBar url={Astro.url} />
+    <h1 class="mb-3 text-5xl font-bold">Notes from {year}</h1>
+    <ul>
+      {
+        notes[year]
+          .sort((a, b) => b.metadata.publishedDate.localeCompare(a.metadata.publishedDate))
+          .map(({ route, metadata }) => (
+            <li class="mb-3">
+              <span class="text-gray-600">
+                {format(parseISO(metadata.publishedDate), 'MMM dd, yyyy')}
+              </span>{' '}
+              ↴
+              <br />
+              <a class="text-blue-800 underline hover:text-blue-500" href={route}>
+                {metadata.title}
+              </a>
+            </li>
+          ))
+      }
+    </ul>
+  </Fragment>
+</BaseLayout>
