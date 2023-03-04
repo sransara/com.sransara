@@ -27,14 +27,16 @@ for (const [path, metadataT] of Object.entries(metadataPaths)) {
   <Fragment slot="head"></Fragment>
   <Fragment slot="body">
     <NavBar url={Astro.url} />
-    <h1 class="mb-3 text-5xl font-bold">Notes</h1>
+    <h1 class="my-3 text-5xl font-bold">Notes</h1>
     <ul>
       {
         Object.keys(notes)
           .sort((a, b) => b.localeCompare(a))
           .map((year) => (
             <li>
-              <h2 class="mt-6 text-2xl">{year}</h2>
+              <h2 class="mt-6 text-2xl">
+                <a href={`/notes/${year}`}>{year}</a>
+              </h2>
               <ul>
                 {notes[year]
                   .sort((a, b) => b.metadata.publishedDate.localeCompare(a.metadata.publishedDate))
