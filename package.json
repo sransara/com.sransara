@@ -23,6 +23,7 @@
     "asciidoctor-kroki": "^0.16.0",
     "asciimath2tex": "^1.4.0",
     "astro": "^2.0.6",
+    "date-fns": "^2.29.3",
     "deepmerge-ts": "^4.3.0",
     "eslint": "^8.33.0",
     "eslint-plugin-astro": "^0.23.0",
