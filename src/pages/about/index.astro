@@ -1,0 +1,11 @@
+---
+import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
+import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
+---
+
+<BaseLayout title="About">
+  <Fragment slot="head"></Fragment>
+  <Fragment slot="body">
+    <NavBar url={Astro.url} />
+  </Fragment>
+</BaseLayout>
