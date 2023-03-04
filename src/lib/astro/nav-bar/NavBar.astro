@@ -5,32 +5,37 @@ interface Props {
 }
 
 const { url, pageType } = Astro.props;
+
 let urlPathParts = url.pathname.split('/').filter((p) => p.length);
-urlPathParts = urlPathParts.slice(
-  0,
-  pageType == 'leaf' ? urlPathParts.length - 1 : urlPathParts.length
-);
+urlPathParts = urlPathParts
+  .slice(0, pageType == 'leaf' ? urlPathParts.length - 1 : urlPathParts.length)
+  .filter((x) => x);
 
 function urlPathPartsToPath(pathParts: string[]) {
   return '/' + pathParts.join('/');
 }
+
+let navPathParts = [];
+navPathParts.push({ text: 'home/sransara', link: '/', sep: '/' });
+urlPathParts.forEach((urlPathPart, i) => {
+  navPathParts.push({
+    text: urlPathPart,
+    link: urlPathPartsToPath(urlPathParts.slice(0, i + 1)),
+    sep: '/'
+  });
+});
+navPathParts.push({
+  text: 'cat /dev/urandom',
+  link: undefined,
+  sep: '/ $'
+});
 ---
 
 <div class="mb-2 font-mono text-sm">
-  <span class="whitespace-no-wrap inline-block">
-    /
-    <a class="text-blue-800 underline hover:text-blue-500" href="/">home/sransara</a>
-  </span>
   {
-    urlPathParts.map((p, i) => (
-      <span class="whitespace-no-wrap inline-block">
-        / {/* prettier-ignore */}
-        <a class="text-blue-800 underline hover:text-blue-500" href={urlPathPartsToPath(urlPathParts.slice(0, i + 1))}>{p}</a>
-      </span>
-    ))
+    navPathParts.map((p, i) =>
+      // prettier-ignore
+      <span class="whitespace-no-wrap inline-block">{p.sep}&nbsp;{p.link ? (<a class="text-blue-800 underline hover:text-blue-500" href={p.link}>{p.text}</a>): (p.text)}&nbsp;</span>
+    )
   }
-  <span class="whitespace-no-wrap inline-block">
-    / $
-    <span class="inline-block text-gray-600">cat /dev/urandom</span>
-  </span>
 </div>
