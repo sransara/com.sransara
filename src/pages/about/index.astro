@@ -3,9 +3,54 @@ import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
 import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
 ---
 
+<style>
+  a {
+    @apply text-blue-800 hover:text-blue-500;
+    @apply underline;
+  }
+
+  ul {
+    list-style-type: square;
+    @apply mb-4;
+    @apply py-0 pl-4;
+  }
+
+  p {
+    @apply mt-2 mb-4;
+  }
+
+  p + ul {
+    @apply -mt-4;
+  }
+</style>
 <BaseLayout title="About">
   <Fragment slot="head"></Fragment>
   <Fragment slot="body">
     <NavBar url={Astro.url} />
+    <h1 class="my-3 text-5xl font-bold">About</h1>
+    <p>My name is Samodya 'Sam' Abeysiriwardane.</p>
+    <p>Have a peek at my:</p>
+    <ul>
+      <li><a href="//github.com/sransara/" target="_blank" rel="noopener">Github</a></li>
+      <li><a href="//files.sransara.com/resume.pdf">Resume</a></li>
+    </ul>
+    <p>Say hello through:</p>
+    <ul>
+      <li>
+        Email — <a href="mailto:hi@sransara.com" target="_blank" rel="noopener">hi@sransara.com</a>
+      </li>
+      <li>
+        Twitter — <a href="//twitter.com/sransara" target="_blank" rel="noopener">@sransara</a>
+      </li>
+      <li>
+        <a
+          href="//www.linkedin.com/in/samodya-abeysiriwardane-b01866133/"
+          target="_blank"
+          rel="noopener"
+        >
+          LinkedIn
+        </a>
+      </li>
+    </ul>
   </Fragment>
 </BaseLayout>
