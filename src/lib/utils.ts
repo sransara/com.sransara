@@ -14,7 +14,7 @@ export async function getNoteMetadata(year?: string) {
     if (!notes[pathYear]) notes[pathYear] = [];
     const metadata = (await metadataT()) as Metadata;
     notes[pathYear].push({
-      route: `/notes/${pathYear}/${match.groups.slug}`,
+      route: `/notes/${pathYear}/${match.groups.slug}/`,
       metadata
     });
   }
