@@ -3,11 +3,13 @@ import image from '@astrojs/image';
 import solidJs from '@astrojs/solid-js';
 import tailwind from '@astrojs/tailwind';
 
+import siteValues from './site.values.mjs';
 import { adocx } from './asciidoctor/integration';
 import { adocxConfig, asciidoctorConfig } from './adocx.config.mjs';
 
+
 export default defineConfig({
-  site: 'https://sransara.com',
+  site: siteValues.site,
   integrations: [
     adocx(adocxConfig, asciidoctorConfig),
     image({
