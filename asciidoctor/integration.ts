@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import type { AstroConfig, AstroIntegration } from 'astro';
 import type { Plugin as VitePlugin } from 'vite';
 
-import asciidoctor, { Asciidoctor } from 'asciidoctor';
+import asciidoctor, { ProcessorOptions } from 'asciidoctor';
 import { deepmerge } from 'deepmerge-ts';
 import fglob from 'fast-glob';
 
@@ -46,7 +46,7 @@ async function compile(
   fileId: string,
   fileReader: string | Promise<string>,
   adocxConfig: AdocxOptions,
-  asciidoctorConfig: Asciidoctor.ProcessorOptions
+  asciidoctorConfig: ProcessorOptions,
 ) {
   const fileContent = await fileReader;
   const document = asciidoctorEngine.load(
@@ -83,7 +83,7 @@ ${convertedHtml}
 
 export function adocx(
   adocxConfig: AdocxOptions,
-  asciidoctorConfig: Asciidoctor.ProcessorOptions
+  asciidoctorConfig: ProcessorOptions,
 ): AstroIntegration {
   return {
     name: '@sransara/astro-adocx',
