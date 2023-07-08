@@ -25,13 +25,13 @@
 
   h2 {
     @apply text-4xl;
-    @apply mt-6 mb-2;
+    @apply mb-2 mt-6;
     @apply text-red-900;
   }
 
   h3 {
     @apply text-3xl;
-    @apply mt-4 mb-1;
+    @apply mb-1 mt-4;
     @apply text-red-900;
   }
 
@@ -54,7 +54,7 @@
   }
 
   .paragraph {
-    @apply mt-2 mb-4;
+    @apply mb-4 mt-2;
 
     .title {
       @apply text-red-900;
@@ -163,10 +163,10 @@
   .quoteblock {
     @apply bg-gray-200;
     @apply border-l-4 border-gray-500;
-    @apply py-1 px-4;
+    @apply px-4 py-1;
 
     .attribution {
-      @apply mt-2 mb-2;
+      @apply mb-2 mt-2;
     }
   }
 
@@ -178,7 +178,7 @@
   }
 
   .listingblock {
-    @apply my-4 mx-0;
+    @apply mx-0 my-4;
     @apply border border-gray-300;
 
     .title {
@@ -242,7 +242,7 @@
   }
 
   .imageblock {
-    @apply my-4 mx-0;
+    @apply mx-0 my-4;
     @apply border border-gray-300;
 
     .title {

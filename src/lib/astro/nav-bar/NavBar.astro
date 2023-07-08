@@ -33,9 +33,24 @@ navPathParts.push({
 
 <div class="mb-2 font-mono text-sm">
   {
-    navPathParts.map((p, i) =>
-      // prettier-ignore
-      <span class="whitespace-no-wrap inline-block">{p.sep}&nbsp;{p.link ? (<a class="text-blue-800 underline hover:text-blue-500" href={p.link}>{p.text}</a>): (<span class="inline-block text-gray-400">{p.text}</span>)}&nbsp;</span>
+    navPathParts.map(
+      (
+        p,
+        _i
+        // prettier-ignore
+      ) => (
+        <span class="whitespace-no-wrap inline-block">
+          {p.sep}&nbsp;
+          {p.link ? (
+            <a class="text-blue-800 underline hover:text-blue-500" href={p.link}>
+              {p.text}
+            </a>
+          ) : (
+            <span class="inline-block text-gray-400">{p.text}</span>
+          )}
+          &nbsp;
+        </span>
+      )
     )
   }
 </div>

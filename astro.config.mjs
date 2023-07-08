@@ -7,7 +7,6 @@ import siteValues from './site.values.mjs';
 import { adocx } from './asciidoctor/integration';
 import { adocxConfig, asciidoctorConfig } from './adocx.config.mjs';
 
-
 export default defineConfig({
   site: siteValues.site,
   integrations: [

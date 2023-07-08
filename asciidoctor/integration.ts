@@ -46,7 +46,7 @@ async function compile(
   fileId: string,
   fileReader: string | Promise<string>,
   adocxConfig: AdocxOptions,
-  asciidoctorConfig: ProcessorOptions,
+  asciidoctorConfig: ProcessorOptions
 ) {
   const fileContent = await fileReader;
   const document = asciidoctorEngine.load(
@@ -83,7 +83,7 @@ ${convertedHtml}
 
 export function adocx(
   adocxConfig: AdocxOptions,
-  asciidoctorConfig: ProcessorOptions,
+  asciidoctorConfig: ProcessorOptions
 ): AstroIntegration {
   return {
     name: '@sransara/astro-adocx',

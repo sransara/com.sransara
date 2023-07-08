@@ -1,5 +1,5 @@
 export type Metadata = {
-	title: string;
-	publishedDate: string;
-	updatedDate?: string;
+  title: string;
+  publishedDate: string;
+  updatedDate?: string;
 };
