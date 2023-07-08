@@ -24,5 +24,4 @@ module.exports = {
     }
     // ...
   ],
-  ignorePatterns: ['*.adoc.astro', '*.adocx.astro']
 };
