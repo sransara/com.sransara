@@ -8,11 +8,12 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "lint": "astro check && tsc --noEmit",
+    "lint": "prettier . --check && eslint . && astro check && tsc --noEmit",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/image": "^0.17.2",
+    "@astrojs/rss": "^2.4.3",
     "@astrojs/solid-js": "^2.2.0",
     "@astrojs/tailwind": "^4.0.0",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
@@ -31,7 +32,7 @@
     "html-entities": "^2.4.0",
     "katex": "^0.16.8",
     "posthtml": "^0.16.6",
-    "prettier": "^3.0.0",
+    "prettier": "^2.8.8",
     "prettier-plugin-astro": "^0.10.0",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "sharp": "^0.32.1",
