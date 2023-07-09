@@ -10,6 +10,7 @@
     "preview": "astro preview",
     "lint": "prettier --check . && eslint . && astro check && tsc --noEmit",
     "prettier:fix": "prettier --write .",
+    "eslint:fix": "eslint --fix .",
     "astro": "astro"
   },
   "dependencies": {

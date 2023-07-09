@@ -15,7 +15,7 @@ module.exports = {
       extends: ['xo-typescript', 'prettier']
     },
     {
-      files: ['*.js', '*.cjs'],
+      files: ['*.cjs'],
       env: { node: true },
       parserOptions: {
         sourceType: 'script'

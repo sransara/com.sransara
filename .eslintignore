@@ -1,6 +1,6 @@
-.eslintrc.cjs
-*.d.ts
-
 dist/
 *.adoc.astro
 *.adocx.astro
+
+.eslintrc.cjs
+*.d.ts
