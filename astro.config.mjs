@@ -9,6 +9,7 @@ import { adocxConfig, asciidoctorConfig } from './adocx.config.mjs';
 
 export default defineConfig({
   site: siteValues.site,
+  scopedStyleStrategy: 'class',
   integrations: [
     adocx(adocxConfig, asciidoctorConfig),
     image({
