@@ -13,7 +13,7 @@ export default defineConfig({
   integrations: [
     adocx(adocxConfig, asciidoctorConfig),
     image({
-      serviceEntryPoint: '../../../../integrations/utils/svgsharp.js'
+      serviceEntryPoint: './integrations/image/svg-sharp.js'
     }),
     solidJs(),
     tailwind({
