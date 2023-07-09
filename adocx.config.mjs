@@ -1,7 +1,7 @@
 import asciidoctor from 'asciidoctor';
 
-import { register as converterRegisterHandle } from './asciidoctor/converter';
-import { calloutMacroRegisterHandle } from './asciidoctor/extensions';
+import { register as converterRegisterHandle } from './integrations/asciidoctor/converter';
+import { calloutMacroRegisterHandle } from './integrations/asciidoctor/extensions';
 
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 

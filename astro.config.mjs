@@ -4,7 +4,7 @@ import solidJs from '@astrojs/solid-js';
 import tailwind from '@astrojs/tailwind';
 
 import siteValues from './site.values.mjs';
-import { adocx } from './asciidoctor/integration';
+import { adocx } from './integrations/asciidoctor/integration';
 import { adocxConfig, asciidoctorConfig } from './adocx.config.mjs';
 
 export default defineConfig({
