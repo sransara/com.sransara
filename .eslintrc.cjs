@@ -1,11 +1,26 @@
 module.exports = {
-  // ...
-  extends: [
-    // ...
-    'plugin:astro/recommended'
-  ],
-  // ...
+  env: {
+    browser: true,
+    es2021: true
+  },
+  extends: ['xo-space', 'prettier', 'plugin:astro/recommended'],
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: './tsconfig.json'
+  },
   overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      extends: ['xo-typescript', 'prettier']
+    },
+    {
+      files: ['*.js', '*.cjs'],
+      env: { node: true },
+      parserOptions: {
+        sourceType: 'script'
+      }
+    },
     {
       // Define the configuration for `.astro` file.
       files: ['*.astro'],
