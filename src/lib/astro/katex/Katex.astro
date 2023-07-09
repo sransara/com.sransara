@@ -13,7 +13,7 @@ const { block = false, lang = 'latexmath' } = Astro.props;
 
 let content: string = await Astro.slots.render('default');
 content = decodeHtmlEntities(content);
-content = lang == 'asciimath' ? new AsciiMathParser().parse(content) : content;
+content = lang === 'asciimath' ? new AsciiMathParser().parse(content) : content;
 
 const throwOnError: boolean = import.meta.env.DEV;
 const options: KatexOptions = {

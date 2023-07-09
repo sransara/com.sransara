@@ -13,6 +13,7 @@ export function getStaticPaths() {
     if (!match || !match.groups) {
       throw new Error('Invalid path globbed.');
     }
+
     return match.groups.year;
   });
   years = [...new Set(years)];

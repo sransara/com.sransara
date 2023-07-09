@@ -16,6 +16,7 @@ export function getStaticPaths() {
     if (!match || !match.groups) {
       throw new Error('Invalid path globbed.');
     }
+
     return {
       params: {
         year: match.groups.year,
@@ -33,6 +34,7 @@ const { metadata } = (await import(
 if (!metadata.publishedDate.startsWith(year || '0000')) {
   throw new Error("metadata.publishedDate and path year doesn't match");
 }
+
 const AstroEmbed = (await import(
   `../../../../../src/text/notes/${year}/${slug}/index.adoc.astro`
 )) as AstroInstance & { docattrs: any };

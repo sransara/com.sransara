@@ -5,41 +5,41 @@ import { fileURLToPath } from 'node:url';
 import type { AstroConfig, AstroIntegration } from 'astro';
 import type { Plugin as VitePlugin } from 'vite';
 
-import asciidoctor, { ProcessorOptions } from 'asciidoctor';
+import asciidoctor, { type ProcessorOptions } from 'asciidoctor';
 import { deepmerge } from 'deepmerge-ts';
 import fglob from 'fast-glob';
 
 import { transform } from './transform';
 
-interface AstroConfigSetupHookOptions {
+type AstroConfigSetupHookOptions = {
   config: AstroConfig;
   command: 'dev' | 'build' | 'preview';
   isRestart: boolean;
   updateConfig: (newConfig: Record<string, any>) => void;
-  // addRenderer: (renderer: AstroRenderer) => void;
+  // AddRenderer: (renderer: AstroRenderer) => void;
   addWatchFile: (path: string | URL) => void;
-  // injectScript: (stage: InjectedScriptStage, content: string) => void;
+  // InjectScript: (stage: InjectedScriptStage, content: string) => void;
   // injectRoute: (injectRoute: InjectedRoute) => void;
-}
+};
 
-interface AdocxOptions {
+type AdocxOptions = {
   astroComponentScript: string;
-}
+};
 
 const asciidoctorEngine = asciidoctor();
 
 const extensions = ['.adocx.astro', '.adoc.astro'];
 
 function astroComponentParts(text: string) {
-  let fence = /^---$(?<fenced>[\s\S]+?)^---$/m;
-  const match = text.match(fence);
+  const fence = /^---$(?<fenced>[\s\S]+?)^---$/m;
+  const match = fence.exec(text);
   if (match) {
-    const componentScript = match.groups?.fenced || '';
+    const componentScript = match.groups?.fenced ?? '';
     const textWithoutFence = text.replace(fence, '');
     return [componentScript, textWithoutFence];
-  } else {
-    return ['', text];
   }
+
+  return ['', text];
 }
 
 async function compile(
@@ -59,10 +59,10 @@ async function compile(
   );
 
   const title = document.getTitle();
-  const attributes = document.getAttributes();
-  const docattrs = {
+  const attributes: unknown = document.getAttributes();
+  const docattrs: unknown = {
     title,
-    ...attributes
+    ...(attributes as Record<string, unknown>)
   };
 
   const converted = document.convert();
@@ -88,17 +88,19 @@ export function adocx(
   return {
     name: '@sransara/astro-adocx',
     hooks: {
-      'astro:config:setup': async ({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      async 'astro:config:setup'({
         config: astroConfig,
         addWatchFile,
         updateConfig
-      }: AstroConfigSetupHookOptions) => {
-        for (const templateDir of asciidoctorConfig.template_dirs || []) {
+      }: AstroConfigSetupHookOptions) {
+        for (const templateDir of asciidoctorConfig.template_dirs ?? []) {
           const dependencies = fglob.sync(path.join(templateDir, '**'), { absolute: true });
           for (const dependency of dependencies) {
             addWatchFile(dependency);
           }
         }
+
         const cwd = fileURLToPath(astroConfig.root);
         const adocxFiles = path.join(cwd, 'asciidoctor', '**/*.ts');
         const adocxConfigFile = path.join(cwd, 'adocx.config.mjs');
@@ -118,6 +120,7 @@ export function adocx(
                   if (!extensions.some((ext) => fileId.endsWith(ext))) {
                     return;
                   }
+
                   const fileContent = await fs.readFile(fileId, 'utf-8');
                   const astroComponent = await compile(
                     fileId,
@@ -125,7 +128,7 @@ export function adocx(
                     adocxConfig,
                     asciidoctorConfig
                   );
-                  // await fs.writeFile(`${path.dirname(fileId)}/out._astro`, astroComponent);
+                  // Await fs.writeFile(`${path.dirname(fileId)}/out._astro`, astroComponent);
                   return {
                     code: astroComponent
                   };
@@ -133,7 +136,7 @@ export function adocx(
                 async handleHotUpdate(context) {
                   // Hack to make HMR work
                   const fileContent = await context.read();
-                  context.read = () =>
+                  context.read = async () =>
                     compile(context.file, fileContent, adocxConfig, asciidoctorConfig);
                   return context.modules;
                 },
@@ -142,9 +145,7 @@ export function adocx(
                   // Move our plugin to before astro:build plugin
                   const plugins = server.config.plugins as VitePlugin[];
                   const findPluginIndex = (ps: VitePlugin[], name: string) =>
-                    ps.findIndex((p) => {
-                      return p.name === name;
-                    });
+                    ps.findIndex((p) => p.name === name);
                   const adocxPluginIndex = findPluginIndex(plugins, 'astro-adoc');
                   const adocxPlugin = plugins[adocxPluginIndex];
                   const astroBuildPluginIndex = findPluginIndex(plugins, 'astro:build');

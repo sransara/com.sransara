@@ -1,4 +1,3 @@
-// @ts-nocheck
 import posthtml from 'posthtml';
 
 function getAttr(node, key, default_) {
@@ -42,6 +41,7 @@ export async function transform(html) {
             node.content = code.content;
             node.tag = 'Shiki';
           }
+
           setAttr(node, 'is:raw', true);
           return node;
         });
@@ -54,15 +54,15 @@ export async function transform(html) {
         });
 
         tree.match({ tag: 'div', attrs: { class: 'stemblock' } }, (node) => {
-          const mathNode = node.content?.find((node) => node.attrs?.class == 'content');
+          const mathNode = node.content?.find((node) => node.attrs?.class === 'content');
           mathNode.tag = 'Katex';
 
-          // remove stem delimitters added by the backend
+          // Remove stem delimitters added by the backend
           const content = (mathNode.content || ['\\(\\)'])[0];
-          const match = content.match(/^\s*(?<delim>\\[\[$])(?<mathContent>[\s\S]*)\\[\]$]\s*$/);
-          mathNode.content = [match.groups['mathContent']];
+          const match = content.match(/^\s*(?<delim>\\[[$])(?<mathContent>[\s\S]*)\\[\]$]\s*$/);
+          mathNode.content = [match.groups.mathContent];
 
-          setAttr(mathNode, 'lang', match.groups['delim'] == '[' ? 'latexmath' : 'asciimath');
+          setAttr(mathNode, 'lang', match.groups.delim === '[' ? 'latexmath' : 'asciimath');
           setAttr(mathNode, 'is:raw', true);
           return node;
         });

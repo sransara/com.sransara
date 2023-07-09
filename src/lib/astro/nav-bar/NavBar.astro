@@ -8,14 +8,14 @@ const { url, pageType = 'non-leaf' } = Astro.props;
 
 let urlPathParts = url.pathname.split('/').filter((p) => p.length);
 urlPathParts = urlPathParts
-  .slice(0, pageType == 'leaf' ? urlPathParts.length - 1 : urlPathParts.length)
+  .slice(0, pageType === 'leaf' ? urlPathParts.length - 1 : urlPathParts.length)
   .filter((x) => x);
 
 function urlPathPartsToPath(pathParts: string[]) {
   return '/' + pathParts.join('/');
 }
 
-let navPathParts = [];
+const navPathParts = [];
 navPathParts.push({ text: 'home/sransara', link: '/', sep: '/' });
 urlPathParts.forEach((urlPathPart, i) => {
   navPathParts.push({
@@ -33,24 +33,9 @@ navPathParts.push({
 
 <div class="mb-2 font-mono text-sm">
   {
-    navPathParts.map(
-      (
-        p,
-        _i
-        // prettier-ignore
-      ) => (
-        <span class="whitespace-no-wrap inline-block">
-          {p.sep}&nbsp;
-          {p.link ? (
-            <a class="text-blue-800 underline hover:text-blue-500" href={p.link}>
-              {p.text}
-            </a>
-          ) : (
-            <span class="inline-block text-gray-400">{p.text}</span>
-          )}
-          &nbsp;
-        </span>
-      )
+    // prettier-ignore
+    navPathParts.map((p, _i) =>
+      <span class="whitespace-no-wrap inline-block">{p.sep}&nbsp;{p.link ? (<a class="text-blue-800 underline hover:text-blue-500" href={p.link}>{p.text}</a>): (<span class="inline-block text-gray-400">{p.text}</span>)}&nbsp;</span>
     )
   }
 </div>

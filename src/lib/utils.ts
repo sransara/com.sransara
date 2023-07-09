@@ -1,22 +1,35 @@
 import type { Metadata } from '@src/lib/types/notes';
 
 export async function getNoteMetadata(year?: string) {
-  const notes: { [key: string]: { route: string; metadata: Metadata }[] } = {};
+  const notes: Record<string, Array<{ route: string; metadata: Metadata }>> = {};
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts', { import: 'metadata' });
   const pathPattern = /^\/src\/text\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/metadata.ts$/;
-  for (const [path, metadataT] of Object.entries(metadataPaths)) {
-    const match = path.match(pathPattern);
-    if (!match || !match.groups) {
-      throw new Error('Invalid path globbed.');
-    }
-    const pathYear = match.groups.year;
-    if (year && year !== pathYear) continue;
+  const notesList = await Promise.all(
+    Object.entries(metadataPaths).map(async ([path, metadataT]) => {
+      const match = pathPattern.exec(path);
+      if (!match?.groups) {
+        throw new Error('Invalid path globbed.');
+      }
+
+      const pathYear = match.groups.year;
+      if (year && year !== pathYear) return;
+      const metadata = (await metadataT()) as Metadata;
+      return [
+        pathYear,
+        {
+          route: `/notes/${pathYear}/${match.groups.slug}/`,
+          metadata
+        }
+      ] as [string, { route: string; metadata: Metadata }];
+    })
+  );
+
+  for (const note of notesList) {
+    if (!note) continue;
+    const [pathYear, metadata] = note;
     if (!notes[pathYear]) notes[pathYear] = [];
-    const metadata = (await metadataT()) as Metadata;
-    notes[pathYear].push({
-      route: `/notes/${pathYear}/${match.groups.slug}/`,
-      metadata
-    });
+    notes[pathYear].push(metadata);
   }
+
   return notes;
 }
