@@ -128,7 +128,7 @@ export function adocx(
                     adocxConfig,
                     asciidoctorConfig
                   );
-                  // Await fs.writeFile(`${path.dirname(fileId)}/out._astro`, astroComponent);
+                  /// await fs.writeFile(`${path.dirname(fileId)}/out._astro`, astroComponent);
                   return {
                     code: astroComponent
                   };
