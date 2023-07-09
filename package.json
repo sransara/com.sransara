@@ -8,7 +8,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "lint": "prettier . --check && eslint . && astro check && tsc --noEmit",
+    "lint": "prettier --check . && eslint . && astro check && tsc --noEmit",
+    "prettier:fix": "prettier --write .",
     "astro": "astro"
   },
   "dependencies": {
