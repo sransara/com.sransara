@@ -1,6 +1,6 @@
 import type { Metadata } from '@src/lib/types/notes';
 
-export async function getNoteMetadata(year?: string) {
+export const getNoteMetadata = async (year?: string) => {
   const notes: Record<string, Array<{ route: string; metadata: Metadata }>> = {};
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts', { import: 'metadata' });
   const pathPattern = /^\/src\/text\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/metadata.ts$/;
@@ -32,4 +32,4 @@ export async function getNoteMetadata(year?: string) {
   }
 
   return notes;
-}
+};
