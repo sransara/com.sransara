@@ -12,6 +12,7 @@
   h5,
   h6 {
     text-align: left;
+    @apply text-amber-900;
 
     a.anchor::before {
       content: '\00A7';
@@ -25,32 +26,27 @@
 
   h2 {
     @apply text-4xl;
-    @apply mb-2 mt-8;
-    @apply text-amber-900;
+    @apply mt-8;
   }
 
   h3 {
     @apply text-3xl;
-    @apply mb-1 mt-6;
-    @apply text-amber-900;
+    @apply mt-6;
   }
 
   h4 {
     @apply text-2xl;
     @apply mt-4;
-    @apply text-amber-900;
   }
 
   h5 {
     @apply text-xl;
     @apply mt-4;
-    @apply text-amber-900;
   }
 
   h6 {
     @apply text-lg;
     @apply mt-4;
-    @apply text-amber-900;
   }
 
   .paragraph {
