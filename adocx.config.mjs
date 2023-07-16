@@ -34,6 +34,7 @@ export const asciidoctorConfig = {
     stem: 'latexmath',
     toc: 'macro',
     imagesdir: './',
-    'kroki-fetch-diagram': true
+    'kroki-fetch-diagram': true,
+    'kroki-default-format': 'png'
   }
 };
