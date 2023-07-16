@@ -43,17 +43,17 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
 ---
 
 <BaseLayout title={metadata.title}>
-  <Fragment slot="head"></Fragment>
+  <Fragment slot="head">
+    <meta property="og:title" content={metadata.title} />
+  </Fragment>
   <Fragment slot="body">
     <NavBar url={Astro.url} pageType="leaf" />
     <article>
       <h1 class="my-3 font-serif text-5xl font-bold underline">{metadata.title}</h1>
       <div class="my-2 text-xs text-gray-500">
         Note by
-        <a class="text-blue-800 underline hover:text-blue-500" href="/about">
-          <!-- prettier-ignore  -->
-          Samodya R. Abeysiriwardane</a
-        >
+        <!-- prettier-ignore  -->
+        <a class="text-blue-800 underline hover:text-blue-500" href="/about">Samodya R. Abeysiriwardane</a>
         &nbsp;|&nbsp; Published
         <span class="text-gray-800">{metadata.publishedDate}</span>
         {
@@ -65,15 +65,13 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
           )
         }
         &nbsp;|&nbsp;
+        <!-- prettier-ignore  -->
         <a
           class="text-blue-800 underline hover:text-blue-500"
           target="_blank"
           rel="noopener noreferrer"
           href={`https://github.com/sransara/sransara.com/tree/master/src/text/notes/${year}/${slug}/`}
-        >
-          <!-- prettier-ignore  -->
-          Source</a
-        >
+        >Source</a>
         &nbsp;|&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
       </div>
@@ -91,18 +89,20 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
       <hr class="my-4 border-2 border-gray-600" />
       <div class="bg-yellow-200 p-5 text-sm">
         Published by
-        <span class="text-gray-800">Samodya R. Abeysiriwardane</span>
+        <span class="text-gray-800">
+          <!-- prettier-ignore  -->
+          <a class="text-blue-800 underline hover:text-blue-500" href="/about">Samodya R. Abeysiriwardane</a>
+        </span>
         on
         <span class="text-gray-800">{metadata.publishedDate}</span>
         &nbsp;/&nbsp;
+        <!-- prettier-ignore  -->
         <a
           class="text-blue-800 underline hover:text-blue-500"
           target="_blank"
           rel="noopener noreferrer"
           href={`https://github.com/sransara/sransara.com/tree/master/src/text/notes/${year}/${slug}/`}
-        >
-          Source</a
-        >
+        >Source</a>
         &nbsp;/&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
       </div>
