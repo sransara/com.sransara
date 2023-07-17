@@ -2,13 +2,15 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { AstroConfig, AstroIntegration } from 'astro';
-import type { Plugin as VitePlugin } from 'vite';
-
 import asciidoctor, { type ProcessorOptions } from 'asciidoctor';
+import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
+import type { AstroConfig, AstroIntegration } from 'astro';
 import { deepmerge } from 'deepmerge-ts';
 import fglob from 'fast-glob';
+import type { Plugin as VitePlugin } from 'vite';
 
+import { register as converterRegisterHandle } from './converter';
+import { calloutMacroRegisterHandle } from './extensions';
 import { transform } from './transform';
 
 type AstroConfigSetupHookOptions = {
@@ -25,8 +27,6 @@ type AstroConfigSetupHookOptions = {
 type AdocxOptions = {
   astroComponentScript: string;
 };
-
-const asciidoctorEngine = asciidoctor();
 
 const extensions = ['.adocx.astro', '.adoc.astro'];
 
@@ -49,6 +49,12 @@ async function compile(
   asciidoctorConfig: ProcessorOptions
 ) {
   const fileContent = await fileReader;
+
+  const asciidoctorEngine = asciidoctor();
+  converterRegisterHandle(asciidoctorEngine);
+  krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
+  calloutMacroRegisterHandle(asciidoctorEngine.Extensions);
+
   const document = asciidoctorEngine.load(
     fileContent,
     deepmerge(asciidoctorConfig, {
