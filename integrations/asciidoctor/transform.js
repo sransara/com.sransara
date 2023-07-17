@@ -37,7 +37,8 @@ export async function transform(html) {
         tree.match({ tag: 'pre' }, (node) => {
           if (getAttr(node, 'class', '').includes('highlight')) {
             const code = node.content[0];
-            setAttr(node, 'lang', getAttr(code, 'data-lang', 'python'));
+            const lang = getAttr(code, 'data-lang-highlight') ?? getAttr(code, 'data-lang', 'text');
+            setAttr(node, 'lang', lang);
             node.content = code.content;
             node.tag = 'Shiki';
           }

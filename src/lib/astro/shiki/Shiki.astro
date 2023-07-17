@@ -9,14 +9,18 @@ interface Props {
 const { lang } = Astro.props;
 
 const highlighter = await getHighlighter({ theme: 'github-light' });
+const langs = highlighter.getLoadedLanguages();
 
-let content: string = await Astro.slots.render('default');
-content = content.replace(
+let content: string | undefined = await Astro.slots.render('default');
+content = (content || '').replace(
   /<i class="conum" data-value="\d+"><\/i><b>\((\d+)\)<\/b>/g,
   '\u0D82$1\u0D83'
 );
 content = decodeHtmlEntities(content);
-let output = highlighter.codeToHtml(content, { lang });
+
+let output = highlighter.codeToHtml(content, {
+  lang: (langs as string[]).indexOf(lang) > -1 ? lang : 'text'
+});
 output = output.replace(/\u0D82(\d+)\u0D83/g, '<i class="conum" data-value="$1"></i><b>$1</b>');
 ---
 
