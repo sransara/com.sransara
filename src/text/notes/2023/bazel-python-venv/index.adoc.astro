@@ -146,7 +146,7 @@ pyshell(
 
 Now we can run `bazel run //:pyshell` to start a Python shell with the declared dependencies available in `PYTHONPATH`.
 
-== VSCode integration
+== Bonus: VSCode integration
 
 After running `bazel build //:pyshell` there will be an artifact that we can directly execute at `bazel-bin/pyshell`.
 By setting that as the `python.defaultInterpreterPath` in VSCode settings we can use the Python LSP as if nothing changed.
