@@ -1,0 +1,164 @@
+= Missing guide for creating a Python virtual environment in Bazel
+
+Bazel provides great tooling for building and testing Python code, but https://github.com/bazelbuild/rules_python[rules_python] as of this note (2023-05-05) do not provide an obvious way to create a Python shell with the `PYTHONPATH` footnote:[A Python shell with the `PYTHONPATH` is what I call a Python virtual environment in this guide.].
+As we venture outside the norms like `venv` by using Bazel, having access to a Python shell/enviroment lets us:
+
+- Hook into a Python LSP like nothing changed
+- Editor integrations (Tips for VSCode integration will be provided later in this guide)
+- Use modules as if we were doing `python -m IPython` or `python -m pytest`
+- Open a REPL
+- etc.
+
+[discrete]
+=== TLDR
+
+We create a `py_binary` macro that uses Bazel Python execution environment to start a `sys.executable` process.
+
+[discrete]
+=== Disclaimer
+I have not tested this method with Windows, but I suspect it will work with some minor tweaks.
+
+== Problem
+
+`PYTHONPATH` is constructed into a Bazel Python execution environment by the https://cs.opensource.google/bazel/bazel/+/master:tools/python/python_bootstrap_template.txt;drc=91584dd4f189f60b67d1984aeeaf2de8496ea824[python_bootstrap_template.txt] file for a `py_binary` target.
+We want to use this environment to just start the interpreter not run a script.
+
+As far as I could this was not possible without changing/overriding the template. But keeping the template up to date is a pain.
+
+== Solution
+
+Since we can not _not_ run a script, we will just run a wrapper script that starts the interpretor that started iteself.
+
+=== Version 1 of the solution
+
+.Initial version of pyshell.py
+[#source:pyshell-py-initial-version]
+[source,python]
+----
+import os
+import sys
+
+os.execv( <1>
+    sys.executable, <2>
+    [sys.executable] + sys.argv[1:],
+)
+----
+<1> Swap the current process with a new process using Unix `execv` system call.
+<2> Use the current Python executable to start the new process, consequently also the intepreter declared in the Bazel `WORKPLACE` file.
+
+Now we just need to create a `py_binary` target that runs this script.
+
+.Initial version of BUILD.bazel
+[#source:build-bazel-initial-version]
+[source,bazel]
+----
+load("@pypi//:requirements.bzl", "all_requirements", "requirement")
+
+py_binary(
+    name = "pyshell",
+    srcs = ["//label/to:pyshell.py"],
+    deps = [ <1>
+        requirement('pytest'),
+        requirement('ipython'),
+    ],
+    # deps = all_requirements, <2>
+)
+----
+<1> Here list the exact requirements you want in your Python environment.
+<2> If you want all the requirements in your `requirements.txt` file, you can use the `all_requirements` macro.
+
+Now we can run `bazel run //label/to:pyshell` to start a Python shell with the `PYTHONPATH` set to the Bazel Python execution environment.
+Or run `bazel run //label/to:pyshell -- -m IPython` to run start an `IPython` shell.
+
+=== Version 2 of the solution
+
+The solution above works, but it is not very ergonomic if you want different shells with different sets of dependencies.
+We can improve it by creating a macro that does the same thing.
+
+Let's assume a directory structure like this:
+
+----
+├── bazel
+│   ├── pyshell.bzl
+│   └── pyshell.py
+├── WORKSPACE
+├── BUILD.bazel
+└── requirements.txt
+----
+
+We can create a macro that creates a `py_binary` target that runs the `pyshell.py` script in the `pyshell.bzl` file.
+
+.pyshell.bzl
+[#source:pyshell-bzl]
+[source,starlark]
+----
+def pyshell(name, srcs, **kwargs):
+    pyshell_label = Label("//bazel:pyshell.py")
+    native.py_binary(
+        name = name,
+        srcs = [pyshell_label] + srcs,
+        main = pyshell_label,
+        **kwargs,
+    )
+----
+
+Slightly improved version of the <<source:pyshell-py-initial-version>> script that
+changes the working directory to the directory where the `bazel` command was run from
+to match the behavior we expect when running `python` from the command line.
+
+.Improved version of pyshell.py
+[#source:pyshell-py-improved-version]
+[source,python]
+----
+import os
+import sys
+
+if __name__ == "__main__":
+    # BAZEL_WORKING_DIRECTORY is where the bazel command was run from.
+    bazel_working_dir = os.environ.get("BAZEL_WORKING_DIRECTORY")
+    if bazel_working_dir:
+        os.chdir(bazel_working_dir)
+
+    os.execv(
+        sys.executable,
+        [sys.executable] + sys.argv,
+    )
+----
+
+Now in `BUILD.bazel` in workspace root we can use the `pyshell` macro.
+
+.Improved version of BUILD.bazel
+[#source:build-bazel-improved-version]
+[source,bazel]
+----
+load("@pypi//:requirements.bzl", "all_requirements", "requirement")
+load("//bazel/pyshell.bzl", "pyshell")
+
+pyshell(
+    name = "pyshell",
+    deps = [
+        requirement('pytest'),
+        requirement('ipython'),
+    ],
+    # deps = all_requirements,
+)
+----
+
+Now we can run `bazel run //:pyshell` to start a Python shell with the declared dependencies available in `PYTHONPATH`.
+
+== VSCode integration
+
+After running `bazel build //:pyshell` there will be an artifact that we can directly execute at `bazel-bin/pyshell`.
+By setting that as the `python.defaultInterpreterPath` in VSCode settings we can use the Python LSP as if nothing changed.
+
+.VSCode settings
+[source,javascript]
+----
+"python.defaultInterpreterPath": "${workspaceFolder}/bazel-bin/pyshell",
+----
+
+== Closing remarks
+
+This is a very simple solution that works for me, but it is not perfect.
+I would love to know if there is an alternative recommended solution.
+If not it would be nice to have a macro like this in the Bazel Python rules.
