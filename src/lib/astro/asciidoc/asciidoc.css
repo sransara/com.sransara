@@ -216,6 +216,11 @@
   .listingblock + .colist {
     @apply -mt-4;
     @apply mb-4;
+
+    td {
+      @apply align-top;
+    }
+
     .conum[data-value] {
       @apply mr-1;
     }
@@ -253,5 +258,19 @@
         @apply mx-auto;
       }
     }
+  }
+}
+
+#footnotes {
+  hr {
+    height: 1em;
+    @apply text-4xl;
+    @apply text-amber-900;
+    @apply mb-2 mt-8;
+    @apply border-none;
+  }
+
+  hr::before {
+    content: 'Footnotes';
   }
 }
