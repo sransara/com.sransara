@@ -32,7 +32,7 @@ const siteTagLine = siteValues.tagLine;
     <slot name="body" />
   </body>
   {
-    import.meta.env.DEV == false && (
+    import.meta.env.DEV === false && (
       <script data-goatcounter="https://goat.sransara.com/goat" async src="/count.js" />
     )
   }
