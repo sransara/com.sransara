@@ -16,7 +16,9 @@ We create a `py_binary` macro that uses Bazel Python execution environment to st
 
 [discrete]
 === Disclaimer
-I have not tested this method with Windows, but I suspect it will work with some minor tweaks.
+
+- I have not tested this method with Windows, but I suspect it will work with some minor tweaks.
+- I am not a Bazel expert, so there might be a better way to do this. My Google-fu didn't find any other guide on this issue, so I decided to write down my solution for it.
 
 == Problem
 
@@ -27,7 +29,7 @@ As far as I could this was not possible without changing/overriding the template
 
 == Solution
 
-Since we can not _not_ run a script, we will just run a wrapper script that starts the interpretor that started iteself.
+Since we can not _not_ run a script, we will just run a wrapper script that starts the interpreter that started iteself.
 
 === Version 1 of the solution
 
