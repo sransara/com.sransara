@@ -1,3 +1,4 @@
 dist/
 *.adoc.astro
 *.adocx.astro
+public/count.js
