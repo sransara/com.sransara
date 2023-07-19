@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
-import siteValues from '~/site.values.mjs';
+import siteValues from '@/site.values.mjs';
 import { getNoteMetadata } from '@src/lib/utils';
 
 export const get: APIRoute = async function () {
