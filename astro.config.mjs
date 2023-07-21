@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import image from '@astrojs/image';
+import sitemap from '@astrojs/sitemap';
 import solidJs from '@astrojs/solid-js';
 import tailwind from '@astrojs/tailwind';
 
@@ -15,6 +16,7 @@ export default defineConfig({
     image({
       serviceEntryPoint: './integrations/image/svg-sharp.js'
     }),
+    sitemap(),
     solidJs(),
     tailwind({
       config: {
