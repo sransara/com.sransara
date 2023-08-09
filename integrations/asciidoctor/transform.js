@@ -49,6 +49,7 @@ export async function transform(html) {
 
         tree.match({ tag: 'span', attrs: { class: 'math' } }, (node) => {
           node.tag = 'Katex';
+          // Default data-lang is latexmath
           setAttr(node, 'lang', getAttr(node, 'data-lang', 'latexmath'));
           setAttr(node, 'is:raw', true);
           return node;
@@ -58,12 +59,13 @@ export async function transform(html) {
           const mathNode = node.content?.find((node) => node.attrs?.class === 'content');
           mathNode.tag = 'Katex';
 
-          // Remove stem delimitters added by the backend
+          // Remove stem delimitters added by the backend - per adocx.config.mjs
           const content = (mathNode.content || ['\\(\\)'])[0];
           const match = content.match(/^\s*(?<delim>\\[[$])(?<mathContent>[\s\S]*)\\[\]$]\s*$/);
           mathNode.content = [match.groups.mathContent];
 
-          setAttr(mathNode, 'lang', match.groups.delim === '[' ? 'latexmath' : 'asciimath');
+          setAttr(mathNode, 'lang', match.groups.delim === '\\[' ? 'latexmath' : 'asciimath');
+          setAttr(mathNode, 'block', true);
           setAttr(mathNode, 'is:raw', true);
           return node;
         });
