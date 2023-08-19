@@ -13,7 +13,7 @@ export const asciidoctorConfig = {
   backend: 'html5',
   standalone: false,
   attributes: {
-    xrefstyle: 'short',
+    xrefstyle: 'full',
     'listing-caption': 'Listing',
     sectanchors: '',
     idprefix: 'id:',
