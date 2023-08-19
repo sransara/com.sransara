@@ -1,0 +1,418 @@
+= Step by step tail recursion elimination of power function as an example
+
+[discrete]
+=== TLDR
+We start with a simple *recursive implementation of power function*.
+And then keep improving it step by step to get to an *iterative implementation*.
+We will then see how *tail recursion elimination* can be *done mechanically by a compiler*.
+And leave with pondering about the *future of programming languages*.
+
+== Problem statement
+
+Let's start with a problem statement.
+
+> Write an algorithm that computes stem:[x^n] for a
+> given stem:[x] and stem:[n] where stem:[x] is a real number and stem:[n] is positive integer stem:[> 0].
+
+
+== Implementations
+
+Easy peasy.
+
+[stem]
+++++
+x^n =\begin{cases}
+  x, & \text{if $n = 1$}.\\
+  x^n * x^{n - 1}, & \text{otherwise}.
+\end{cases}
+++++
+
+And simple Python implementation:
+
+.v0 - Naiive implementation
+[#source:v0-implementation]
+[source,python]
+----
+def power(x: int, n: int) -> int::
+    if n == 1: return x
+    else: return x * power(x, n - 1)
+----
+
+Not so fast. This is a recursive algorithm. It's easy to understand, but it's not very efficient.
+The time complexity of it is stem:[O(n)]. That's because we're doing `n` recursive calls.
+
+Can we do better?
+
+We can cut the recursive calls in half for each stem:[n] By observing that:
+
+[asciimath]
+++++
+"if n is even" rarr x^n = (x^2)^(n / 2)
+++++
+
+.v1 - Recursive implementation
+[#source:v1-implementation]
+[source,python]
+----
+def power(x: int, n: int) -> int:
+    if n == 1: return x
+    # if n is even
+    if n % 2 == 0: return power(x * x, n // 2)
+    # else n is odd
+    else: return x * power(x, n - 1)
+----
+
+Now we're doing only stem:[log(n)] recursive calls. That's a big win.
+Time complexity of this algorithm is stem:[O(log(n))] assuming multiplication operation is stem:[O(1)].
+
+.Comparing function call tree of v0 vs v1
+[mermaid,function-call-tree-v0-vs-v1]
+....
+flowchart LR
+    v0l1(("pow(3, 8) = ?")) -- 3 x --> v0l2["pow(3, 7)"]
+    v0l2 -- 3 x --> v0l3["pow(3, 6)"]
+    v0l3 -- 3 x --> v0l4["pow(3, 5)"]
+    v0l4 -- 3 x --> v0l5["pow(3, 4)"]
+    v0l5 -- 3 x --> v0l6["pow(3, 3)"]
+    v0l6 -- 3 x --> v0l7["pow(3, 2)"]
+    v0l7 -- 3 x --> v0l8(("pow(3, 1) = 3"))
+    v0l8 -- 9 --> v0l7
+    v0l7 -- 27 --> v0l6
+    v0l6 -- 81 --> v0l5
+    v0l5 -- 243 --> v0l4
+    v0l4 -- 729 --> v0l3
+    v0l3 -- 2187 --> v0l2
+    v0l2 -- 6561 --> v0l1
+
+    v1l1(("pow(3, 8) = ?")) --> v1l2["pow(9, 4)"]
+    v1l2 --> v1l3["pow(81, 2)"]
+    v1l3 --> v1l4(("pow(6561, 1) = 6561"))
+    v1l4 -- 6561 --> v1l3
+    v1l3 -- 6561 --> v1l2
+    v1l2 -- 6561 --> v1l1
+
+    linkStyle default stroke:lightgray
+    classDef default font-family:monospace,font-size:8pt
+....
+
+How about space complexity? We're doing stem:[log(n)] recursive calls, so we need to store stem:[log(n)] stack frames.
+So it is stem:[O(log(n))] as well. It is certainly better than stem:[O(n)] of v0.
+
+But can we do better?
+
+Let's zoom into the function call tree of v1.
+
+.Function call tree of v1
+[#image:function-call-tree-v1]
+[mermaid,function-call-tree-v1]
+....
+flowchart LR
+    v1l1(("pow(3, 8) = ?")) --> v1l2["pow(9, 4)"]
+    v1l2 --> v1l3["pow(81, 2)"]
+    v1l3 --> v1l4(("pow(6561, 1) = 6561"))
+    v1l4 -- 6561 --> v1l3
+    v1l3 -- 6561 --> v1l2
+    v1l2 -- 6561 --> v1l1
+
+    linkStyle default stroke:lightgray
+    classDef default font-family:monospace,font-size:10pt
+....
+
+We see that 6561 is being returned back through the call functions.
+_We don't need no stack frames for that_.
+
+The call stack is great when we need to store the state and return back to it later.
+Especially seen in backtracking algorithms.
+But in this case we don't need to return back to the state.
+We just need to return the final value as the result.
+
+.It's just iteration now
+[mermaid,iteration-v2]
+....
+flowchart LR
+    v1l1(("x=3, n=8\npow(3, 8) = ?")) --> v1l2["x=x * x, n=n ÷ 2\npow(9, 4)"]
+    v1l2 --> v1l3["x=x * x, n=n ÷ 2\npow(81, 2)"]
+    v1l3 --> v1l4(("x=x * x, n=n ÷ 2\npow(6561, 1) = 6561"))
+    v1l4 --> result(6561)
+
+    linkStyle default stroke:lightgray
+    classDef default font-family:monospace,font-size:10pt
+....
+
+By viewing our previous function call tree as a loop, we can implement the same algorithm iteratively.
+
+.v2 - Iterative with a bit of recursion implementation
+[#source:v2-implementation]
+[source,python]
+----
+def power(x: int, n: int) -> int:
+    while n > 1:
+        if n % 2 == 0: # if n is even
+            # return power(x * x, n // 2)
+            x = x * x
+            n = n // 2
+        else: # else n is odd <1>
+            return x * power(x, n - 1)
+    return x
+----
+<1> Yes, I have pushed the `n is odd` case under the rug for now. We will get back to it soon.
+
+Now we're doing stem:[log(n)] iterations with stem:[O(1)] space complexity in the best case. Yay!
+
+Let's zoom back into <<source:v1-implementation>> to see what was special in the case of stem:[n] being even?
+
+.Zooming into v1 implementation
+[source,python]
+----
+def power(x: int, n: int) -> int:
+    ...
+    if n == 1: return x
+    # if n is even
+    if n % 2 == 0: return power(x * x, n / 2)
+    ...
+----
+
+What was special is that, in the case of stem:[n] being even, the *last "action"* is a recursive call to the same function.
+And that is called https://wiki.haskell.org/Tail_recursion[tail recursion].
+
+> When recursive call is at the tail end of the function, it is called *tail recursion*.
+
+Tail recursion is special because as we saw it can be easily converted to iteration.
+And this commonly known as *tail call optimization* or *tail call elimination*.
+
+- the base case is the exit condition of the loop
+- the recursive call is the loop itself
+- any variable transformations are the loop body
+
+As you can see this conversion is totally mechanical when the conditions are met.
+And any optimizing compiler is able to do this.
+
+But what if the conditions are not met?
+
+Let's zoom back into <<source:v1-implementation>> to see what was special in the case of stem:[n] being odd?
+
+.Zooming again into v1 implementation
+[source,python]
+----
+def power(x: int, n: int) -> int:
+    ...
+    if n == 1: return x
+    # if n is even
+    ...
+    # else: n is odd
+    else: return x * power(x, n - 1)
+----
+
+What's _special_ in the case of stem:[n] being odd is that, the *last action* is a multiplication.
+That's pretty much the most basic requirement for tail call optimization.
+But no fear, we can find a way.
+
+Let's zoom into <<image:function-call-tree-v1>>.
+
+.Zoom into function call tree of v1
+[mermaid,zoomed-function-call-tree-v1]
+....
+flowchart LR
+    v1l1(("pow(3, 8) = ?")) --> v1l2["pow(9, 4)"]
+    v1l2 -..-> v1l4(("pow(6561, 1) = 6561"))
+    v1l4 -. 6561 .-> v1l2
+    v1l2 -- 6561 --> v1l1
+
+    linkStyle 0,1,2,3 stroke:lightgray
+    classDef default font-family:monospace,font-size:10pt
+....
+
+We can see that `pow(6561, 1)` is a rewrite of the original function `pow(3, 8)`.
+Actually every function call in the tree is a rewrite of the original function while simplifying to reach the base case.
+
+In otherwords function parameters/arguments carry enough context to solve the original funtion.
+
+So in our problem how can we jam in the multiplication (`x *`) into the function parameters/arguments?
+We can literally jam it in by adding another parameter that passes it as a continuation (also can think of as a callback).
+
+.v3 - Iterative implementation with continuations
+[#source:v3-implementation]
+[source,python]
+----
+def power(x: int, n: int, cont) -> int:
+    if n == 1: return cont(print(x) or x)
+    # if n is even
+    if n % 2 == 0: return power(x * x, n // 2, cont)
+    # else n is odd
+    else: return power(x, n - 1, lambda result: cont(print(x, result) or x * result))
+----
+
+Okay, let's deconstruct what's going on here.
+
+1. We add a new parameter `cont` which is a function that takes an `int` and returns an `int`.
+2. We add a default value for `cont` which is the identity function.
+3. We call `cont` with the result of the function when we reach the base case.
+4. For `n is even` we pass the continuation as is.
+5. For `n is odd` we wrap the continuation with a new continuation that multiplies the result with `x`.
+
+Since 5th point is the most interesting, diving a little deeper into it:
+
+[source,python]
+----
+# Was else n is odd
+else: return x * power(x, n - 1)
+
+# Can be rewritten as
+else:
+    result = power(x, n -1) # result of the recursive call
+    return x * result
+
+# With continuation (just for this recursive step)
+else: return power(x, n - 1, lambda result: x * result)
+
+# Since the continuation of the current recusrive step
+# needs to be followed by the continuation of the previous recursive step
+# we need to compose the continuations
+#
+# continutaion                   continuation
+# of current                     of previous
+# recursive step                 recursive step
+# ---------------               ----------------
+#  (x * result)    followed by      cont
+#
+# which can be written as: cont(x * result)
+#
+else: return power(x, n - 1, lambda result: cont(x * result))
+----
+
+Small example just to make sure we're on the same page:
+
+.v3 - Iterative implementation with continuations example
+[#source:continuation-example]
+[source,python]
+----
+# to solve: power(x=3, n=6)
+power(3, 6, lambda r: r)
+# n is even
+power(3 * 3, 6 // 2, lambda r: r)
+# n is odd
+power(9, 3 - 1, lambda result: (lambda r: r)(9 * result))
+# n is even
+power(9 * 9, 2 // 2, lambda result: (lambda r: r)(9 * result))
+# n == 1
+return (lambda result: (lambda r: r)(9 * result))(81)
+= (lambda r: r)(9 * 81))
+= 729
+----
+
+The final answer gets simplified beautifully to `729`.
+
+With <<source:v3-implementation>> we have *eliminated tail recursion* once again.
+What's cool is that the last transformation that we did can also be done mechanically by a compiler if they so wish.
+
+But you are probably asking what did we really gain in <<source:v3-implementation>> compared to  <<source:v2-implementation>>?
+We still have stem:[O(n)] space complexity in worst case because of the continuations.
+
+Yes, we do. But we have gained something else. We have gained a hint of knowledge about continuations.
+https://en.wikipedia.org/wiki/Continuation-passing_style[Continuations] are a powerful concept in programming languages that is worth exploring on it own. But we're not going to do that here. We're going to continue with our problem.
+
+We can make one more observation in above <<source:continuation-example>> to see if we can do better.
+We see that, we wait till the base case (`n == 1`) to simplify the result. Do  we have to?
+
+Let's see how the base case looks like for another example.
+
+[source,python]
+----
+# to solve: power(x=3, n=14)
+...
+# at n == 1
+return (lambda r1: (lambda r2: (lambda r0: r0)(9 * r2))(81 * r1))(6561)
+= (lambda r2: (lambda r0: r0)(9 * r2))(81 * 6561)
+= (lambda r0: r0)(9 * 531441))
+= 4782969
+
+# ie. without continuation notation
+= (9 * (81 * 6561)) <1>
+= 4782969
+----
+<1> Notice the paranethesis that make the order of the operations explicit.
+
+Because of the order of the operations we have to wait till the base case to simplify the result.
+But what if we can change the order of the operations?
+If we can do `9 * 81` first, then we can simplify the result at the recursive step itself.
+
+And we can do that because we know that multiplication is associative.
+
+Armed with that knowledge let's try to rewrite <<source:v3-implementation>>.
+Instead of lazily accumulating continuations that will evaluate the result at the base case.
+Let's eagerly evaluate the accumulations at the recursive step itself.
+
+.v4 - Iterative implementation with eager evaluation
+[#source:v4-implementation]
+[source,python]
+----
+def power(x: int, n: int, acc: int = 1) -> int:
+    if n == 1: return acc * x
+    # if n is even
+    if n % 2 == 0: return power(x * x, n // 2, acc)
+    # else n is odd
+    else: return power(x, n - 1, acc * x)
+----
+
+Notice that we use `1` as the default value for `acc` instead of the identity function (`lambda r: r`).
+Because `1` is the https://en.wikipedia.org/wiki/Identity_element[identity element] of the multiplication operation.
+
+We're finally doing stem:[log(n)] iterations with stem:[O(1)] space complexity in the all cases. Yay!
+
+== LLVM tail recursion elimination
+
+What's even cooler is that a sufficiently smart compiler can do this transformation for us,
+from <<source:v1-implementation>> to <<source:v4-implementation>>.
+
+Python doesn't have tail call optimization. So we can't see this transformation in action.
+But we can see it in action with C and *clang* compiler (-O3).
+
+> LLVM Pass: https://www.llvm.org/docs/Passes.html#tailcallelim-tail-call-elimination[tailcallelim: Tail Call Elimination]
+>
+> This file transforms calls of the current function (self recursion) followed by a return instruction with a branch to the entry of the function, creating a loop. This pass also implements the following extensions to the basic algorithm:
+>
+> 1. Trivial instructions between the call and return do not prevent the transformation from taking place, though currently the analysis cannot support moving any really useful instructions (only dead ones).
+> 2. This pass transforms functions that are prevented from being tail recursive by an associative expression to use an accumulator variable, thus compiling the typical naive factorial or fib implementation into efficient code.
+> 3. TRE is performed if the function returns void, if the return returns the result returned by the call, or if the function returns a run-time constant on all exits from the function. It is possible, though unlikely, that the return returns something else (like constant 0), and can still be TRE'd. It can be TRE'd if all other return instructions in the function return the exact same value.
+> 4. If it can prove that callees do not access their caller stack frame, they are marked as eligible for tail call elimination (by the code generator).
+
+[source,c]
+----
+unsigned int pow(unsigned int x, unsigned int n) {
+    if (n == 0) { return 1; }
+    else if (n % 2 == 0) { return pow(x * x, n / 2); }
+    else { return x * pow(x, n - 1); }
+}
+----
+
+.https://godbolt.org/z/EsE19KGTj[Tail recursion elimination] in one of many LLVM IR optimization passes
+[#image:llvm-tailrec-elimination-pass]
+image::llvm-tailrec-elimination-pass.png[]
+
+The whole point of high level programming languages is to write programs that are easy to understand and reason about.
+And when we do that, we can let the compiler do the heavy lifting of optimizing the code for us.
+
+- <<source:v0-implementation>> is obvious in its intentions but slow.
+- <<source:v1-implementation>> is slightly less obvious but littler faster.
+- <<source:v4-implementation>> is fast but hides the intentions in lot of implementation details.
+
+It would be awesome if the compiler can go from <<source:v0-implementation>> to <<source:v4-implementation>>.
+But since it involves a bit of human ingenuity and knowledge of the problem domain,
+we will have to make do with compilers being able to transform <<source:v1-implementation>> to <<source:v4-implementation>>.
+
+
+== Food for thought
+
+Notice that even for clang to do the transformation, it had to know the properties of integer multiplication operation.
+- the fact that it is associative
+- the fact that it has an identity element
+
+What if our function was matrix multiplication (matrix multiplication is also associative)?
+Can the compiler still do the transformation?
+Does the programming language have to provide a way to tell the compiler that the operation is associative?
+
+Let's close this note with food for thought.
+
+If you are intrigued by that you should read https://dl.acm.org/doi/10.1145/357980.358001["An axiomatic basis for computer programming" (C.A.R. Hoare. 1983)].
+
+> In this paper an attempt is made to explore the logical foundations of computer programming by use of techniques which were first applied in the study of geometry and have later been extended to other branches of mathematics. This involves the elucidation of sets of axioms and rules of inference which can be used in proofs of the properties of computer programs. Examples are given of such axioms and rules, and a formal proof of a simple theorem is displayed. Finally, it is argued that important advantages, both theoretical and practical, may follow from a pursuance of these topics.
