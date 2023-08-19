@@ -15,7 +15,7 @@ Let's start with a problem statement.
 > given stem:[x] and stem:[n] where stem:[x] is a real number and stem:[n] is positive integer stem:[> 0].
 
 
-== Implementations
+== Recursive Implementations
 
 Easy peasy.
 
@@ -139,6 +139,8 @@ flowchart LR
     classDef default font-family:monospace,font-size:10pt
 ....
 
+== Iterative Implementations
+
 By viewing our previous function call tree as a loop, we can implement the same algorithm iteratively.
 
 .v2 - Iterative with a bit of recursion implementation
@@ -222,13 +224,18 @@ flowchart LR
     classDef default font-family:monospace,font-size:10pt
 ....
 
+== Epiphany
+
 We can see that `pow(6561, 1)` is a rewrite of the original function `pow(3, 8)`.
 Actually every function call in the tree is a rewrite of the original function while simplifying to reach the base case.
 
 In otherwords function parameters/arguments carry enough context to solve the original funtion.
 
+== Continuations
+
 So in our problem how can we jam in the multiplication (`x *`) into the function parameters/arguments?
 We can literally jam it in by adding another parameter that passes it as a continuation (also can think of as a callback).
+
 
 .v3 - Iterative implementation with continuations
 [#source:v3-implementation]
@@ -337,6 +344,8 @@ But what if we can change the order of the operations?
 If we can do `9 * 81` first, then we can simplify the result at the recursive step itself.
 
 And we can do that because we know that multiplication is associative.
+
+== Final implementation
 
 Armed with that knowledge let's try to rewrite <<source:v3-implementation>>.
 Instead of lazily accumulating continuations that will evaluate the result at the base case.
