@@ -14,8 +14,7 @@ Let's start with a problem statement.
 > Write an algorithm that computes stem:[x^n] for a
 > given stem:[x] and stem:[n] where stem:[x] is a real number and stem:[n] is positive integer stem:[> 0].
 
-
-== Recursive Implementations
+== Journey through the solution space
 
 Easy peasy.
 
@@ -138,8 +137,6 @@ flowchart LR
     linkStyle default stroke:lightgray
     classDef default font-family:monospace,font-size:10pt
 ....
-
-== Iterative Implementations
 
 By viewing our previous function call tree as a loop, we can implement the same algorithm iteratively.
 
@@ -326,7 +323,8 @@ But you are probably asking what did we really gain in <<source:v3-implementatio
 We still have stem:[O(n)] space complexity in worst case because of the continuations.
 
 Yes, we do. But we have gained something else. We have gained a hint of knowledge about continuations.
-https://en.wikipedia.org/wiki/Continuation-passing_style[Continuations] are a powerful concept in programming languages that is worth exploring on it own. But we're not going to do that here. We're going to continue with our problem.
+https://en.wikipedia.org/wiki/Continuation-passing_style[Continuations] are a powerful concept in programming languages that is worth exploring on it own.
+But we're not going to do that here. We're going to continue with our problem.
 
 We can make one more observation in above <<source:continuation-example>> to see if we can do better.
 We see that, we wait till the base case (`n == 1`) to simplify the result. Do  we have to?
@@ -353,15 +351,13 @@ Because of the order of the operations we have to wait till the base case to sim
 But what if we can change the order of the operations?
 If we can do `9 * 81` first, then we can simplify the result at the recursive step itself.
 
-And we can do that because we know that multiplication is associative.
-
-== Final implementation
+And we can do that because we know that *multiplication is associative*.
 
 Armed with that knowledge let's try to rewrite <<source:v3-implementation>>.
 Instead of lazily accumulating continuations that will evaluate the result at the base case.
 Let's eagerly evaluate the accumulations at the recursive step itself.
 
-.v4 - Iterative implementation with eager evaluation
+.v4 - Tail recursive implementation with eager evaluation
 [#source:v4-implementation]
 [source,python]
 ----
@@ -379,12 +375,52 @@ def power(x: int, n: int, acc: int = 1) -> int:
 Notice that we use `1` as the default value for `acc` instead of the identity function (`lambda r: r`).
 Because `1` is the https://en.wikipedia.org/wiki/Identity_element[identity element] of the multiplication operation.
 
+[discrete]
+=== Side note
+But what if the continuation (multiplication operation in this case) was not associative in <<source:v3-implementation>>?
+
+Then we would have to wait till the base case to evaluate the result.
+It would have essentially prevented us from transforming <<source:v3-implementation>> to <<source:v4-implementation>>.
+
+But fear not, you can read more about the fascinating idea of
+https://eli.thegreenplace.net/2017/on-recursion-continuations-and-trampolines/[trampolines] to approach this problem.
+The idea revolves around taking the continuation out of the stack and putting it in the heap.
+
+== Final implementation
+
+Let's put all the pieces together and convert <<source:v4-implementation>> to an iterative function.
+
+.v5 - Final iterative implementation
+[#source:v5-implementation]
+[source,python]
+----
+def power(x: int, n: int) -> int:
+    acc = 1
+    while n > 1:
+        if n % 2 == 0: # if n is even
+            # return power(x * x, n // 2, acc)
+            x = x * x
+            n = n // 2
+        else: # else n is odd
+            # return power(x, n - 1, acc * x)
+            acc = acc * x
+            n = n - 1
+    return acc * x
+----
+
+This was a purely mechanical transformation just like we saw when going from <<source:v1-implementation>> to <<source:v2-implementation>>.
+
+- the base case is the exit condition of the loop
+- the recursive call is the loop itself
+- any variable transformations are the loop body
+- accumulator is initialzed at the begining, transformed in middle and returned at the end
+
 We're finally doing stem:[log(n)] iterations with stem:[O(1)] space complexity in the all cases. Yay!
 
 == LLVM tail recursion elimination
 
 What's even cooler is that a sufficiently smart compiler can do this transformation for us,
-from <<source:v1-implementation>> to <<source:v4-implementation>>.
+from <<source:v1-implementation>> to <<source:v5-implementation>>.
 
 Python doesn't have tail call optimization. So we can't see this transformation in action.
 But we can see it in action with C and *clang* compiler (-O3).
@@ -416,16 +452,17 @@ And when we do that, we can let the compiler do the heavy lifting of optimizing 
 
 - <<source:v0-implementation>> is obvious in its intentions but slow.
 - <<source:v1-implementation>> is slightly less obvious but littler faster.
-- <<source:v4-implementation>> is fast but hides the intentions in lot of implementation details.
+- <<source:v5-implementation>> is fast but hides the intentions in lot of implementation details.
 
-It would be awesome if the compiler can go from <<source:v0-implementation>> to <<source:v4-implementation>>.
+It would be awesome if the compiler can go from <<source:v0-implementation>> to <<source:v5-implementation>>.
 But since it involves a bit of human ingenuity and knowledge of the problem domain,
-we will have to make do with compilers being able to transform <<source:v1-implementation>> to <<source:v4-implementation>>.
+we will have to make do with compilers being able to transform <<source:v1-implementation>> to <<source:v5-implementation>>.
 
 
 == Food for thought
 
 Notice that even for clang to do the transformation, it had to know the properties of integer multiplication operation.
+
 - the fact that it is associative
 - the fact that it has an identity element
 
