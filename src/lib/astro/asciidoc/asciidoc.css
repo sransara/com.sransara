@@ -246,14 +246,13 @@
     @apply mx-0 my-4;
     @apply flex flex-col place-content-center;
     @apply border border-gray-300;
+    @apply cursor-zoom-in;
 
-    &:not(:fullscreen) {
-      @apply cursor-zoom-in;
-    }
-
-    &:fullscreen {
+    &.fullscreen {
       @apply bg-white;
       @apply cursor-zoom-out;
+      @apply fixed left-0 top-0 m-0 h-full w-full p-0;
+      z-index: 99999;
     }
 
     .title {

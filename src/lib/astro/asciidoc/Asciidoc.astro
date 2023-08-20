@@ -11,14 +11,18 @@ import './asciidoc.css';
   const imageblocks = document.getElementsByClassName('imageblock');
   for (const imageblock of imageblocks) {
     const img = imageblock.getElementsByTagName('img')[0];
-    img.addEventListener('click', () => {
-      if (document.fullscreenElement === null) {
-        imageblock.requestFullscreen();
+    img.addEventListener('click', (event) => {
+      if (!imageblock.classList.contains('fullscreen')) {
+        event.stopPropagation();
+        imageblock.classList.add('fullscreen');
+        document.body.classList.add('overflow-hidden');
       }
     });
-    imageblock.addEventListener('click', () => {
-      if (document.fullscreenElement === imageblock) {
-        document.exitFullscreen();
+    imageblock.addEventListener('click', (event) => {
+      if (imageblock.classList.contains('fullscreen')) {
+        event.stopPropagation();
+        imageblock.classList.remove('fullscreen');
+        document.body.classList.remove('overflow-hidden');
       }
     });
   }
