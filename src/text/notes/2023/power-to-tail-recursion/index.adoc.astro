@@ -390,6 +390,12 @@ The idea revolves around taking the continuation out of the stack and putting it
 
 Let's put all the pieces together and convert <<source:v4-implementation>> to an iterative function.
 
+To go from <<source:v4-implementation>> to <<source:v5-implementation>> we just need to remember the following:
+
+> - the base case is the exit condition of the loop
+> - the recursive call is the loop itself
+> - any variable transformations are the loop body
+
 .v5 - Final iterative implementation
 [#source:v5-implementation]
 [source,python]
@@ -407,13 +413,6 @@ def power(x: int, n: int) -> int:
             n = n - 1
     return acc * x
 ----
-
-This was a purely mechanical transformation just like we saw when going from <<source:v1-implementation>> to <<source:v2-implementation>>.
-
-- the base case is the exit condition of the loop
-- the recursive call is the loop itself
-- any variable transformations are the loop body
-- accumulator is initialzed at the begining, transformed in middle and returned at the end
 
 We're finally doing stem:[log(n)] iterations with stem:[O(1)] space complexity in the all cases. Yay!
 
