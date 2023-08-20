@@ -244,15 +244,27 @@
 
   .imageblock {
     @apply mx-0 my-4;
+    @apply flex flex-col place-content-center;
     @apply border border-gray-300;
 
+    &:not(:fullscreen) {
+      @apply cursor-zoom-in;
+    }
+
+    &:fullscreen {
+      @apply bg-white;
+      @apply cursor-zoom-out;
+    }
+
     .title {
-      @apply text-center text-sm;
+      @apply w-full text-center text-sm;
       @apply bg-gray-300 p-1;
+      @apply cursor-auto;
     }
 
     .content {
       @apply p-2;
+      @apply w-full;
 
       img {
         @apply mx-auto;

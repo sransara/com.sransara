@@ -5,3 +5,21 @@ import './asciidoc.css';
 <main class="asciidoc">
   <slot />
 </main>
+
+<script>
+  // Full screen images on click
+  let imageblocks = document.getElementsByClassName('imageblock');
+  for (let imageblock of imageblocks) {
+    const img = imageblock.getElementsByTagName('img')[0];
+    img.addEventListener('click', () => {
+      if (document.fullscreenElement === null) {
+        imageblock.requestFullscreen();
+      }
+    });
+    imageblock.addEventListener('click', () => {
+      if (document.fullscreenElement === imageblock) {
+        document.exitFullscreen();
+      }
+    });
+  }
+</script>
