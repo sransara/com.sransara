@@ -242,11 +242,21 @@ We can literally jam it in by adding another parameter that passes it as a conti
 [source,python]
 ----
 def power(x: int, n: int, cont) -> int:
-    if n == 1: return cont(print(x) or x)
+    if n == 1: return cont(x)
     # if n is even
-    if n % 2 == 0: return power(x * x, n // 2, cont)
+    if n % 2 == 0:
+        return power(
+            x * x,
+            n // 2,
+            cont
+        )
     # else n is odd
-    else: return power(x, n - 1, lambda result: cont(print(x, result) or x * result))
+    else:
+        return power(
+            x,
+            n - 1,
+            lambda result: cont(x * result)
+        )
 ----
 
 Okay, let's deconstruct what's going on here.
@@ -356,11 +366,14 @@ Let's eagerly evaluate the accumulations at the recursive step itself.
 [source,python]
 ----
 def power(x: int, n: int, acc: int = 1) -> int:
-    if n == 1: return acc * x
+    if n == 1:
+        return acc * x
     # if n is even
-    if n % 2 == 0: return power(x * x, n // 2, acc)
+    if n % 2 == 0:
+        return power(x * x, n // 2, acc)
     # else n is odd
-    else: return power(x, n - 1, acc * x)
+    else:
+        return power(x, n - 1, acc * x)
 ----
 
 Notice that we use `1` as the default value for `acc` instead of the identity function (`lambda r: r`).
