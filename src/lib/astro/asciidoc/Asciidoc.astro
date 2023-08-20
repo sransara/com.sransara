@@ -9,7 +9,7 @@ import './asciidoc.css';
 <script>
   // Full screen images on click
   const imageblocks = document.getElementsByClassName('imageblock');
-  for (let imageblock of imageblocks) {
+  for (const imageblock of imageblocks) {
     const img = imageblock.getElementsByTagName('img')[0];
     img.addEventListener('click', () => {
       if (document.fullscreenElement === null) {
