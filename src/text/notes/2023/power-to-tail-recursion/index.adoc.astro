@@ -241,21 +241,21 @@ We can literally jam it in by adding another parameter that passes it as a conti
 [#source:v3-implementation]
 [source,python]
 ----
-def power(x: int, n: int, cont) -> int:
+def power(x: int, n: int, cont: Callable[[int], int] = lambda x: x) -> int:
     if n == 1: return cont(x)
     # if n is even
     if n % 2 == 0:
         return power(
-            x * x,
-            n // 2,
-            cont
+            x=x * x,
+            n=n // 2,
+            cont=cont
         )
     # else n is odd
     else:
         return power(
-            x,
-            n - 1,
-            lambda result: cont(x * result)
+            x=x,
+            n=n - 1,
+            cont=lambda result: cont(x * result)
         )
 ----
 
