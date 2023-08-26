@@ -249,7 +249,7 @@
     @apply cursor-zoom-in;
 
     &.fullscreen {
-      @apply bg-white;
+      @apply backdrop-blur-lg;
       @apply cursor-zoom-out;
       @apply fixed left-0 top-0 m-0 h-full w-full p-0;
       z-index: 99999;
