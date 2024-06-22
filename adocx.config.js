@@ -1,11 +1,11 @@
 const astroComponentScript = `
-import { Image, Picture } from '@astrojs/image/components';
-import Katex from '@src/lib/astro/katex/Katex.astro';
-import Shiki from '@src/lib/astro/shiki/Shiki.astro';
+import { Image, Picture } from 'astro:assets';
+import Katex from '@/src/lib/astro/katex/Katex.astro';
+import Shiki from '@/src/lib/astro/shiki/Shiki.astro';
 `;
 
 export const adocxConfig = {
-  astroComponentScript
+  astroComponentScript,
 };
 
 export const asciidoctorConfig = {
@@ -22,7 +22,5 @@ export const asciidoctorConfig = {
     stem: 'latexmath',
     toc: 'macro',
     imagesdir: './',
-    'kroki-fetch-diagram': true,
-    'kroki-default-format': 'png'
-  }
+  },
 };

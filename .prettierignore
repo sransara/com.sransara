@@ -1,4 +1,2 @@
-dist/
-*.adoc.astro
-*.adocx.astro
+pnpm-lock.yaml
 public/count.js
