@@ -2,7 +2,7 @@
 import type { AstroInstance } from 'astro';
 
 import type { Metadata } from '@/src/lib/types/notes';
-import { Image } from '@astrojs/image/components';
+import { Image } from 'astro:assets';
 
 import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
 import Asciidoc from '@/src/lib/astro/asciidoc/Asciidoc.astro';
@@ -36,7 +36,7 @@ if (!metadata.publishedDate.startsWith(year || '0000')) {
 }
 
 const AstroEmbed = (await import(
-  `../../../../../src/text/notes/${year}/${slug}/index.adoc.astro`
+  `../../../../../src/text/notes/${year}/${slug}/index.adocx`
 )) as AstroInstance & { docattrs: any };
 
 const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`);
