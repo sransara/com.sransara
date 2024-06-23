@@ -9,21 +9,41 @@ import type { Plugin as VitePlugin } from 'vite';
 import { registerConverter } from './converter';
 
 type AdocxOptions = {
-  astroComponentScript: string;
+  astroScriptHead: string;
+  astroScriptBody: string;
 };
 
 const adocxExtension = '.adocx';
 
-function astroComponentParts(text: string) {
-  const fence = /^---$(?<fenced>[\s\S]+?)^---$/m;
-  const match = fence.exec(text);
-  if (match) {
-    const componentScript = match.groups?.fenced ?? '';
-    const textWithoutFence = text.replace(fence, '');
-    return [componentScript, textWithoutFence];
-  }
+function astroComponentParts(html: string) {
+  const fence = new RegExp(
+    /<script-adocx-(?<type>head|body)>(?<code>[\s\S]+?)<\/script-adocx-(?:head|body)>/,
+    'g',
+  );
+  const adocxScriptHead = [];
+  const adocxScriptBody = [];
+  const adocxContent = [];
 
-  return ['', text];
+  let match: RegExpExecArray | null;
+  let lastIndex = 0;
+
+  while ((match = fence.exec(html)) !== null) {
+    adocxContent.push(html.slice(lastIndex, match.index));
+    lastIndex = fence.lastIndex;
+
+    const [_full, type, code] = match;
+    if (type === 'head') {
+      adocxScriptHead.push(code);
+    } else {
+      adocxScriptBody.push(code);
+    }
+  }
+  adocxContent.push(html.slice(lastIndex));
+  return {
+    adocxScriptHead: adocxScriptHead.join('\n'),
+    adocxScriptBody: adocxScriptBody.join('\n'),
+    adocxContent: adocxContent.join(''),
+  };
 }
 
 async function compileAstroComponent(astroComponent: string, fileId: string) {
@@ -67,17 +87,16 @@ async function compileAsciidoctor(
   };
 
   const converted = document.convert();
-  let [componentScript, convertedHtml] = astroComponentParts(converted);
-  componentScript = `${adocxConfig.astroComponentScript.trim()}\n${componentScript.trim()}`;
+  let { adocxScriptHead, adocxScriptBody, adocxContent } = astroComponentParts(converted);
   const astroComponent = `
 ---
-import { components as builtinComponents } from 'astro-adocx/components';
-${componentScript}
-const { components = {} } = Astro.props;
-const Components = { ...builtinComponents, ...components };
+${adocxConfig.astroScriptHead.trim()}
+${adocxScriptHead.trim()}
 export const docattrs = ${JSON.stringify(docattrs)};
+${adocxConfig.astroScriptBody.trim()}
+${adocxScriptBody.trim()}
 ---
-${convertedHtml}
+${adocxContent.trim()}
 `;
   return astroComponent;
 }
