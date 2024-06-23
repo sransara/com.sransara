@@ -9,6 +9,7 @@ const config = [
     rules: {
       // override/add rules settings here, such as:
       // "astro/no-set-html-directive": "error"
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
   {
