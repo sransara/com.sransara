@@ -8,10 +8,12 @@ import { fileURLToPath } from 'node:url';
 import type { Plugin as VitePlugin } from 'vite';
 import { registerConverter } from './converter';
 
-type AdocxOptions = {
+export type AstroAdocxOptions = {
   astroScriptHead: string;
   astroScriptBody: string;
 };
+
+export type AdocOptions = ProcessorOptions;
 
 const adocxExtension = '.adocx';
 
@@ -57,7 +59,7 @@ async function compileAstroComponent(astroComponent: string, fileId: string) {
 
 async function compileAsciidoctor(
   fileId: string,
-  adocxConfig: AdocxOptions,
+  adocxConfig: AstroAdocxOptions,
   asciidoctorConfig: ProcessorOptions,
 ) {
   const asciidoctorEngine = asciidoctor();
@@ -102,7 +104,7 @@ ${adocxContent.trim()}
 }
 
 export function adocx(
-  adocxConfig: AdocxOptions,
+  adocxConfig: AstroAdocxOptions,
   asciidoctorConfig: ProcessorOptions,
 ): AstroIntegration {
   return {

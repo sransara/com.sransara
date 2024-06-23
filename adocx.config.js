@@ -1,13 +1,16 @@
-const astroComponentScript = `
+const astroScriptHead = `
 import { Image, Picture } from 'astro:assets';
 import Katex from '@/src/lib/astro/katex/Katex.astro';
 import Shiki from '@/src/lib/astro/shiki/Shiki.astro';
 `;
 
+/** @type { import('astro-adocx/integration').AstroAdocxOptions } */
 export const adocxConfig = {
-  astroComponentScript,
+  astroScriptHead,
+  astroScriptBody: '',
 };
 
+/** @type { import('astro-adocx/integration').AdocOptions } */
 export const asciidoctorConfig = {
   safe: 'server',
   backend: 'html5',

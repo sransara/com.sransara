@@ -1,10 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 const config = {
+  applyBaseStyles: false,
   content: ['./src/**/*.{astro,html,js,jsx,ts,tsx,md,mdx}'],
   theme: {
-    extend: {}
+    extend: {},
   },
-  plugins: []
+  plugins: [],
 };
 
 export default config;
