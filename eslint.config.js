@@ -12,9 +12,6 @@ const config = [
       'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
-  {
-    ignores: ['public/count.js'],
-  },
 ];
 
 export default config;
