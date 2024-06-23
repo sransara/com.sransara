@@ -1,9 +1,9 @@
 ---
 import { format, parseISO } from 'date-fns';
 
-import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
-import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
-import { getNoteMetadata } from '@src/lib/utils';
+import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
+import NavBar from '@/src/lib/astro/nav-bar/NavBar.astro';
+import { getNoteMetadata } from '@/src/lib/utils';
 
 export function getStaticPaths() {
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
@@ -19,8 +19,8 @@ export function getStaticPaths() {
   years = [...new Set(years)];
   return years.map((year) => ({
     params: {
-      year
-    }
+      year,
+    },
   }));
 }
 

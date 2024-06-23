@@ -1,4 +1,4 @@
-import type { Metadata } from '@src/lib/types/notes';
+import type { Metadata } from '@/src/lib/types/notes';
 
 export const getNoteMetadata = async (year?: string) => {
   const notes: Record<string, Array<{ route: string; metadata: Metadata }>> = {};
@@ -18,10 +18,10 @@ export const getNoteMetadata = async (year?: string) => {
         pathYear,
         {
           route: `/notes/${pathYear}/${match.groups.slug}/`,
-          metadata
-        }
+          metadata,
+        },
       ] as [string, { route: string; metadata: Metadata }];
-    })
+    }),
   );
 
   for (const note of notesList) {

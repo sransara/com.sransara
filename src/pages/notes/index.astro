@@ -1,9 +1,9 @@
 ---
 import { format, parseISO } from 'date-fns';
 
-import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
-import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
-import { getNoteMetadata } from '@src/lib/utils';
+import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
+import NavBar from '@/src/lib/astro/nav-bar/NavBar.astro';
+import { getNoteMetadata } from '@/src/lib/utils';
 
 const notes = await getNoteMetadata();
 ---

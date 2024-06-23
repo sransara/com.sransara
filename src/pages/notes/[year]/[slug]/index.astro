@@ -1,12 +1,12 @@
 ---
 import type { AstroInstance } from 'astro';
 
-import type { Metadata } from '@src/lib/types/notes';
+import type { Metadata } from '@/src/lib/types/notes';
 import { Image } from '@astrojs/image/components';
 
-import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
-import Asciidoc from '@src/lib/astro/asciidoc/Asciidoc.astro';
-import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
+import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
+import Asciidoc from '@/src/lib/astro/asciidoc/Asciidoc.astro';
+import NavBar from '@/src/lib/astro/nav-bar/NavBar.astro';
 
 export function getStaticPaths() {
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
@@ -20,8 +20,8 @@ export function getStaticPaths() {
     return {
       params: {
         year: match.groups.year,
-        slug: match.groups.slug
-      }
+        slug: match.groups.slug,
+      },
     };
   });
 }
