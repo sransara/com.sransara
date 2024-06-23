@@ -6,7 +6,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Plugin as VitePlugin } from 'vite';
-import { registerConverter } from './converter';
+import subSpecialchars from './patches/sub_specialchars';
 
 export type AstroAdocxOptions = {
   astroScriptHead: string;
@@ -63,10 +63,9 @@ async function compileAsciidoctor(
   asciidoctorConfig: ProcessorOptions,
 ) {
   const asciidoctorEngine = asciidoctor();
-  // Patch replacements inspired by: https://github.com/jirutka/asciidoctor-html5s/blob/master/lib/asciidoctor/html5s/replacements.rb
-  // @ts-expect-error: REPLACEMENTS is a private API constant
-  asciidoctorEngine.REPLACEMENTS.push([/\{/, '&lbrace;', 'none'], [/\}/, '&rbrace;', 'none']);
-  registerConverter(asciidoctorEngine);
+  subSpecialchars.register();
+
+  // registerConverter(asciidoctorEngine);
 
   const builtinTemplateDir = path.join(path.dirname(fileURLToPath(import.meta.url)), 'templates');
   const document = asciidoctorEngine.loadFile(
@@ -126,7 +125,7 @@ export function adocx(
                     adocxConfig,
                     asciidoctorConfig,
                   );
-                  await fs.writeFile(`${path.dirname(fileId)}/out._astro`, astroComponent);
+                  await fs.writeFile(`${path.dirname(fileId)}/out.mine.astro`, astroComponent);
                   const transformResult = await compileAstroComponent(astroComponent, fileId);
                   const astroMetadata = {
                     clientOnlyComponents: transformResult.clientOnlyComponents,
