@@ -21,7 +21,7 @@
     "@typescript-eslint/parser": "^7.13.0",
     "asciimath2tex": "^1.5.0",
     "astro": "^4.10.2",
-    "astro-adocx": "link:plugins/astro-adocx",
+    "astro-adocx": "link:linkd/astro-adocx",
     "autoprefixer": "^10.4.19",
     "date-fns": "^3.6.0",
     "eslint": "^9.4.0",

@@ -17,7 +17,11 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install linkd dependencies
+        working-directory: linkd/astro-adocx
+        run: pnpm install --frozen-lockfile
       - run: pnpm run lint
       - run: pnpm run build
       - name: Publish to Cloudflare Pages
