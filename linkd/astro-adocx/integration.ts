@@ -12,8 +12,9 @@ import {
 import subSpecialchars from './patches/sub_specialchars';
 
 export type AstroAdocxOptions = {
-  astroScriptHead: string;
-  astroScriptBody: string;
+  astroScriptHead?: string;
+  astroScriptBody?: string;
+  withAsciidocEngine?: (asciidoctorEngine: Asciidoctor) => void;
 };
 
 export type AdocOptions = ProcessorOptions;
@@ -78,10 +79,10 @@ async function compileAdoc(
   const converted = document.convert();
   let { adocxScriptHead, adocxScriptBody, adocxContent } = astroComponentParts(converted);
   const astroComponent = `---
-${adocxConfig.astroScriptHead.trim()}
+${(adocxConfig.astroScriptHead ?? '').trim()}
 ${adocxScriptHead.trim()}
 export const docattrs = ${JSON.stringify(docattrs)};
-${adocxConfig.astroScriptBody.trim()}
+${(adocxConfig.astroScriptBody ?? '').trim()}
 ${adocxScriptBody.trim()}
 ---
 ${adocxContent.trim()}
@@ -91,17 +92,19 @@ ${adocxContent.trim()}
 
 export function adocx(
   adocxConfig: AstroAdocxOptions,
-  asciidoctorConfig: ProcessorOptions,
+  asciidoctorConfig: AdocOptions,
 ): AstroIntegration {
   let _compileAdoc: (filename: string) => Promise<string>;
   let _compileAstro: (code: string, filename: string) => Promise<CompileAstroResult>;
-
   return {
     name: '@sransara/astro-adocx',
     hooks: {
       async 'astro:config:setup'({ config: astroConfig, updateConfig, logger }) {
         const asciidoctorEngine = asciidoctor();
         subSpecialchars.register();
+        if (adocxConfig.withAsciidocEngine) {
+          adocxConfig.withAsciidocEngine(asciidoctorEngine);
+        }
         _compileAdoc = async (filename) => {
           return compileAdoc(asciidoctorEngine, filename, adocxConfig, asciidoctorConfig);
         };
@@ -132,6 +135,7 @@ export function adocx(
                     return;
                   }
                   const astroComponent = await _compileAdoc(fileId);
+                  // fs.writeFileSync(fileId.replace(adocxExtension, '.mine.astro'), astroComponent);
                   return {
                     code: astroComponent,
                   };

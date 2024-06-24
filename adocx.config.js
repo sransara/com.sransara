@@ -1,5 +1,8 @@
+// @ts-ignore: Types are not available
+import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
+
 const astroScriptHead = `
-import { Image, Picture } from 'astro:assets';
+import { Image } from 'astro:assets';
 import Katex from '@/src/lib/astro/katex/Katex.astro';
 import Shiki from '@/src/lib/astro/shiki/Shiki.astro';
 `;
@@ -7,7 +10,9 @@ import Shiki from '@/src/lib/astro/shiki/Shiki.astro';
 /** @type { import('astro-adocx/integration').AstroAdocxOptions } */
 export const adocxConfig = {
   astroScriptHead,
-  astroScriptBody: '',
+  withAsciidocEngine(asciidoctorEngine) {
+    krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
+  },
 };
 
 /** @type { import('astro-adocx/integration').AdocOptions } */
@@ -25,5 +30,7 @@ export const asciidoctorConfig = {
     stem: 'latexmath',
     toc: 'macro',
     imagesdir: './',
+    'kroki-fetch-diagram': true,
+    'kroki-default-format': 'png',
   },
 };
