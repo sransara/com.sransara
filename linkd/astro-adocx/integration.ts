@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import asciidoctor, { type ProcessorOptions } from 'asciidoctor';
+import asciidoctor, { type Asciidoctor, type ProcessorOptions } from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
 import { deepmerge } from 'deepmerge-ts';
 import type { Plugin as VitePlugin } from 'vite';
@@ -18,7 +18,7 @@ export type AstroAdocxOptions = {
 
 export type AdocOptions = ProcessorOptions;
 
-const adocxExtension = '.adocx';
+const adocxExtension = '.adoc';
 
 function astroComponentParts(html: string) {
   const fence = new RegExp(
@@ -51,14 +51,12 @@ function astroComponentParts(html: string) {
   };
 }
 
-async function compileAsciidoctor(
+async function compileAdoc(
+  asciidoctorEngine: Asciidoctor,
   fileId: string,
   adocxConfig: AstroAdocxOptions,
   asciidoctorConfig: ProcessorOptions,
 ) {
-  const asciidoctorEngine = asciidoctor();
-  subSpecialchars.register();
-
   const document = asciidoctorEngine.loadFile(
     fileId,
     deepmerge(
@@ -95,12 +93,19 @@ export function adocx(
   adocxConfig: AstroAdocxOptions,
   asciidoctorConfig: ProcessorOptions,
 ): AstroIntegration {
-  let compile: (code: string, filename: string) => Promise<CompileAstroResult>;
+  let _compileAdoc: (filename: string) => Promise<string>;
+  let _compileAstro: (code: string, filename: string) => Promise<CompileAstroResult>;
 
   return {
     name: '@sransara/astro-adocx',
     hooks: {
       async 'astro:config:setup'({ config: astroConfig, updateConfig, logger }) {
+        const asciidoctorEngine = asciidoctor();
+        subSpecialchars.register();
+        _compileAdoc = async (filename) => {
+          return compileAdoc(asciidoctorEngine, filename, adocxConfig, asciidoctorConfig);
+        };
+
         updateConfig({
           vite: {
             plugins: [
@@ -108,7 +113,7 @@ export function adocx(
                 name: 'vite-astro-adocx',
                 enforce: 'pre',
                 configResolved(viteConfig) {
-                  compile = (code, filename) => {
+                  _compileAstro = (code, filename) => {
                     return compileAstro({
                       compileProps: {
                         astroConfig,
@@ -126,21 +131,23 @@ export function adocx(
                   if (!fileId.endsWith(adocxExtension)) {
                     return;
                   }
-                  const astroComponent = await compileAsciidoctor(
-                    fileId,
-                    adocxConfig,
-                    asciidoctorConfig,
-                  );
-                  // await fs.writeFile(`${path.dirname(fileId)}/out.mine.astro`, astroComponent);
-
-                  let transformResult;
+                  const astroComponent = await _compileAdoc(fileId);
+                  return {
+                    code: astroComponent,
+                  };
+                },
+                async transform(source, fileId) {
+                  if (!fileId.endsWith(adocxExtension)) {
+                    return;
+                  }
+                  const astroComponent = source;
+                  let transformResult: CompileAstroResult;
                   try {
-                    transformResult = await compile(astroComponent, fileId);
-                  } catch (e) {
-                    // @ts-expect-error: Add correct file to error object
-                    e.loc.file = `${fileId.replace(adocxExtension, '.astro')}`;
-                    console.error(e);
-                    throw e;
+                    transformResult = await _compileAstro(astroComponent, fileId);
+                  } catch (err) {
+                    // @ts-expect-error: Try to inject a file id to the error object
+                    err.loc.file = `${fileId.replace(adocxExtension, '.astro')}`;
+                    throw err;
                   }
                   const astroMetadata = {
                     clientOnlyComponents: transformResult.clientOnlyComponents,

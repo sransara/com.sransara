@@ -36,7 +36,7 @@ if (!metadata.publishedDate.startsWith(year || '0000')) {
 }
 
 const AstroEmbed = (await import(
-  `../../../../../src/text/notes/${year}/${slug}/index.adocx`
+  `../../../../../src/text/notes/${year}/${slug}/index.adoc`
 )) as AstroInstance & { docattrs: any };
 
 const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`);

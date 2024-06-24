@@ -5,6 +5,8 @@
     "paths": {
       "@/*": ["*"]
     },
-    "checkJs": true
+    "checkJs": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js"
   }
 }

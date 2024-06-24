@@ -1,0 +1,46 @@
+= Hello from another world.
+
+This is first contact.
+
+++++
+<script-adocx-head>
+import { Counter } from './Counter.jsx';
+</script-adocx-head>
+++++
+
+== TE *Stt*
+
+Hello there who *are* you
+
+Something or rather image:poster.jpg[]
+
+.First two commits in the Commit History
+[#image:commits-ab-0]
+image::poster.jpg[]
+
+The hail-and-rainbow protocol can be initiated < at five levels:
+
+<asdfasd> [.varname.happy]"`Hello`"
+
+stem:[a^2 + b^2 = c^2]
+
+++++
+<Counter client:load />
+++++
+
+=== Toatts
+
+. doublefootnote:[The double hail-and-rainbow *level* makes (C) my { { toes tingle.]
+. tertiary
+. supernumerary
+. supermassive
+. apocalyptic
+
+== Tarts
+
+Try (C) to see the copyright symbol.
+See if { is replaced.
+
+A bold statement!footnote:disclaimer[Opinions are my own.]
+
+Another outrageous statement.footnote:disclaimer[]
