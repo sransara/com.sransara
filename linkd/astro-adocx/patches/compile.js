@@ -1,4 +1,7 @@
-// @ts-nocheck: only for building ruby code
+// @ts-nocheck: Script used only for building ruby code
+
+// reference: https://docs.asciidoctor.org/asciidoctor.js/latest/extend/extensions/compile-ruby-extension/
+
 import fs from 'node:fs';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
