@@ -9,6 +9,7 @@ import {
   type CompileAstroResult,
 } from './node_modules/astro/dist/vite-plugin-astro/compile.js';
 
+import { registerConverter } from './converter.js';
 import subSpecialchars from './patches/sub_specialchars';
 
 export type AstroAdocxOptions = {
@@ -79,6 +80,7 @@ async function compileAdoc(
   const converted = document.convert();
   let { adocxScriptHead, adocxScriptBody, adocxContent } = astroComponentParts(converted);
   const astroComponent = `---
+import { Image } from 'astro:assets';
 ${(adocxConfig.astroScriptHead ?? '').trim()}
 ${adocxScriptHead.trim()}
 export const docattrs = ${JSON.stringify(docattrs)};
@@ -102,6 +104,7 @@ export function adocx(
       async 'astro:config:setup'({ config: astroConfig, updateConfig, logger }) {
         const asciidoctorEngine = asciidoctor();
         subSpecialchars.register();
+        registerConverter(asciidoctorEngine);
         if (adocxConfig.withAsciidocEngine) {
           adocxConfig.withAsciidocEngine(asciidoctorEngine);
         }

@@ -2,7 +2,6 @@
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 
 const astroScriptHead = `
-import { Image } from 'astro:assets';
 import Katex from '@/src/lib/astro/katex/Katex.astro';
 import Shiki from '@/src/lib/astro/shiki/Shiki.astro';
 `;
@@ -20,6 +19,7 @@ export const asciidoctorConfig = {
   safe: 'server',
   backend: 'html5',
   standalone: false,
+  template_dirs: ['src/templates'],
   attributes: {
     xrefstyle: 'full',
     'listing-caption': 'Listing',
