@@ -1,7 +1,7 @@
 = Conceptually building up to the fundamentals datastructures of Git.
 :sectnums:
 
-Have you ever wondered how Git works? 
+Have you ever wondered how Git works?
 In this note we will incrementally build a version control system while taking inspiration from Git.
 Our focus will be on finding data structures to model revision lineage and version backups.
 
@@ -61,7 +61,7 @@ https://en.wikipedia.org/wiki/Darcs[Darcs^] and https://pijul.org/model/[Pijul^]
 
 == Intents and commands
 
-Unlike a versioned file system where content is automatically backed up; 
+Unlike a versioned file system where content is automatically backed up;
 in a VCS, all actions are performed when a user shows intent.
 Therefore the interface to our VCS plays a crucial role.
 
@@ -84,7 +84,7 @@ Let's first list essential user intents and map each of them to our UI.
 
 * `sheep commit`
 * Here be dragons! Most of the magic happens in here.
-* When the user executes this command: a new backup version is created with all the staged content, and the version history is extended with the new checkpoint. 
+* When the user executes this command: a new backup version is created with all the staged content, and the version history is extended with the new checkpoint.
 We will see more about this extensively later on.
 
 [discrete]
@@ -101,7 +101,7 @@ image::git-basics-staging.png[]
 [discrete]
 ===== So where is the branching work flow?
 It's simply a matter of executing `sheep checkout <checkpoint>` to go back to a checkpoint; then `sheep branch <name>` to give the new branch a name.
-And follow it up by `sheep add` and `sheep commit` workflow in <<image:git-basics-staging>>. 
+And follow it up by `sheep add` and `sheep commit` workflow in <<image:git-basics-staging>>.
 Later on we will see how this is handled internally.
 
 There is few other important intents/commands (diff, merge, fetch, push) that we will discuss as we go along.
@@ -150,7 +150,7 @@ Simple idea here is to keep track of the lineage of each commit.
 
 In the previous section we discussed `commit` as a verb. Here we talk about commit as a noun.
 From the previous section we know that a commit holds information about the snapshot.
-Snapshot is a view of the directory content at a `commit`. 
+Snapshot is a view of the directory content at a `commit`.
 The goal of taking a snapshot is because we want to see all the changes to directory content after the parent commit.
 We would also like to see who changed it, when they changed it, and why they changed it at a later point of time.
 
@@ -160,7 +160,7 @@ We'll call this a *commit object*.
 ==== Commit history graph
 
 Commit History Graph is the data structure that holds the lineage information of every commit.
-Basically it's the life blood of our VCS. 
+Basically it's the life blood of our VCS.
 In implementation, Commit history graph is just the relative ordering created by bunch of commit objects that connect to each other like a chain.
 
 ==== Parent and Child commits
@@ -192,7 +192,7 @@ We'll name the commits A, B in sequence for first and second commit.
 *A points to B? Or B points to A?*
 Although we usually like to imagine the flow as forward in _time_, hence point from A to B;
 the answer is B points to A, because what we want from the graph is the history that led to a commit.
-We want to see the flow backwards in _time_. 
+We want to see the flow backwards in _time_.
 This decision lets us easily traverse backwards in _time_ to find the ancestors and hence the changes that led to the current state of a file.
 
 Observe in this model that A has no knowledge of the existence of B, meaning that a parent commit keeps no knowledge of the children commits.
@@ -209,7 +209,7 @@ image::commits-abcd-0.png[]
 
 Visually we can see that repo was at commit B, and then added commit C and then commit D.
 In implementation this can simply be achieved by having a pointer that always point to the currently active commit.
-Git calls this the *HEAD*. 
+Git calls this the *HEAD*.
 On the above history, since our currently active commit is D, current value of HEAD will be D (This is not exactly how Git does it, there's one extra level of indirection. We will see about this in the branching section).
 
 [source, python, title=""]
@@ -277,7 +277,7 @@ In Git terms, this layer of indirection is called *refs*.
 
 Branch names are just pointers to commits that follow along as the commit history graph extends.
 In addition we can notice that HEAD concept we discussed before is almost too similar to this branch concept.
-Git integrates the HEAD concept with the branches concept. 
+Git integrates the HEAD concept with the branches concept.
 Internally Git calls local branches as *heads* with in refs.
 
 [source, shell, title=""]
@@ -392,13 +392,13 @@ A database for our commit objects. And an api to get and create commits by a nam
 Basically we need a *key-value storage*. Git following the true Unix ways, uses the file system structure.
 Simply: filename as the key, and content as the value.
 
-But remember that during a fetch we sync all commits from a remote repo into local repo. 
+But remember that during a fetch we sync all commits from a remote repo into local repo.
 That every commit should have its own unique name.
 Looking at the problem in a different way: we need a way to see if a commit with same content already exists in the local repo.
 Basically we need a way to uniquely identify each distinct piece of content.
 How to easily check whether two contents are the same without having to scan the whole length of the content? Hashing!
 
-*Content hashing* to the rescue. 
+*Content hashing* to the rescue.
 Get a hash of the object and that will be the name/key of that object and the value will be the object itself.
 Git calls this the *content addressable storage* and resides in (.git/objects/)
 
@@ -422,7 +422,7 @@ So we can detect any corruption just by observing at the tip of the branch.
 
 Now that we have the Content addressable storage, fetching commit objects is just a matter of downloading
 all commits accessible from the remote branch access points on to the local repo.
-Due to to our hashing mechanism we can ensure that we will not corrupt commit objects in the local repo. 
+Due to to our hashing mechanism we can ensure that we will not corrupt commit objects in the local repo.
 (We assume that hash collisions are highly unlikely)
 
 Once we have all the commit objects from the remote repo, we just use the remote refs (or remote branch pointers) to access the Commit History Graph that the remote repo sees.
@@ -514,7 +514,7 @@ When we say differences between the snapshots we need to focus on:
 * Differences in content (edits to file contents)
 * Differences in directory structure (add/remove directories)
 
-Let's say we model the diff as a function that brings the parent commit's snapshot to the child commit's. 
+Let's say we model the diff as a function that brings the parent commit's snapshot to the child commit's.
 And store this function in some serialized format that we can apply later to reconstruct a version.
 Space problem solved.
 But this method has a major effect in performance for the user intent: going back to a previous revision.
@@ -589,9 +589,9 @@ That is to use the content addressable storage.
 Note that key of a blob is dependant only on the hash of its content, a rename would not affect the blob (This will help us track renames when doing `diff`).
 Hash of the root of the trie will be the snapshot pointer that will be used in creating a commit object.
 
-_Notice_: that we are treating blobs as opaque objects. 
+_Notice_: that we are treating blobs as opaque objects.
 We are not trying to store the diff between the blobs that could be almost the same, between revisions.
-We are still not using our space as efficiently as possible. 
+We are still not using our space as efficiently as possible.
 This becomes an issue especially when we are transferring content over networks.
 As briefly touched upon before, Git uses something called *pack files*, you can read more about it https://codewords.recurse.com/issues/three/unpacking-git-packfiles[here^].
 
@@ -754,10 +754,10 @@ See https://git-scm.com/docs/git-merge-base[documentation for git-merge-base^].
 
 Once we have a base commit and the two conflicting commits, we are ready to do the merge of directory content.
 
-We can think of trie merge as a merge function for key value storage, because trie is basically a key value storage where keys have a hierarchy. 
+We can think of trie merge as a merge function for key value storage, because trie is basically a key value storage where keys have a hierarchy.
 
 To investiage this let's zoom in on commits C, D and F in <<image:commits-abcd-ef-g>>.
-C is the common ancestor. 
+C is the common ancestor.
 D is the current tip of `master` branch; F is the current tip of `hot-fix` branch.
 Let's see how the merged commit G can be derived from C, D and F.
 I have used (*) stars to mark which content were actually changed from C.
@@ -795,7 +795,7 @@ Say no more to `rm -rf .git`. Say hello to `rm -rf .sheep`.
 === Bird's-eye view
 
 If we take a bird's-eye view of what we have done until now: we can see that we have built a database.
-A database with a branching based concurrency control mechanism. 
+A database with a branching based concurrency control mechanism.
 Taking the notion of *database as value* (https://www.youtube.com/watch?v=EKdV1IgAaFc[talk by Rich Hikey^]), the value we built for `sheep` is a *trie*.
 But we focused on a trie merely because our aim was to build a VCS.
 Using just content addressable storage and ref indirection layer as our building blocks we should be able to build almost any fully persistent data structure.

@@ -15,12 +15,12 @@ function template(opalCode) {
 /* eslint-disable */
 // @ts-nocheck
 
-function register() {
+function patch() {
 
 ${opalCode}
 
 }
-export default { register };
+export default { patch };
 
 `;
 }

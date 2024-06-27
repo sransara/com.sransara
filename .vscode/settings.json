@@ -18,5 +18,8 @@
     "astro", // Enable .astro
     "typescript", // Enable .ts
     "typescriptreact" // Enable .tsx
-  ]
+  ],
+  "asciidoc.preview.asciidoctorAttributes": {
+    "skip-front-matter": true
+  }
 }

@@ -1,14 +1,14 @@
 // @ts-ignore: Types are not available
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 
-const astroScriptHead = `
+const astroFenced = `
 import Katex from '@/src/lib/astro/katex/Katex.astro';
 import Shiki from '@/src/lib/astro/shiki/Shiki.astro';
 `;
 
 /** @type { import('astro-adocx/integration').AstroAdocxOptions } */
 export const adocxConfig = {
-  astroScriptHead,
+  astroFenced,
   withAsciidocEngine(asciidoctorEngine) {
     krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
   },

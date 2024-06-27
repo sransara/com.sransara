@@ -1,20 +1,20 @@
+import fs from 'node:fs';
 import path from 'node:path';
 
 import asciidoctor, { type Asciidoctor, type ProcessorOptions } from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
-import { deepmerge } from 'deepmerge-ts';
 import type { Plugin as VitePlugin } from 'vite';
 import {
   compileAstro,
   type CompileAstroResult,
 } from './node_modules/astro/dist/vite-plugin-astro/compile.js';
 
-import { registerConverter } from './converter.js';
+import { register as blockMacroScrtiptHeadRegisterHandle } from './extensions/blockMacroScrtiptHead.ts';
+import { register as postProcessorRegisterHandle } from './extensions/postProcessor.ts';
 import subSpecialchars from './patches/sub_specialchars';
 
 export type AstroAdocxOptions = {
-  astroScriptHead?: string;
-  astroScriptBody?: string;
+  astroFenced?: string;
   withAsciidocEngine?: (asciidoctorEngine: Asciidoctor) => void;
 };
 
@@ -22,72 +22,29 @@ export type AdocOptions = ProcessorOptions;
 
 const adocxExtension = '.adoc';
 
-function astroComponentParts(html: string) {
-  const fence = new RegExp(
-    /<script-adocx-(?<type>head|body)>(?<code>[\s\S]+?)<\/script-adocx-(?:head|body)>/,
-    'g',
-  );
-  const adocxScriptHead = [];
-  const adocxScriptBody = [];
-  const adocxContent = [];
-
-  let match: RegExpExecArray | null;
-  let lastIndex = 0;
-
-  while ((match = fence.exec(html)) !== null) {
-    adocxContent.push(html.slice(lastIndex, match.index));
-    lastIndex = fence.lastIndex;
-
-    const [_full, type, code] = match;
-    if (type === 'head') {
-      adocxScriptHead.push(code);
-    } else {
-      adocxScriptBody.push(code);
-    }
-  }
-  adocxContent.push(html.slice(lastIndex));
-  return {
-    adocxScriptHead: adocxScriptHead.join('\n'),
-    adocxScriptBody: adocxScriptBody.join('\n'),
-    adocxContent: adocxContent.join(''),
-  };
-}
-
 async function compileAdoc(
   asciidoctorEngine: Asciidoctor,
   fileId: string,
   adocxConfig: AstroAdocxOptions,
   asciidoctorConfig: ProcessorOptions,
 ) {
-  const document = asciidoctorEngine.loadFile(
-    fileId,
-    deepmerge(
-      {
-        attributes: {
-          outdir: path.dirname(fileId),
-        },
-      },
-      asciidoctorConfig,
-    ),
-  );
+  const document = asciidoctorEngine.loadFile(fileId, asciidoctorConfig);
+  document.setAttribute('skip-front-matter', true);
+  document.setAttribute('outdir', path.dirname(fileId));
   const title = document.getTitle();
-  const attributes: unknown = document.getAttributes();
-  const docattrs: unknown = {
+  const attributes = document.getAttributes() as Record<string, string | undefined>;
+  const docattrs = {
     title,
     ...(attributes as Record<string, unknown>),
   };
 
   const converted = document.convert();
-  let { adocxScriptHead, adocxScriptBody, adocxContent } = astroComponentParts(converted);
   const astroComponent = `---
-import { Image } from 'astro:assets';
-${(adocxConfig.astroScriptHead ?? '').trim()}
-${adocxScriptHead.trim()}
-export const docattrs = ${JSON.stringify(docattrs)};
-${(adocxConfig.astroScriptBody ?? '').trim()}
-${adocxScriptBody.trim()}
+${(adocxConfig.astroFenced ?? '').trim()}
+export let docattrs = ${JSON.stringify(docattrs)};
+${(attributes['front-matter'] ?? '').trim()}
 ---
-${adocxContent.trim()}
+${converted.trim()}
 `;
   return astroComponent;
 }
@@ -103,8 +60,10 @@ export function adocx(
     hooks: {
       async 'astro:config:setup'({ config: astroConfig, updateConfig, logger }) {
         const asciidoctorEngine = asciidoctor();
-        subSpecialchars.register();
-        registerConverter(asciidoctorEngine);
+        subSpecialchars.patch();
+
+        postProcessorRegisterHandle(asciidoctorEngine.Extensions);
+        blockMacroScrtiptHeadRegisterHandle(asciidoctorEngine.Extensions);
         if (adocxConfig.withAsciidocEngine) {
           adocxConfig.withAsciidocEngine(asciidoctorEngine);
         }
@@ -138,7 +97,7 @@ export function adocx(
                     return;
                   }
                   const astroComponent = await _compileAdoc(fileId);
-                  // fs.writeFileSync(fileId.replace(adocxExtension, '.mine.astro'), astroComponent);
+                  fs.writeFileSync(fileId.replace(adocxExtension, '.debug.astro'), astroComponent);
                   return {
                     code: astroComponent,
                   };
