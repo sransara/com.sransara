@@ -79,8 +79,8 @@ const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`
         <Image src={poster} alt="Poster" />
       </div>
       {
-        AstroEmbed.docattrs.title && (
-          <div class="font-serif text-lg font-bold">{AstroEmbed.docattrs.title}</div>
+        AstroEmbed.docattrs.doctitle && (
+          <div class="font-serif text-lg font-bold">{AstroEmbed.docattrs.doctitle}</div>
         )
       }
       <Asciidoc>

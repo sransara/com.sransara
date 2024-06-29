@@ -9,7 +9,6 @@ import {
   type CompileAstroResult,
 } from './node_modules/astro/dist/vite-plugin-astro/compile.js';
 
-import { register as blockMacroScrtiptHeadRegisterHandle } from './extensions/blockMacroScrtiptHead.ts';
 import { register as postProcessorRegisterHandle } from './extensions/postProcessor.ts';
 import subSpecialchars from './patches/sub_specialchars';
 
@@ -22,6 +21,15 @@ export type AdocOptions = ProcessorOptions;
 
 const adocxExtension = '.adoc';
 
+function decodeSpecialChars(str: string) {
+  return str
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&lbrace;/g, '{')
+    .replace(/&rbrace;/g, '}');
+}
+
 async function compileAdoc(
   asciidoctorEngine: Asciidoctor,
   fileId: string,
@@ -29,20 +37,16 @@ async function compileAdoc(
   asciidoctorConfig: ProcessorOptions,
 ) {
   const document = asciidoctorEngine.loadFile(fileId, asciidoctorConfig);
-  document.setAttribute('skip-front-matter', true);
   document.setAttribute('outdir', path.dirname(fileId));
-  const title = document.getTitle();
-  const attributes = document.getAttributes() as Record<string, string | undefined>;
-  const docattrs = {
-    title,
-    ...(attributes as Record<string, unknown>),
-  };
 
   const converted = document.convert();
+  const docattrs = document.getAttributes() as Record<string, string | undefined>;
+  const astroFenced = decodeSpecialChars(document.getAttribute('front-matter') ?? '');
+
   const astroComponent = `---
 ${(adocxConfig.astroFenced ?? '').trim()}
 export let docattrs = ${JSON.stringify(docattrs)};
-${(attributes['front-matter'] ?? '').trim()}
+${astroFenced.trim()}
 ---
 ${converted.trim()}
 `;
@@ -63,10 +67,16 @@ export function adocx(
         subSpecialchars.patch();
 
         postProcessorRegisterHandle(asciidoctorEngine.Extensions);
-        blockMacroScrtiptHeadRegisterHandle(asciidoctorEngine.Extensions);
         if (adocxConfig.withAsciidocEngine) {
           adocxConfig.withAsciidocEngine(asciidoctorEngine);
         }
+
+        if (asciidoctorConfig.attributes === undefined) {
+          asciidoctorConfig.attributes = {};
+        }
+        // @ts-expect-error: Ignore error because types are confusing in asciidoctor
+        asciidoctorConfig.attributes['skip-front-matter'] = true;
+
         _compileAdoc = async (filename) => {
           return compileAdoc(asciidoctorEngine, filename, adocxConfig, asciidoctorConfig);
         };

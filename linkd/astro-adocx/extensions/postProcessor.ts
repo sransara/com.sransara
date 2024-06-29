@@ -15,9 +15,10 @@ export function register(registry: typeof Extensions | Extensions.Registry) {
 
 function extension(this: Extensions.PostprocessorDsl) {
   this.process(function (adoc: AdocDocument, output: string) {
-    let astroFenced = adoc.getAttribute('front-matter') ?? '';
-
-    const result = posthtml([swapImgWithImage()]).process(output, { sync: true });
+    const result = posthtml([swapImgWithImage({ adoc })]).process(output, {
+      sync: true,
+      directives: [{ name: '$', start: '{', end: '}' }],
+    });
     // @ts-ignore: Ignore error because types are wrong in posthtml
     return result.html;
   });
@@ -43,16 +44,12 @@ function setAttr(node: Node, key: string, value: string | boolean) {
   return old;
 }
 
-const swapImgWithImage =
-  (options = {}) =>
-  (tree: Node) => {
-    // @ts-expect-error: Ignore error because types are wrong in posthtml
-    tree.unshift({
-      tag: 'script-adocx-head',
-      attrs: {},
-      content: ['\n', "import { Image } from 'astro:assets';", '\n'],
-    } as Node);
+const swapImgWithImage = ({ adoc }: { adoc: AdocDocument }) => {
+  let astroFenced = adoc.getAttribute('front-matter') ?? '';
+  astroFenced = `import { Image } from "astro:assets";\n${astroFenced.trimStart()}`;
+  adoc.setAttribute('front-matter', astroFenced);
 
+  return (tree: Node) => {
     tree.match({ tag: 'img' }, (node: Node) => {
       const src = getAttr(node, 'src');
       if (!src) {
@@ -82,3 +79,4 @@ const swapImgWithImage =
       return node;
     });
   };
+};

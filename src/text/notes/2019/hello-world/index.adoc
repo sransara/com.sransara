@@ -1,17 +1,15 @@
 ---
+import { Counter } from './Counter.jsx';
 ---
 = Hello from another world.
 
 This is first contact.
 
-[script-adocx-head]
-++++
-import { Counter } from './Counter.jsx';
-++++
-
 == TE *Stt*
 
-Hello there who *are* you
+Hello there who *are {* you
+
+callout:3[]
 
 Something or rather image:poster.jpg[]
 
@@ -23,10 +21,10 @@ The hail-and-rainbow protocol can be initiated < at five levels:
 
 <asdfasd> [.varname.happy]"`Hello`"
 
-stem:[a^2 + b^2 = c^2]
+asciimath:[a^2 + b^2 = c^2]
 
 ++++
-<Counter client:load />
+<Counter client:load={$true$} />
 ++++
 
 === Toatts

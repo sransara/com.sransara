@@ -1,5 +1,7 @@
 // @ts-ignore: Types are not available
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
+import { register as converterRegisterHandle } from 'astro-adocx/converter';
+import { register as inlineMacroCalloutRegisterHandle } from './adocx/extensions/inlineMacroCallout';
 
 const astroFenced = `
 import Katex from '@/src/lib/astro/katex/Katex.astro';
@@ -10,7 +12,9 @@ import Shiki from '@/src/lib/astro/shiki/Shiki.astro';
 export const adocxConfig = {
   astroFenced,
   withAsciidocEngine(asciidoctorEngine) {
+    converterRegisterHandle(asciidoctorEngine);
     krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
+    inlineMacroCalloutRegisterHandle(asciidoctorEngine.Extensions);
   },
 };
 
@@ -19,7 +23,6 @@ export const asciidoctorConfig = {
   safe: 'server',
   backend: 'html5',
   standalone: false,
-  template_dirs: ['src/templates'],
   attributes: {
     xrefstyle: 'full',
     'listing-caption': 'Listing',
