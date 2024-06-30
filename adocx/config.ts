@@ -1,28 +1,34 @@
+import path from 'node:path';
+
 // @ts-ignore: Types are not available
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
-import { register as converterRegisterHandle } from 'astro-adocx/converter';
-import { register as inlineMacroCalloutRegisterHandle } from './adocx/extensions/inlineMacroCallout';
+import type { AdocOptions, AstroAdocxOptions, Template } from 'astro-adocx/types';
 
-const astroFenced = `
-import Katex from '@/src/lib/astro/katex/Katex.astro';
-import Shiki from '@/src/lib/astro/shiki/Shiki.astro';
-`;
+import { register as inlineMacroCalloutRegisterHandle } from './extensions/inlineMacroCallout';
 
-/** @type { import('astro-adocx/integration').AstroAdocxOptions } */
+const templates = Object.fromEntries(
+  Object.entries(import.meta.glob('./templates/*.ts', { eager: true })).map(([key, value]) => [
+    path.basename(key, '.ts'),
+    value as Template,
+  ]),
+);
+
+const astroFenced = ``;
+
 export const adocxConfig = {
   astroFenced,
   withAsciidocEngine(asciidoctorEngine) {
-    converterRegisterHandle(asciidoctorEngine);
     krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
     inlineMacroCalloutRegisterHandle(asciidoctorEngine.Extensions);
   },
-};
+  withDocument(filePath, document) {
+    // useful for asciidoctor-diagrams/kroki
+    document.setAttribute('outdir', path.dirname(filePath));
+  },
+  templates,
+} satisfies AstroAdocxOptions;
 
-/** @type { import('astro-adocx/integration').AdocOptions } */
 export const asciidoctorConfig = {
-  safe: 'server',
-  backend: 'html5',
-  standalone: false,
   attributes: {
     xrefstyle: 'full',
     'listing-caption': 'Listing',
@@ -36,4 +42,4 @@ export const asciidoctorConfig = {
     'kroki-fetch-diagram': true,
     'kroki-default-format': 'png',
   },
-};
+} satisfies AdocOptions;

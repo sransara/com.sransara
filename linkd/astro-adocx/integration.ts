@@ -1,7 +1,7 @@
 import fs from 'node:fs';
-import path from 'node:path';
 
-import asciidoctor, { type Asciidoctor, type ProcessorOptions } from 'asciidoctor';
+import type { Asciidoctor, ProcessorOptions } from 'asciidoctor';
+import asciidoctor from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
 import type { Plugin as VitePlugin } from 'vite';
 import {
@@ -9,26 +9,12 @@ import {
   type CompileAstroResult,
 } from './node_modules/astro/dist/vite-plugin-astro/compile.js';
 
-import { register as postProcessorRegisterHandle } from './extensions/postProcessor.ts';
+import { register as converterRegisterHandle } from './converter.ts';
 import subSpecialchars from './patches/sub_specialchars';
-
-export type AstroAdocxOptions = {
-  astroFenced?: string;
-  withAsciidocEngine?: (asciidoctorEngine: Asciidoctor) => void;
-};
-
-export type AdocOptions = ProcessorOptions;
+import type { AdocOptions, AstroAdocxOptions } from './types.js';
+import { decodeSpecialChars } from './utils/astroFence.ts';
 
 const adocxExtension = '.adoc';
-
-function decodeSpecialChars(str: string) {
-  return str
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&lbrace;/g, '{')
-    .replace(/&rbrace;/g, '}');
-}
 
 async function compileAdoc(
   asciidoctorEngine: Asciidoctor,
@@ -37,16 +23,23 @@ async function compileAdoc(
   asciidoctorConfig: ProcessorOptions,
 ) {
   const document = asciidoctorEngine.loadFile(fileId, asciidoctorConfig);
-  document.setAttribute('outdir', path.dirname(fileId));
+  adocxConfig.withDocument?.(fileId, document);
 
   const converted = document.convert();
   const docattrs = document.getAttributes() as Record<string, string | undefined>;
-  const astroFenced = decodeSpecialChars(document.getAttribute('front-matter') ?? '');
+
+  // Astro component's fenced code declared in the config
+  const adocxConfigAstroFenced = adocxConfig.astroFenced ?? '';
+  // Astro component's fenced code added by the templates
+  const astroFenced = decodeSpecialChars(document.getAttribute('astro-fenced') ?? '');
+  // Astro component's fenced code declared in the document itself
+  const frontMatter = decodeSpecialChars(document.getAttribute('front-matter') ?? '');
 
   const astroComponent = `---
-${(adocxConfig.astroFenced ?? '').trim()}
+${adocxConfigAstroFenced.trim()}
 export let docattrs = ${JSON.stringify(docattrs)};
 ${astroFenced.trim()}
+${frontMatter.trim()}
 ---
 ${converted.trim()}
 `;
@@ -65,16 +58,17 @@ export function adocx(
       async 'astro:config:setup'({ config: astroConfig, updateConfig, logger }) {
         const asciidoctorEngine = asciidoctor();
         subSpecialchars.patch();
+        converterRegisterHandle(asciidoctorEngine, adocxConfig.templates ?? {});
+        adocxConfig.withAsciidocEngine?.(asciidoctorEngine);
 
-        postProcessorRegisterHandle(asciidoctorEngine.Extensions);
-        if (adocxConfig.withAsciidocEngine) {
-          adocxConfig.withAsciidocEngine(asciidoctorEngine);
-        }
-
+        // Default asciidoctor config that makes sense in this context
+        asciidoctorConfig.standalone = false;
+        asciidoctorConfig.safe = 'server';
+        asciidoctorConfig.backend = 'html5';
         if (asciidoctorConfig.attributes === undefined) {
           asciidoctorConfig.attributes = {};
         }
-        // @ts-expect-error: Ignore error because types are confusing in asciidoctor
+        // allow astro code fences at the beginning
         asciidoctorConfig.attributes['skip-front-matter'] = true;
 
         _compileAdoc = async (filename) => {
@@ -106,11 +100,19 @@ export function adocx(
                   if (!fileId.endsWith(adocxExtension)) {
                     return;
                   }
-                  const astroComponent = await _compileAdoc(fileId);
-                  fs.writeFileSync(fileId.replace(adocxExtension, '.debug.astro'), astroComponent);
-                  return {
-                    code: astroComponent,
-                  };
+                  try {
+                    const astroComponent = await _compileAdoc(fileId);
+                    fs.writeFileSync(
+                      fileId.replace(adocxExtension, '.debug.astro'),
+                      astroComponent,
+                    );
+                    return {
+                      code: astroComponent,
+                    };
+                  } catch (e) {
+                    console.error(e);
+                    throw new Error(`Error processing adoc file: ${fileId}: ${e}`);
+                  }
                 },
                 async transform(source, fileId) {
                   if (!fileId.endsWith(adocxExtension)) {
@@ -120,31 +122,31 @@ export function adocx(
                   let transformResult: CompileAstroResult;
                   try {
                     transformResult = await _compileAstro(astroComponent, fileId);
-                  } catch (err) {
+                    const astroMetadata = {
+                      clientOnlyComponents: transformResult.clientOnlyComponents,
+                      hydratedComponents: transformResult.hydratedComponents,
+                      scripts: transformResult.scripts,
+                      containsHead: transformResult.containsHead,
+                      propagation: transformResult.propagation ? 'self' : 'none',
+                      pageOptions: {},
+                    };
+                    return {
+                      code: transformResult.code,
+                      map: transformResult.map,
+                      meta: {
+                        astro: astroMetadata,
+                        vite: {
+                          // Setting this vite metadata to `ts` causes Vite to resolve .js
+                          // extensions to .ts files.
+                          lang: 'ts',
+                        },
+                      },
+                    };
+                  } catch (e) {
                     // @ts-expect-error: Try to inject a file id to the error object
                     err.loc.file = `${fileId.replace(adocxExtension, '.astro')}`;
-                    throw err;
+                    throw e;
                   }
-                  const astroMetadata = {
-                    clientOnlyComponents: transformResult.clientOnlyComponents,
-                    hydratedComponents: transformResult.hydratedComponents,
-                    scripts: transformResult.scripts,
-                    containsHead: transformResult.containsHead,
-                    propagation: transformResult.propagation ? 'self' : 'none',
-                    pageOptions: {},
-                  };
-                  return {
-                    code: transformResult.code,
-                    map: transformResult.map,
-                    meta: {
-                      astro: astroMetadata,
-                      vite: {
-                        // Setting this vite metadata to `ts` causes Vite to resolve .js
-                        // extensions to .ts files.
-                        lang: 'ts',
-                      },
-                    },
-                  };
                 },
               },
             ] as VitePlugin[],
