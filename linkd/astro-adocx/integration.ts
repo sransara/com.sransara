@@ -3,11 +3,14 @@ import fs from 'node:fs';
 import type { Asciidoctor, ProcessorOptions } from 'asciidoctor';
 import asciidoctor from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
+import astroJSXRenderer from 'astro/jsx/renderer.js';
 import type { Plugin as VitePlugin } from 'vite';
 import {
   compileAstro,
   type CompileAstroResult,
 } from './node_modules/astro/dist/vite-plugin-astro/compile.js';
+import { handleHotUpdate } from './node_modules/astro/dist/vite-plugin-astro/hmr.js';
+import { type CompileMetadata } from './node_modules/astro/dist/vite-plugin-astro/types.js';
 
 import { register as converterRegisterHandle } from './converter.ts';
 import subSpecialchars from './patches/sub_specialchars';
@@ -55,7 +58,17 @@ export function adocx(
   return {
     name: '@sransara/astro-adocx',
     hooks: {
-      async 'astro:config:setup'({ config: astroConfig, updateConfig, logger }) {
+      async 'astro:config:setup'({
+        config: astroConfig,
+        updateConfig,
+        // @ts-expect-error: `addPageExtension` is part of the private api
+        addPageExtension,
+        addRenderer,
+        logger,
+      }) {
+        addRenderer(astroJSXRenderer);
+        addPageExtension(adocxExtension);
+
         const asciidoctorEngine = asciidoctor();
         subSpecialchars.patch();
         converterRegisterHandle(asciidoctorEngine, adocxConfig.templates ?? {});
@@ -75,6 +88,8 @@ export function adocx(
           return compileAdoc(asciidoctorEngine, filename, adocxConfig, asciidoctorConfig);
         };
 
+        let astroFileToCompileMetadata = new Map<string, CompileMetadata>();
+
         updateConfig({
           vite: {
             plugins: [
@@ -82,8 +97,8 @@ export function adocx(
                 name: 'vite-astro-adocx',
                 enforce: 'pre',
                 configResolved(viteConfig) {
-                  _compileAstro = (code, filename) => {
-                    return compileAstro({
+                  _compileAstro = async (code, filename) => {
+                    const result = await compileAstro({
                       compileProps: {
                         astroConfig,
                         viteConfig,
@@ -91,12 +106,19 @@ export function adocx(
                         filename,
                         source: code,
                       },
-                      astroFileToCompileMetadata: new Map(),
+                      astroFileToCompileMetadata,
                       logger: logger as any,
                     });
+                    return result;
                   };
                 },
+                buildStart() {
+                  astroFileToCompileMetadata = new Map();
+                },
                 async load(fileId) {
+                  if (!fileId.includes(adocxExtension)) {
+                    return;
+                  }
                   if (!fileId.endsWith(adocxExtension)) {
                     return;
                   }
@@ -147,6 +169,12 @@ export function adocx(
                     err.loc.file = `${fileId.replace(adocxExtension, '.astro')}`;
                     throw e;
                   }
+                },
+                async handleHotUpdate(ctx) {
+                  return handleHotUpdate(ctx, {
+                    logger: logger as any,
+                    astroFileToCompileMetadata,
+                  });
                 },
               },
             ] as VitePlugin[],

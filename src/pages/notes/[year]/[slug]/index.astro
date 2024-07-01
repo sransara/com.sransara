@@ -7,6 +7,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
 import Asciidoc from '@/src/lib/astro/asciidoc/Asciidoc.astro';
 import NavBar from '@/src/lib/astro/nav-bar/NavBar.astro';
+import { entries } from '@/src/text';
 
 export function getStaticPaths() {
   const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
@@ -35,9 +36,9 @@ if (!metadata.publishedDate.startsWith(year || '0000')) {
   throw new Error("metadata.publishedDate and path year doesn't match");
 }
 
-const AstroEmbed = (await import(
-  `../../../../../src/text/notes/${year}/${slug}/index.adoc`
-)) as AstroInstance & { docattrs: any };
+const AstroEmbed = (await entries[`notes/${year}/${slug}/index.adoc`]()) as AstroInstance & {
+  docattrs: any;
+};
 
 const poster = import(`../../../../../src/text/notes/${year}/${slug}/poster.jpg`);
 ---

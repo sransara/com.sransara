@@ -1,5 +1,5 @@
 ---
-import { Counter } from './Counter.jsx';
+// import { Counter } from './Counter.jsx';
 ---
 = Hello from another world.
 
@@ -24,7 +24,7 @@ The hail-and-rainbow protocol can be initiated < at five levels:
 asciimath:[a^2 + b^2 = c^2]
 
 ++++
-<Counter client:load={true} />
+<!-- <Counter client:load={true} /> -->
 ++++
 
 === Toatts
