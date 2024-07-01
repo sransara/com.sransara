@@ -1,10 +1,9 @@
-import fs from 'node:fs';
-
 import type { Asciidoctor, ProcessorOptions } from 'asciidoctor';
 import asciidoctor from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
 import astroJSXRenderer from 'astro/jsx/renderer.js';
 import type { Plugin as VitePlugin } from 'vite';
+
 import {
   compileAstro,
   type CompileAstroResult,
@@ -124,10 +123,10 @@ export function adocx(
                   }
                   try {
                     const astroComponent = await _compileAdoc(fileId);
-                    fs.writeFileSync(
-                      fileId.replace(adocxExtension, '.debug.astro'),
-                      astroComponent,
-                    );
+                    // fs.writeFileSync(
+                    //   fileId.replace(adocxExtension, '.debug.astro'),
+                    //   astroComponent,
+                    // );
                     return {
                       code: astroComponent,
                     };
