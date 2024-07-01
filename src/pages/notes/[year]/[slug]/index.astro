@@ -36,7 +36,7 @@ if (!metadata.publishedDate.startsWith(year || '0000')) {
   throw new Error("metadata.publishedDate and path year doesn't match");
 }
 
-const AstroEmbed = (await entries[`notes/${year}/${slug}/index.adoc`]()) as AstroInstance & {
+const AstroEmbed = (await entries[`notes/${year}/${slug}/index.a.mdoc`]()) as AstroInstance & {
   docattrs: any;
 };
 

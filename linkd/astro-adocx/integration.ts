@@ -16,7 +16,7 @@ import subSpecialchars from './patches/sub_specialchars';
 import type { AdocOptions, AstroAdocxOptions } from './types.js';
 import { decodeSpecialChars } from './utils/astroFence.ts';
 
-const adocxExtension = '.adoc';
+const adocxExtension = '.a.mdoc';
 
 async function compileAdoc(
   asciidoctorEngine: Asciidoctor,
