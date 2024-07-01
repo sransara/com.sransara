@@ -3,15 +3,9 @@ import fs from 'node:fs';
 import type { Asciidoctor, ProcessorOptions } from 'asciidoctor';
 import asciidoctor from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
-import astroJSXRenderer from 'astro/jsx/renderer.js';
 import type { Plugin as VitePlugin } from 'vite';
-import {
-  compileAstro,
-  type CompileAstroResult,
-} from './node_modules/astro/dist/vite-plugin-astro/compile.js';
-import { handleHotUpdate } from './node_modules/astro/dist/vite-plugin-astro/hmr.js';
-import { type CompileMetadata } from './node_modules/astro/dist/vite-plugin-astro/types.js';
 
+import path from 'node:path';
 import { register as converterRegisterHandle } from './converter.ts';
 import subSpecialchars from './patches/sub_specialchars';
 import type { AdocOptions, AstroAdocxOptions } from './types.js';
@@ -54,21 +48,10 @@ export function adocx(
   asciidoctorConfig: AdocOptions,
 ): AstroIntegration {
   let _compileAdoc: (filename: string) => Promise<string>;
-  let _compileAstro: (code: string, filename: string) => Promise<CompileAstroResult>;
   return {
     name: '@sransara/astro-adocx',
     hooks: {
-      async 'astro:config:setup'({
-        config: astroConfig,
-        updateConfig,
-        // @ts-expect-error: `addPageExtension` is part of the private api
-        addPageExtension,
-        addRenderer,
-        logger,
-      }) {
-        addRenderer(astroJSXRenderer);
-        addPageExtension(adocxExtension);
-
+      async 'astro:config:setup'({ config: astroConfig, updateConfig, addWatchFile }) {
         const asciidoctorEngine = asciidoctor();
         subSpecialchars.patch();
         converterRegisterHandle(asciidoctorEngine, adocxConfig.templates ?? {});
@@ -88,40 +71,24 @@ export function adocx(
           return compileAdoc(asciidoctorEngine, filename, adocxConfig, asciidoctorConfig);
         };
 
-        let astroFileToCompileMetadata = new Map<string, CompileMetadata>();
-
         updateConfig({
           vite: {
             plugins: [
               {
                 name: 'vite-astro-adocx',
                 enforce: 'pre',
-                configResolved(viteConfig) {
-                  _compileAstro = async (code, filename) => {
-                    const result = await compileAstro({
-                      compileProps: {
-                        astroConfig,
-                        viteConfig,
-                        preferences: new Map() as any,
-                        filename,
-                        source: code,
-                      },
-                      astroFileToCompileMetadata,
-                      logger: logger as any,
-                    });
-                    return result;
-                  };
-                },
-                buildStart() {
-                  astroFileToCompileMetadata = new Map();
+                resolveId(source, importer, options) {
+                  if (source.endsWith(adocxExtension) && importer !== undefined) {
+                    return path.join(path.dirname(importer), source + '.astro');
+                  }
                 },
                 async load(fileId) {
-                  if (!fileId.includes(adocxExtension)) {
+                  if (!fileId.endsWith(adocxExtension + '.astro')) {
                     return;
                   }
-                  if (!fileId.endsWith(adocxExtension)) {
-                    return;
-                  }
+                  fileId = fileId.replace(adocxExtension + '.astro', adocxExtension);
+                  fileId = path.resolve(astroConfig.root.pathname, path.join('.', fileId));
+                  addWatchFile(fileId);
                   try {
                     const astroComponent = await _compileAdoc(fileId);
                     fs.writeFileSync(
@@ -132,49 +99,9 @@ export function adocx(
                       code: astroComponent,
                     };
                   } catch (e) {
-                    console.error(e);
+                    // console.error(e);
                     throw new Error(`Error processing adoc file: ${fileId}: ${e}`);
                   }
-                },
-                async transform(source, fileId) {
-                  if (!fileId.endsWith(adocxExtension)) {
-                    return;
-                  }
-                  const astroComponent = source;
-                  let transformResult: CompileAstroResult;
-                  try {
-                    transformResult = await _compileAstro(astroComponent, fileId);
-                    const astroMetadata = {
-                      clientOnlyComponents: transformResult.clientOnlyComponents,
-                      hydratedComponents: transformResult.hydratedComponents,
-                      scripts: transformResult.scripts,
-                      containsHead: transformResult.containsHead,
-                      propagation: transformResult.propagation ? 'self' : 'none',
-                      pageOptions: {},
-                    };
-                    return {
-                      code: transformResult.code,
-                      map: transformResult.map,
-                      meta: {
-                        astro: astroMetadata,
-                        vite: {
-                          // Setting this vite metadata to `ts` causes Vite to resolve .js
-                          // extensions to .ts files.
-                          lang: 'ts',
-                        },
-                      },
-                    };
-                  } catch (e) {
-                    // @ts-expect-error: Try to inject a file id to the error object
-                    err.loc.file = `${fileId.replace(adocxExtension, '.astro')}`;
-                    throw e;
-                  }
-                },
-                async handleHotUpdate(ctx) {
-                  return handleHotUpdate(ctx, {
-                    logger: logger as any,
-                    astroFileToCompileMetadata,
-                  });
                 },
               },
             ] as VitePlugin[],
