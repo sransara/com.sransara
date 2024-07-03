@@ -1,4 +1,4 @@
-import { Document as AdocDocument, Section } from 'asciidoctor';
+import type { Document as AdocDocument, Section } from 'asciidoctor';
 
 export interface Outline {
   id: string;

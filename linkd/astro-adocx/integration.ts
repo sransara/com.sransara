@@ -1,22 +1,20 @@
 import type { Asciidoctor, ProcessorOptions } from 'asciidoctor';
 import asciidoctor from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
-import astroJSXRenderer from 'astro/jsx/renderer.js';
 import type { Plugin as VitePlugin } from 'vite';
 
 import {
   compileAstro,
   type CompileAstroResult,
 } from './node_modules/astro/dist/vite-plugin-astro/compile.js';
-import { handleHotUpdate } from './node_modules/astro/dist/vite-plugin-astro/hmr.js';
-import { type CompileMetadata } from './node_modules/astro/dist/vite-plugin-astro/types.js';
 
 import { register as converterRegisterHandle } from './converter.ts';
 import subSpecialchars from './patches/sub_specialchars';
 import type { AdocOptions, AstroAdocxOptions } from './types.js';
 import { decodeSpecialChars } from './utils/astroFence.ts';
+import { getOutline } from './utils/outline.ts';
 
-const adocxExtension = '.a.mdoc';
+const adocxExtension = '.adoc';
 
 async function compileAdoc(
   asciidoctorEngine: Asciidoctor,
@@ -29,7 +27,7 @@ async function compileAdoc(
 
   const converted = document.convert();
   const docattrs = document.getAttributes() as Record<string, string | undefined>;
-
+  const outline = getOutline(document);
   // Astro component's fenced code declared in the config
   const adocxConfigAstroFenced = adocxConfig.astroFenced ?? '';
   // Astro component's fenced code added by the templates
@@ -40,6 +38,7 @@ async function compileAdoc(
   const astroComponent = `---
 ${adocxConfigAstroFenced.trim()}
 export let docattrs = ${JSON.stringify(docattrs)};
+export let outline = ${JSON.stringify(outline)};
 ${astroFenced.trim()}
 ${frontMatter.trim()}
 ---
@@ -62,10 +61,8 @@ export function adocx(
         updateConfig,
         // @ts-expect-error: `addPageExtension` is part of the private api
         addPageExtension,
-        addRenderer,
         logger,
       }) {
-        addRenderer(astroJSXRenderer);
         addPageExtension(adocxExtension);
 
         const asciidoctorEngine = asciidoctor();
@@ -87,8 +84,6 @@ export function adocx(
           return compileAdoc(asciidoctorEngine, filename, adocxConfig, asciidoctorConfig);
         };
 
-        let astroFileToCompileMetadata = new Map<string, CompileMetadata>();
-
         updateConfig({
           vite: {
             plugins: [
@@ -101,34 +96,30 @@ export function adocx(
                       compileProps: {
                         astroConfig,
                         viteConfig,
-                        preferences: new Map() as any,
+                        preferences: new Map() as any, // not sure how to get this from astro
                         filename,
                         source: code,
                       },
-                      astroFileToCompileMetadata,
-                      logger: logger as any,
+                      astroFileToCompileMetadata: new Map(),
+                      logger: logger as any, // not sure if we can do any better here
                     });
                     return result;
                   };
                 },
-                buildStart() {
-                  astroFileToCompileMetadata = new Map();
-                },
                 async load(fileId) {
-                  if (!fileId.includes(adocxExtension)) {
-                    return;
-                  }
                   if (!fileId.endsWith(adocxExtension)) {
                     return;
                   }
+                  // console.log('Loading', fileId);
                   try {
                     const astroComponent = await _compileAdoc(fileId);
                     // fs.writeFileSync(
-                    //   fileId.replace(adocxExtension, '.debug.astro'),
+                    //   `${fileId}.debug.astro`,
                     //   astroComponent,
                     // );
                     return {
                       code: astroComponent,
+                      map: { mappings: '' },
                     };
                   } catch (e) {
                     console.error(e);
@@ -139,6 +130,7 @@ export function adocx(
                   if (!fileId.endsWith(adocxExtension)) {
                     return;
                   }
+                  // console.log('Transforming', fileId);
                   const astroComponent = source;
                   let transformResult: CompileAstroResult;
                   try {
@@ -163,17 +155,13 @@ export function adocx(
                         },
                       },
                     };
-                  } catch (e) {
-                    // @ts-expect-error: Try to inject a file id to the error object
-                    err.loc.file = `${fileId.replace(adocxExtension, '.astro')}`;
-                    throw e;
+                  } catch (err) {
+                    // @ts-expect-error: Inject a fake file id to the error object
+                    err.loc.file = `${fileId}.debug.astro`;
+                    // @ts-expect-error: Try to inject a file content to the error object
+                    err.fullCode = astroComponent;
+                    throw err;
                   }
-                },
-                async handleHotUpdate(ctx) {
-                  return handleHotUpdate(ctx, {
-                    logger: logger as any,
-                    astroFileToCompileMetadata,
-                  });
                 },
               },
             ] as VitePlugin[],
