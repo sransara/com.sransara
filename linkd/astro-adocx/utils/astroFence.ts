@@ -1,13 +1,5 @@
 import type { AbstractNode } from 'asciidoctor';
-
-export function decodeSpecialChars(str: string) {
-  return str
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&lbrace;/g, '{')
-    .replace(/&rbrace;/g, '}');
-}
+import { decodeSpecialChars } from './string';
 
 export function addOnceToAstroFence(node: AbstractNode, fencedLines: string) {
   const document = node.getDocument();

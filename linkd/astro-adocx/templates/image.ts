@@ -21,8 +21,7 @@ export const convert: Template<Block>['convert'] = (node: Block, opts?: any) => 
 
   return atag('div', {
     id,
-    class: 'imageblock',
-    'data-roles': roles,
+    class: `imageblock ${roles}`,
     children: [
       atag('div', {
         class: 'content',

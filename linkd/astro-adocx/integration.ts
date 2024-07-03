@@ -2,17 +2,17 @@ import type { Asciidoctor, ProcessorOptions } from 'asciidoctor';
 import asciidoctor from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
 import type { Plugin as VitePlugin } from 'vite';
-
+import { register as converterRegisterHandle } from './converter.ts';
+import { register as blockAstroRegisterHandle } from './extensions/blockAstro.ts';
+import { register as postprocessorLayoutRegisterHandle } from './extensions/postprocessorLayout.ts';
 import {
   compileAstro,
   type CompileAstroResult,
 } from './node_modules/astro/dist/vite-plugin-astro/compile.js';
-
-import { register as converterRegisterHandle } from './converter.ts';
 import subSpecialchars from './patches/sub_specialchars';
 import type { AdocOptions, AstroAdocxOptions } from './types.js';
-import { decodeSpecialChars } from './utils/astroFence.ts';
 import { getOutline } from './utils/outline.ts';
+import { decodeSpecialChars } from './utils/string.ts';
 
 const adocxExtension = '.adoc';
 
@@ -36,9 +36,9 @@ async function compileAdoc(
   const frontMatter = decodeSpecialChars(document.getAttribute('front-matter') ?? '');
 
   const astroComponent = `---
-${adocxConfigAstroFenced.trim()}
 export let docattrs = ${JSON.stringify(docattrs)};
 export let outline = ${JSON.stringify(outline)};
+${adocxConfigAstroFenced.trim()}
 ${astroFenced.trim()}
 ${frontMatter.trim()}
 ---
@@ -68,6 +68,8 @@ export function adocx(
         const asciidoctorEngine = asciidoctor();
         subSpecialchars.patch();
         converterRegisterHandle(asciidoctorEngine, adocxConfig.templates ?? {});
+        blockAstroRegisterHandle(asciidoctorEngine.Extensions);
+        postprocessorLayoutRegisterHandle(asciidoctorEngine.Extensions);
         adocxConfig.withAsciidocEngine?.(asciidoctorEngine);
 
         // Default asciidoctor config that makes sense in this context
@@ -113,10 +115,7 @@ export function adocx(
                   // console.log('Loading', fileId);
                   try {
                     const astroComponent = await _compileAdoc(fileId);
-                    // fs.writeFileSync(
-                    //   `${fileId}.debug.astro`,
-                    //   astroComponent,
-                    // );
+                    // fs.writeFileSync(`${fileId}.debug.astro`, astroComponent);
                     return {
                       code: astroComponent,
                       map: { mappings: '' },
