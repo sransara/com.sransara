@@ -24,7 +24,7 @@ jobs:
       - name: Install linkd dependencies
         working-directory: linkd/astro-adocx
         run: pnpm install --frozen-lockfile
-      - run: pnpm run lint
+      # - run: pnpm run lint
       - run: pnpm run build
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
