@@ -45,7 +45,7 @@ export const asciidoctorConfig = {
     imagesdir: './_assets/',
     'kroki-fetch-diagram': true,
     'kroki-default-format': 'png',
-    'astro-layout-path': '@/src/layouts/asciidocNoteLayout/AsciidocNoteLayout.astro',
+    'astro-layout-path': '@/src/layouts/adocNoteLayout/AdocNoteLayout.astro',
     'astro-layout-args': '{...{ metadata, poster, docattrs, outline }}',
   },
 } satisfies AdocOptions;
