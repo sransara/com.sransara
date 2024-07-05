@@ -33,3 +33,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: sransara-com
           directory: dist
+          wranglerVersion: '3'
