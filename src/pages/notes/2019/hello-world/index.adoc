@@ -1,5 +1,5 @@
 ---
-import { Counter } from './Counter.jsx';
+import { Counter } from './_islands/Counter.jsx';
 ---
 = Hello from another world.
 

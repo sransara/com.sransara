@@ -13,7 +13,11 @@ const templates = Object.fromEntries(
   ]),
 );
 
-const astroFenced = ``;
+const astroFenced = `
+// For astro-layout-args
+import { metadata } from './_meta/metadata.ts';
+import poster from './_meta/poster.jpg';
+`;
 
 export const adocxConfig = {
   astroFenced,
@@ -38,8 +42,10 @@ export const asciidoctorConfig = {
     icons: 'font',
     stem: 'latexmath',
     toc: 'macro',
-    imagesdir: './',
+    imagesdir: './_assets/',
     'kroki-fetch-diagram': true,
     'kroki-default-format': 'png',
+    'astro-layout-path': '@/src/layouts/asciidocNoteLayout/AsciidocNoteLayout.astro',
+    'astro-layout-args': '{...{ metadata, poster, docattrs, outline }}',
   },
 } satisfies AdocOptions;
