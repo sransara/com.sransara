@@ -1,0 +1,37 @@
+---
+import AsciiMathParser from 'asciimath2tex';
+import { decodeSpecialChars } from 'astro-adocx/utils/string.ts';
+import katex, { type KatexOptions } from 'katex';
+import 'katex/dist/katex.min.css';
+
+interface Props {
+  block?: boolean;
+  lang?: 'latexmath' | 'asciimath';
+}
+
+const { block = false, lang = 'latexmath' } = Astro.props;
+
+let content: string = await Astro.slots.render('default');
+content = decodeSpecialChars(content);
+content = lang === 'asciimath' ? new AsciiMathParser().parse(content) : content;
+
+const throwOnError: boolean = import.meta.env.DEV;
+const options: KatexOptions = {
+  displayMode: block,
+  throwOnError,
+  fleqn: true,
+  output: 'html',
+};
+
+const output = katex.renderToString(content, options);
+---
+
+<style is:global>
+  .katex-display > .katex > .katex-html > .tag {
+    position: absolute;
+    right: auto;
+    left: -1.8em;
+  }
+</style>
+
+<Fragment set:html={output} />

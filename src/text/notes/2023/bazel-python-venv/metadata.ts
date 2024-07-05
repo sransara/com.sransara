@@ -1,6 +1,0 @@
-import type { Metadata } from '@src/lib/types/notes';
-
-export const metadata: Metadata = {
-  title: 'Quick guide: Bazel Python virtual environment',
-  publishedDate: '2023-05-05'
-};

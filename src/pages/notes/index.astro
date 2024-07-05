@@ -1,11 +1,15 @@
 ---
 import { format, parseISO } from 'date-fns';
 
-import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
-import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
-import { getNoteMetadata } from '@src/lib/utils';
+import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
+import NavBar from '@/src/lib/astro/navBar/NavBar.astro';
+import { routes } from '@/src/pages/_metas.ts';
+import { groupBy } from '@/src/lib/utils.ts';
 
-const notes = await getNoteMetadata();
+const notesGroupedByYear = groupBy(
+  routes('/notes'),
+  (note) => note.route.match(/^\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/$/)?.groups?.year,
+);
 ---
 
 <BaseLayout title="Notes">
@@ -15,7 +19,7 @@ const notes = await getNoteMetadata();
     <h1 class="my-3 text-5xl font-bold">Notes</h1>
     <ul>
       {
-        Object.keys(notes)
+        Object.keys(notesGroupedByYear)
           .sort((a, b) => b.localeCompare(a))
           .map((year) => (
             <li>
@@ -23,7 +27,7 @@ const notes = await getNoteMetadata();
                 <a href={`/notes/${year}`}>{year}</a>
               </h2>
               <ul>
-                {notes[year]
+                {notesGroupedByYear[year]
                   .sort((a, b) => b.metadata.publishedDate.localeCompare(a.metadata.publishedDate))
                   .map(({ route, metadata }) => (
                     <li class="mb-3">

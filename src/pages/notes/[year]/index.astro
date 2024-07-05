@@ -1,33 +1,27 @@
 ---
 import { format, parseISO } from 'date-fns';
 
-import BaseLayout from '@src/layouts/baseLayout/BaseLayout.astro';
-import NavBar from '@src/lib/astro/nav-bar/NavBar.astro';
-import { getNoteMetadata } from '@src/lib/utils';
+import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
+import NavBar from '@/src/lib/astro/navBar/NavBar.astro';
+import { routes } from '@/src/pages/_metas.ts';
 
 export function getStaticPaths() {
-  const metadataPaths = import.meta.glob('/src/text/notes/**/metadata.ts');
-  const pathPattern = /^\/src\/text\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/metadata.ts$/;
-  let years = Object.entries(metadataPaths).map(([path]) => {
-    const match = path.match(pathPattern);
-    if (!match || !match.groups) {
-      throw new Error('Invalid path globbed.');
+  let years = routes('/notes').reduce((result, { route }) => {
+    const match = route.match(/^\/notes\/(?<year>\d\d\d\d)\/(?<slug>[^/]+)\/$/);
+    if (match && match.groups && match.groups.year) {
+      result.add(match.groups.year);
     }
-
-    return match.groups.year;
-  });
-  years = [...new Set(years)];
-  return years.map((year) => ({
+    return result;
+  }, new Set<string>());
+  return Array.from(years).map((year) => ({
     params: {
-      year
-    }
+      year,
+    },
   }));
 }
 
 const { year } = Astro.params;
 if (!year) throw new Error('Invalid route');
-
-const notes = await getNoteMetadata(year);
 ---
 
 <BaseLayout title={`Notes from ${year}`}>
@@ -37,7 +31,8 @@ const notes = await getNoteMetadata(year);
     <h1 class="my-3 text-5xl font-bold">Notes from {year}</h1>
     <ul>
       {
-        notes[year]
+        routes('/notes')
+          .filter(({ route }) => route.startsWith(`/notes/${year}/`))
           .sort((a, b) => b.metadata.publishedDate.localeCompare(a.metadata.publishedDate))
           .map(({ route, metadata }) => (
             <li class="mb-3">

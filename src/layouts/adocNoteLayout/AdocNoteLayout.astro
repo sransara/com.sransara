@@ -1,0 +1,23 @@
+---
+import type { ImageMetadata } from 'astro';
+import type { Outline } from 'astro-adocx/utils/outline';
+
+import type { Metadata } from '@/src/lib/types/notes';
+import NoteLayout from '@/src/layouts/noteLayout/NoteLayout.astro';
+import Asciidoc from '@/src/lib/astro/asciidoc/Asciidoc.astro';
+
+interface Props {
+  metadata: Metadata;
+  poster: ImageMetadata;
+  docattrs: Record<string, string>;
+  outline: Outline;
+}
+
+const { metadata, poster, docattrs, outline } = Astro.props;
+---
+
+<NoteLayout metadata={metadata} poster={poster} subheading={docattrs.title} outline={outline}>
+  <Asciidoc>
+    <slot />
+  </Asciidoc>
+</NoteLayout>
