@@ -71,9 +71,6 @@ importers:
       eslint-plugin-tailwindcss:
         specifier: ^3.17.3
         version: 3.17.4(tailwindcss@3.4.4)
-      html-entities:
-        specifier: ^2.5.2
-        version: 2.5.2
       katex:
         specifier: ^0.16.10
         version: 0.16.10
@@ -1673,9 +1670,6 @@ packages:
 
   html-entities@2.3.3:
     resolution: {integrity: sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==, tarball: https://registry.npmjs.org/html-entities/-/html-entities-2.3.3.tgz}
-
-  html-entities@2.5.2:
-    resolution: {integrity: sha512-K//PSRMQk4FZ78Kyau+mZurHn3FH0Vwr+H36eE0rPbeYkRRi9YxceYPhuN60UwWorxyKHhqoAJl2OFKa4BVtaA==, tarball: https://registry.npmjs.org/html-entities/-/html-entities-2.5.2.tgz}
 
   html-escaper@3.0.3:
     resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==, tarball: https://registry.npmjs.org/html-escaper/-/html-escaper-3.0.3.tgz}
@@ -4889,8 +4883,6 @@ snapshots:
       space-separated-tokens: 2.0.2
 
   html-entities@2.3.3: {}
-
-  html-entities@2.5.2: {}
 
   html-escaper@3.0.3: {}
 
