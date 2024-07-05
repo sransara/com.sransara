@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { Outline } from 'astro-adocx/utils/outline';
+import siteValues from '@/site.values.js';
 
 import type { Metadata } from '@/src/lib/types/notes';
 import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
@@ -28,7 +29,7 @@ const { metadata, poster, subheading } = Astro.props;
       <div class="my-2 text-xs text-gray-500">
         Note by
         <!-- prettier-ignore  -->
-        <a class="text-blue-800 underline hover:text-blue-500" href="/about">Samodya Abeysiriwardane</a>
+        <a class="text-blue-800 underline hover:text-blue-500" href="/about">{siteValues.author}</a>
         &nbsp;|&nbsp; Published
         <span class="text-gray-800">{metadata.publishedDate}</span>
         {
@@ -51,9 +52,8 @@ const { metadata, poster, subheading } = Astro.props;
       <div class="bg-yellow-200 p-5 text-sm">
         Published by
         <span class="text-gray-800">
-          <a class="text-blue-800 underline hover:text-blue-500" href="/about">
-            Samodya Abeysiriwardane
-          </a>
+          <!-- prettier-ignore  -->
+          <a class="text-blue-800 underline hover:text-blue-500" href="/about">{siteValues.author}</a>
         </span>
         on
         <span class="text-gray-800">{metadata.publishedDate}</span>

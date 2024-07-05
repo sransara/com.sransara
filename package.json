@@ -33,7 +33,6 @@
     "eslint": "^9.4.0",
     "eslint-plugin-astro": "^1.2.2",
     "eslint-plugin-tailwindcss": "^3.17.3",
-    "html-entities": "^2.5.2",
     "katex": "^0.16.10",
     "postcss": "^8.4.38",
     "postcss-load-config": "^6.0.1",

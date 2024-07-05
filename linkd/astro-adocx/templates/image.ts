@@ -27,10 +27,11 @@ export const convert: Template<Block>['convert'] = (node: Block, opts?: any) => 
         class: 'content',
         children: [inlineImage],
       }),
-      atag('div', {
-        class: 'title',
-        children: [title],
-      }),
+      title &&
+        atag('div', {
+          class: 'title',
+          children: [title],
+        }),
     ],
   });
 };

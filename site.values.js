@@ -1,5 +1,6 @@
 export default {
   site: 'https://sransara.com',
   name: 'sransara',
-  tagLine: 'True randomness'
+  tagLine: 'True randomness',
+  author: 'Samodya Abeysiriwardane',
 };
