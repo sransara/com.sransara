@@ -1,8 +1,6 @@
 import type { Asciidoctor, ProcessorOptions } from 'asciidoctor';
 import asciidoctor from 'asciidoctor';
 import type { AstroIntegration } from 'astro';
-import fs from 'fs';
-import type { Plugin as VitePlugin } from 'vite';
 import { register as converterRegisterHandle } from './converter.ts';
 import { register as postprocessorLayoutRegisterHandle } from './extensions/postprocessorLayout.ts';
 import {
@@ -114,7 +112,7 @@ export function adocx(
                   // console.log('Loading', fileId);
                   try {
                     const astroComponent = await _compileAdoc(fileId);
-                    fs.writeFileSync(`${fileId}.debug.astro`, astroComponent);
+                    // fs.writeFileSync(`${fileId}.debug.astro`, astroComponent);
                     return {
                       code: astroComponent,
                       map: { mappings: '' },
@@ -162,7 +160,7 @@ export function adocx(
                   }
                 },
               },
-            ] as VitePlugin[],
+            ],
           },
         });
       },

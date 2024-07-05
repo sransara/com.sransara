@@ -6,7 +6,7 @@ import { type Template } from 'astro-adocx/types.ts';
 import { addOnceToAstroFence } from 'astro-adocx/utils/astroFence';
 import { atag } from 'astro-adocx/utils/asx.ts';
 
-export const convert: Template<Block>['convert'] = (node: Block, opts?: any) => {
+export const convert: Template<Block>['convert'] = (node: Block, _opts?: any) => {
   const id = node.getId();
   const title = node.getCaptionedTitle();
   const roles = node.getRoles().join(' ');

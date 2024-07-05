@@ -6,7 +6,7 @@ import { UnsupportedNode, type Template } from '../types.ts';
 import { addOnceToAstroFence } from '../utils/astroFence.ts';
 import { Aexpr, aexpr, atag } from '../utils/asx.ts';
 
-export const convert: Template<Inline>['convert'] = (node: Inline, opts?: any) => {
+export const convert: Template<Inline>['convert'] = (node: Inline, _opts?: any) => {
   if (node.getType() === 'icon' && node.getDocument().getAttribute('icons') === 'font') {
     return UnsupportedNode;
   }
@@ -14,10 +14,10 @@ export const convert: Template<Inline>['convert'] = (node: Inline, opts?: any) =
   if (!target) {
     throw new Error('Missing target');
   }
-  return convertImageNode(node, target, opts);
+  return convertImageNode(node, target, _opts);
 };
 
-export const convertImageNode = (node: Inline, target: string, opts?: any) => {
+export const convertImageNode = (node: Inline, target: string, _opts?: any) => {
   let src: string | Aexpr = node.getImageUri(target);
 
   let alt = node.getAttribute('alt');
