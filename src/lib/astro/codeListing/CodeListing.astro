@@ -1,0 +1,25 @@
+---
+import { codeToHtml, bundledLanguages } from 'shiki';
+import { decodeSpecialChars } from 'astro-adocx/utils/string.ts';
+
+interface Props {
+  lang: string;
+}
+
+const { lang } = Astro.props;
+
+let content: string | undefined = await Astro.slots.render('default');
+content = (content || '').replace(
+  /<i class="conum" data-value="\d+"><\/i><b>\((\d+)\)<\/b>/g,
+  '\u0D82$1\u0D83',
+);
+content = decodeSpecialChars(content);
+
+let output = await codeToHtml(content, {
+  lang: lang in bundledLanguages ? lang : 'text',
+  theme: 'github-light',
+});
+output = output.replace(/\u0D82(\d+)\u0D83/g, '<i class="conum" data-value="$1"></i><b>$1</b>');
+---
+
+<Fragment set:html={output} />
