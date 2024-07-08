@@ -21,7 +21,7 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      # - run: pnpm run lint
+      - run: pnpm run lint
       - run: pnpm run build
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
