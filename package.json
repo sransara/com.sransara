@@ -18,7 +18,7 @@
     "@astrojs/solid-js": "^4.4.0",
     "@astrojs/tailwind": "^5.1.0",
     "@eslint/js": "^9.6.0",
-    "@sransara/astro-adocx": "^0.0.12",
+    "@sransara/astro-adocx": "^0.0.13",
     "@types/eslint": "^8.56.10",
     "@types/eslint__js": "^8.42.3",
     "@types/katex": "^0.16.7",
