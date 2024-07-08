@@ -2,9 +2,9 @@
 // - https://github.com/asciidoctor/asciidoctor-backends/blob/master/erb/html5/block_math.html.erb
 
 import type { Block } from 'asciidoctor';
-import { type Template } from '@sransara/astro-adocx/types';
-import { addOnceToAstroFence } from '@sransara/astro-adocx/utils/astroFence';
-import { atag } from '@sransara/astro-adocx/utils/asx';
+import { type Template } from '@sransara/astro-adocx/types.js';
+import { addOnceToAstroFence } from '@sransara/astro-adocx/utils/astroFence.js';
+import { atag } from '@sransara/astro-adocx/utils/asx.js';
 
 export const convert: Template<Block>['convert'] = (node: Block, _opts?: any) => {
   const id = node.getId();

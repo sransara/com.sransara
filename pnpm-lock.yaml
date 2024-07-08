@@ -27,8 +27,8 @@ importers:
         specifier: ^9.6.0
         version: 9.6.0
       '@sransara/astro-adocx':
-        specifier: ^0.0.10
-        version: 0.0.10(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))
+        specifier: ^0.0.12
+        version: 0.0.12(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))
       '@types/eslint':
         specifier: ^8.56.10
         version: 8.56.10
@@ -87,11 +87,11 @@ importers:
         specifier: ^0.14.0
         version: 0.14.0
       prettier-plugin-organize-imports:
-        specifier: ^3.2.4
-        version: 3.2.4(prettier@3.3.2)(typescript@5.5.3)
+        specifier: ^4.0.0
+        version: 4.0.0(prettier@3.3.2)(typescript@5.5.3)
       prettier-plugin-tailwindcss:
         specifier: ^0.6.5
-        version: 0.6.5(prettier-plugin-astro@0.14.0)(prettier-plugin-organize-imports@3.2.4(prettier@3.3.2)(typescript@5.5.3))(prettier@3.3.2)
+        version: 0.6.5(prettier-plugin-astro@0.14.0)(prettier-plugin-organize-imports@4.0.0(prettier@3.3.2)(typescript@5.5.3))(prettier@3.3.2)
       sharp:
         specifier: ^0.33.4
         version: 0.33.4
@@ -841,12 +841,12 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
-  '@sransara/astro-adocx@0.0.10':
-    resolution: {integrity: sha512-HjhKbn4IwxI8UcoEinmJO5RV5PwX+FLjc9rG8Bx+u6w5DR1nkew2YAu1oKdwodAW8P+XzlmNuiZFK+pgTkUK4Q==, tarball: https://registry.npmjs.org/@sransara/astro-adocx/-/astro-adocx-0.0.10.tgz}
+  '@sransara/astro-adocx@0.0.12':
+    resolution: {integrity: sha512-RdOba6RLtwRgShiZM444YGDimd36Fp4PgYhNlPGqiOSZVDnaaY0D1q5opVHI51EywdNECcpUZTK0pkQuL3SX+w==, tarball: https://registry.npmjs.org/@sransara/astro-adocx/-/astro-adocx-0.0.12.tgz}
     peerDependencies:
       asciidoctor: ^3.0.4
       astro: ^4.10.2
-      vite: 5.3.1
+      vite: ^5.3.1
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==, tarball: https://registry.npmjs.org/@types/babel__core/-/babel__core-7.20.5.tgz}
@@ -2340,17 +2340,17 @@ packages:
     resolution: {integrity: sha512-7jRGJsexaRIyUzTk8uzXlP45cw6DQ5Ci4bTe0xCBCcuO1Fff8jJy9oI+kRCQKSdDFTSAArMSg8GpvzlKBtSaZA==, tarball: https://registry.npmjs.org/prettier-plugin-astro/-/prettier-plugin-astro-0.14.0.tgz}
     engines: {node: ^14.15.0 || >=16.0.0}
 
-  prettier-plugin-organize-imports@3.2.4:
-    resolution: {integrity: sha512-6m8WBhIp0dfwu0SkgfOxJqh+HpdyfqSSLfKKRZSFbDuEQXDDndb8fTpRWkUrX/uBenkex3MgnVk0J3b3Y5byog==, tarball: https://registry.npmjs.org/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-3.2.4.tgz}
+  prettier-plugin-organize-imports@4.0.0:
+    resolution: {integrity: sha512-vnKSdgv9aOlqKeEFGhf9SCBsTyzDSyScy1k7E0R1Uo4L0cTcOV7c1XQaT7jfXIOc/p08WLBfN2QUQA9zDSZMxA==, tarball: https://registry.npmjs.org/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-4.0.0.tgz}
     peerDependencies:
-      '@volar/vue-language-plugin-pug': ^1.0.4
-      '@volar/vue-typescript': ^1.0.4
+      '@vue/language-plugin-pug': ^2.0.24
       prettier: '>=2.0'
       typescript: '>=2.9'
+      vue-tsc: ^2.0.24
     peerDependenciesMeta:
-      '@volar/vue-language-plugin-pug':
+      '@vue/language-plugin-pug':
         optional: true
-      '@volar/vue-typescript':
+      vue-tsc:
         optional: true
 
   prettier-plugin-tailwindcss@0.6.5:
@@ -3812,7 +3812,7 @@ snapshots:
     dependencies:
       solid-js: 1.8.18
 
-  '@sransara/astro-adocx@0.0.10(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))':
+  '@sransara/astro-adocx@0.0.12(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))':
     dependencies:
       app-root-path: 3.1.0
       asciidoctor: 3.0.4(chokidar@3.6.0)
@@ -5625,17 +5625,17 @@ snapshots:
       prettier: 3.3.2
       sass-formatter: 0.7.9
 
-  prettier-plugin-organize-imports@3.2.4(prettier@3.3.2)(typescript@5.5.3):
+  prettier-plugin-organize-imports@4.0.0(prettier@3.3.2)(typescript@5.5.3):
     dependencies:
       prettier: 3.3.2
       typescript: 5.5.3
 
-  prettier-plugin-tailwindcss@0.6.5(prettier-plugin-astro@0.14.0)(prettier-plugin-organize-imports@3.2.4(prettier@3.3.2)(typescript@5.5.3))(prettier@3.3.2):
+  prettier-plugin-tailwindcss@0.6.5(prettier-plugin-astro@0.14.0)(prettier-plugin-organize-imports@4.0.0(prettier@3.3.2)(typescript@5.5.3))(prettier@3.3.2):
     dependencies:
       prettier: 3.3.2
     optionalDependencies:
       prettier-plugin-astro: 0.14.0
-      prettier-plugin-organize-imports: 3.2.4(prettier@3.3.2)(typescript@5.5.3)
+      prettier-plugin-organize-imports: 4.0.0(prettier@3.3.2)(typescript@5.5.3)
 
   prettier@3.3.2: {}
 

@@ -1,6 +1,6 @@
 import type { Extensions } from 'asciidoctor';
 
-import { isExtensionSingleton } from '@sransara/astro-adocx/types';
+import { isExtensionSingleton } from '@sransara/astro-adocx/types.js';
 
 export function register(registry: typeof Extensions | Extensions.Registry) {
   if (isExtensionSingleton(registry)) {
