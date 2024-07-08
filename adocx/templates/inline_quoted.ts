@@ -1,6 +1,6 @@
 import type { Inline } from 'asciidoctor';
-import { UnsupportedNode, type Template } from 'astro-adocx/types.ts';
-import { addOnceToAstroFence } from 'astro-adocx/utils/astroFence.ts';
+import { UnsupportedNode, type Template } from '@sransara/astro-adocx/types';
+import { addOnceToAstroFence } from '@sransara/astro-adocx/utils/astroFence';
 
 export const convert: Template<Inline>['convert'] = (node: Inline, _opts?: any) => {
   const nodeType = node.getType();

@@ -2,7 +2,7 @@ import path from 'node:path';
 
 // @ts-ignore: Types are not available
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
-import type { AdocOptions, AstroAdocxOptions, Template } from 'astro-adocx/types';
+import type { AdocOptions, AstroAdocxOptions, Template } from '@sransara/astro-adocx/types';
 
 import { register as inlineMacroCalloutRegisterHandle } from './extensions/inlineMacroCallout';
 

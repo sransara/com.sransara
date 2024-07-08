@@ -1,11 +1,11 @@
 import sitemap from '@astrojs/sitemap';
 import solid from '@astrojs/solid-js';
 import tailwind from '@astrojs/tailwind';
-import { adocx } from 'astro-adocx/integration';
+import { adocx } from '@sransara/astro-adocx/integration';
 import { defineConfig } from 'astro/config';
 
-import { adocxConfig, asciidoctorConfig } from './adocx/config.ts';
-import siteValues from './site.values.js';
+import { adocxConfig, asciidoctorConfig } from './adocx/config';
+import siteValues from './site.values';
 
 export default defineConfig({
   site: siteValues.site,
