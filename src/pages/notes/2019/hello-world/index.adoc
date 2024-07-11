@@ -2,6 +2,7 @@
 import { Counter } from './_islands/Counter.jsx';
 ---
 = Hello from another world.
+:astro-layout: note
 
 This is first contact.
 

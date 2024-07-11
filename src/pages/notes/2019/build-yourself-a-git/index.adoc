@@ -1,5 +1,6 @@
 = Conceptually building up to the fundamentals datastructures of Git.
 :sectnums:
+:astro-layout: note
 
 Have you ever wondered how Git works?
 In this note we will incrementally build a version control system while taking inspiration from Git.

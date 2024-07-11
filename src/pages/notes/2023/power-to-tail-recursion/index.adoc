@@ -1,4 +1,5 @@
 = Step by step tail recursion elimination of power function as an example
+:astro-layout: note
 
 [discrete]
 === TLDR

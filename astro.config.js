@@ -1,7 +1,7 @@
 import sitemap from '@astrojs/sitemap';
 import solid from '@astrojs/solid-js';
 import tailwind from '@astrojs/tailwind';
-import { adocx } from '@sransara/astro-adocx/integration.js';
+import { adocx } from '@sransara/astro-adocx/integration';
 import { defineConfig } from 'astro/config';
 
 import { adocxConfig, asciidoctorConfig } from './adocx/config';

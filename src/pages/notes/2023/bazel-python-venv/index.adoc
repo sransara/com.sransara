@@ -1,5 +1,5 @@
 = Missing guide for creating a Python virtual environment in Bazel
-:astro-layout-path: @/src/layouts/asciidocNoteLayout/AsciidocNoteLayout.astro
+:astro-layout: note
 
 Bazel provides great tooling for building and testing Python code, but https://github.com/bazelbuild/rules_python[rules_python] as of this note (2023-05-05) do not provide an obvious way to create a Python shell with the `PYTHONPATH` footnote:[A Python shell with the `PYTHONPATH` is what I call a Python virtual environment in this guide.].
 As we venture outside the norms like `venv` by using Bazel, having access to a Python shell/enviroment lets us:
