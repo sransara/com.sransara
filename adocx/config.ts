@@ -1,14 +1,14 @@
 import path from 'node:path';
 
-import type {
-  AdocNodeConverters,
-  AdocOptions,
-  AstroAdocxOptions,
-} from '@sransara/astro-adocx/types';
+import type { AdocOptions, AstroAdocxOptions } from '@sransara/astro-adocx/types';
 // @ts-ignore: Types are not available
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 
 import { register as inlineMacroCalloutRegisterHandle } from './extensions/inlineMacroCallout';
+import {
+  type AdocNodeConverters,
+  register as nodeConvertingConverterRegisterHandle,
+} from './nodeConvertingConverter';
 
 const nodeConverters = Object.fromEntries(
   Object.entries(import.meta.glob('./nodeConverters/*.ts', { eager: true, import: 'convert' })).map(
@@ -25,6 +25,7 @@ import poster from './_meta/poster.jpg';
 export const adocxConfig = {
   astroFenced,
   withAsciidocEngine(asciidoctorEngine) {
+    nodeConvertingConverterRegisterHandle(asciidoctorEngine, nodeConverters);
     krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
     inlineMacroCalloutRegisterHandle(asciidoctorEngine.Extensions);
   },
@@ -32,7 +33,6 @@ export const adocxConfig = {
     // useful for asciidoctor-diagrams/kroki
     document.setAttribute('outdir', path.dirname(filePath));
   },
-  nodeConverters,
   astroLayouts: {
     note: {
       path: '@/src/layouts/adocNoteLayout/AdocNoteLayout.astro',
