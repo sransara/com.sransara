@@ -16,7 +16,7 @@ interface Props {
 const { metadata, poster, docattrs, outline } = Astro.props;
 ---
 
-<NoteLayout metadata={metadata} poster={poster} subheading={docattrs.title} outline={outline}>
+<NoteLayout metadata={metadata} poster={poster} subheading={docattrs.doctitle} outline={outline}>
   <Asciidoc>
     <slot />
   </Asciidoc>
