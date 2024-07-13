@@ -32,6 +32,8 @@ export const adocxConfig = {
   async withDocument(filePath, document) {
     // useful for asciidoctor-diagrams/kroki
     document.setAttribute('outdir', path.dirname(filePath));
+    // extract the relative path from the src/
+    document.setAttribute('source-file', filePath.replace(/.*\/src\//, 'src/'));
   },
   async withConvertedDocument(_filePath, astroTemplate) {
     return astroTemplate;

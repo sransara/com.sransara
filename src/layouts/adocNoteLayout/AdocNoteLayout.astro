@@ -9,14 +9,23 @@ import Asciidoc from '@/src/lib/astro/asciidoc/Asciidoc.astro';
 interface Props {
   metadata: Metadata;
   poster: ImageMetadata;
-  docattrs: Record<string, string>;
+  docattrs: Record<string, string | undefined>;
   outline: Outline;
 }
 
 const { metadata, poster, docattrs, outline } = Astro.props;
 ---
 
-<NoteLayout metadata={metadata} poster={poster} subheading={docattrs.doctitle} outline={outline}>
+<NoteLayout
+  metadata={metadata}
+  poster={poster}
+  subheading={docattrs.doctitle}
+  sourceFile={docattrs['source-file']}
+  outline={outline}
+>
+  <pre>
+    {JSON.stringify(docattrs, null, 2)}
+  </pre>
   <Asciidoc>
     <slot />
   </Asciidoc>

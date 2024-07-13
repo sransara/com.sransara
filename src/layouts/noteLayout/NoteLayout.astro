@@ -2,8 +2,8 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { Outline } from '@sransara/astro-adocx/utils/outline';
-import siteValues from '@/site.values.js';
 
+import siteValues from '@/site.values.js';
 import type { Metadata } from '@/src/lib/types/notes';
 import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
 import NavBar from '@/src/lib/astro/navBar/NavBar.astro';
@@ -11,11 +11,14 @@ import NavBar from '@/src/lib/astro/navBar/NavBar.astro';
 interface Props {
   metadata: Metadata;
   poster: ImageMetadata;
+  sourceFile?: string;
   subheading?: string;
   outline?: Outline;
 }
 
-const { metadata, poster, subheading } = Astro.props;
+const { metadata, poster, sourceFile, subheading } = Astro.props;
+
+const githubSourceFile = `${siteValues.githubSourcePrefix}/${sourceFile}?plain=1`;
 ---
 
 <BaseLayout title={metadata.title}>
@@ -42,6 +45,13 @@ const { metadata, poster, subheading } = Astro.props;
         }
         &nbsp;|&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
+        &nbsp;|&nbsp; {
+          sourceFile && (
+            <a class="text-blue-800 underline hover:text-blue-500" href={githubSourceFile}>
+              Source
+            </a>
+          )
+        }
       </div>
       <div class="my-2 flex justify-center bg-gray-600 px-5">
         <Image src={poster} alt="poster" loading="eager" />
@@ -59,6 +69,13 @@ const { metadata, poster, subheading } = Astro.props;
         <span class="text-gray-800">{metadata.publishedDate}</span>
         &nbsp;/&nbsp;
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
+        &nbsp;/&nbsp; {
+          sourceFile && (
+            <a class="text-blue-800 underline hover:text-blue-500" href={githubSourceFile}>
+              Source
+            </a>
+          )
+        }
       </div>
     </article>
   </Fragment>
