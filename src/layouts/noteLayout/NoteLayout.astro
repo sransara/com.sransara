@@ -18,7 +18,9 @@ interface Props {
 
 const { metadata, poster, sourceFile, subheading } = Astro.props;
 
-const githubSourceFile = `${siteValues.githubSourcePrefix}/${sourceFile}?plain=1`;
+const githubSourceFile = (sourceFile: string) => {
+  return `${siteValues.githubSourcePrefix}/${sourceFile}?plain=1`;
+};
 ---
 
 <BaseLayout title={metadata.title}>
@@ -47,7 +49,10 @@ const githubSourceFile = `${siteValues.githubSourcePrefix}/${sourceFile}?plain=1
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
         &nbsp;|&nbsp; {
           sourceFile && (
-            <a class="text-blue-800 underline hover:text-blue-500" href={githubSourceFile}>
+            <a
+              class="text-blue-800 underline hover:text-blue-500"
+              href={githubSourceFile(sourceFile)}
+            >
               Source
             </a>
           )
@@ -71,7 +76,10 @@ const githubSourceFile = `${siteValues.githubSourcePrefix}/${sourceFile}?plain=1
         <a class="text-blue-800 underline hover:text-blue-500" href={Astro.url}>Permalink</a>
         &nbsp;/&nbsp; {
           sourceFile && (
-            <a class="text-blue-800 underline hover:text-blue-500" href={githubSourceFile}>
+            <a
+              class="text-blue-800 underline hover:text-blue-500"
+              href={githubSourceFile(sourceFile)}
+            >
               Source
             </a>
           )

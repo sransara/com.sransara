@@ -23,9 +23,6 @@ const { metadata, poster, docattrs, outline } = Astro.props;
   sourceFile={docattrs['source-file']}
   outline={outline}
 >
-  <pre>
-    {JSON.stringify(docattrs, null, 2)}
-  </pre>
   <Asciidoc>
     <slot />
   </Asciidoc>
