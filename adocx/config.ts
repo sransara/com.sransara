@@ -4,11 +4,11 @@ import path from 'node:path';
 // @ts-ignore: Types are not available
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 
-import { register as inlineMacroCalloutRegisterHandle } from '#/adocx/extensions/inlineMacroCallout';
+import { register as inlineMacroCalloutRegisterHandle } from './extensions/inlineMacroCallout';
 import {
   type AdocNodeConverters,
   register as nodeConvertingConverterRegisterHandle,
-} from '#/adocx/nodeConvertingConverter';
+} from './nodeConvertingConverter';
 
 const nodeConverters = Object.fromEntries(
   Object.entries(import.meta.glob('./nodeConverters/*.ts', { eager: true, import: 'convert' })).map(
@@ -41,7 +41,7 @@ export const adocxConfig = {
   },
   astroLayouts: {
     note: {
-      path: '#/src/layouts/adocNoteLayout/AdocNoteLayout.astro',
+      path: '@/src/layouts/adocNoteLayout/AdocNoteLayout.astro',
       args: 'poster={poster} metadata={metadata}',
     },
   },

@@ -1,4 +1,4 @@
-import siteValues from '#/site.values.js';
+import siteValues from '@/site.values.js';
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
 import { routes } from './_metas.ts';

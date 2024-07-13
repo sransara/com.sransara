@@ -1,9 +1,9 @@
 ---
 import { format, parseISO } from 'date-fns';
 
-import BaseLayout from '#/src/layouts/baseLayout/BaseLayout.astro';
-import NavBar from '#/src/lib/astro/navBar/NavBar.astro';
-import { routes } from '#/src/pages/_metas.ts';
+import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
+import NavBar from '@/src/lib/astro/navBar/NavBar.astro';
+import { routes } from '@/src/pages/_metas.ts';
 
 export function getStaticPaths() {
   let years = routes('/notes').reduce((result, { route }) => {

@@ -3,9 +3,8 @@
 
 import { atag } from '@sransara/astro-adocx/utils/asx';
 import type { Block, Inline } from 'asciidoctor';
-
-import { convertImageNode } from '#/adocx/nodeConverters/inline_image';
-import { type AdocNodeConverter } from '#/adocx/nodeConvertingConverter';
+import { type AdocNodeConverter } from '../nodeConvertingConverter';
+import { convertImageNode } from './inline_image.js';
 
 export const convert: AdocNodeConverter<Block> = (node: Block, opts?: any) => {
   const target = node.getAttribute('target');

@@ -4,8 +4,7 @@
 import { addOnceToAstroFence } from '@sransara/astro-adocx/utils/astroFence';
 import { Aexpr, aexpr, atag } from '@sransara/astro-adocx/utils/asx';
 import type { Inline } from 'asciidoctor';
-
-import { type AdocNodeConverter } from '#/adocx/nodeConvertingConverter';
+import { type AdocNodeConverter } from '../nodeConvertingConverter';
 
 export const convert: AdocNodeConverter<Inline> = (node: Inline, _opts?: any) => {
   if (node.getType() === 'icon' && node.getDocument().getAttribute('icons') === 'font') {
