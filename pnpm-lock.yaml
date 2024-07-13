@@ -27,8 +27,8 @@ importers:
         specifier: ^9.6.0
         version: 9.6.0
       '@sransara/astro-adocx':
-        specifier: ^0.1.1
-        version: 0.1.1(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))
+        specifier: ^0.1.2
+        version: 0.1.2(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))
       '@types/eslint':
         specifier: ^8.56.10
         version: 8.56.10
@@ -844,8 +844,8 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
-  '@sransara/astro-adocx@0.1.1':
-    resolution: {integrity: sha512-iVO2dUhusZn+WU/dZsVp9xfmkmmbF94qUChpPwDZuYL79KDwl+x4QrheJVUSE4YMI0mbJcBxD7aV8s7ECth3zA==, tarball: https://registry.npmjs.org/@sransara/astro-adocx/-/astro-adocx-0.1.1.tgz}
+  '@sransara/astro-adocx@0.1.2':
+    resolution: {integrity: sha512-D96XsLUQGH/njpPMneT3Xe8GJCu2gu29yw4899OnUk3VBlVVdzFIoxsF+oL2gPhLT4FoJdPZp42+DTrFDmzGag==, tarball: https://registry.npmjs.org/@sransara/astro-adocx/-/astro-adocx-0.1.2.tgz}
     peerDependencies:
       asciidoctor: ^3.0.4
       astro: ^4.10.2
@@ -3815,7 +3815,7 @@ snapshots:
     dependencies:
       solid-js: 1.8.18
 
-  '@sransara/astro-adocx@0.1.1(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))':
+  '@sransara/astro-adocx@0.1.2(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))':
     dependencies:
       app-root-path: 3.1.0
       asciidoctor: 3.0.4(chokidar@3.6.0)

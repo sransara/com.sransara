@@ -33,6 +33,9 @@ export const adocxConfig = {
     // useful for asciidoctor-diagrams/kroki
     document.setAttribute('outdir', path.dirname(filePath));
   },
+  async withConvertedDocument(_filePath, astroTemplate) {
+    return astroTemplate;
+  },
   async withAstroComponent(_filePath, component) {
     return component;
   },
