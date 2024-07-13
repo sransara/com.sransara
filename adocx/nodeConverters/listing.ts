@@ -4,7 +4,8 @@
 import { addOnceToAstroFence } from '@sransara/astro-adocx/utils/astroFence';
 import { atag } from '@sransara/astro-adocx/utils/asx';
 import type { Block } from 'asciidoctor';
-import { type AdocNodeConverter } from '../nodeConvertingConverter';
+
+import { type AdocNodeConverter } from '#adocx/nodeConvertingConverter';
 
 export const convert: AdocNodeConverter<Block> = (node: Block, _opts?: any) => {
   const id = node.getId();

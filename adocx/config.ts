@@ -4,11 +4,11 @@ import path from 'node:path';
 // @ts-ignore: Types are not available
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 
-import { register as inlineMacroCalloutRegisterHandle } from './extensions/inlineMacroCallout';
+import { register as inlineMacroCalloutRegisterHandle } from '#adocx/extensions/inlineMacroCallout';
 import {
   type AdocNodeConverters,
   register as nodeConvertingConverterRegisterHandle,
-} from './nodeConvertingConverter';
+} from '#adocx/nodeConvertingConverter';
 
 const nodeConverters = Object.fromEntries(
   Object.entries(import.meta.glob('./nodeConverters/*.ts', { eager: true, import: 'convert' })).map(
@@ -60,7 +60,7 @@ export const asciidoctorConfig = {
     icons: 'font',
     stem: 'latexmath',
     toc: 'macro',
-    imagesdir: './_assets/',
+    imagesdir: './_assets',
     'kroki-fetch-diagram': true,
     'kroki-default-format': 'png',
   },
