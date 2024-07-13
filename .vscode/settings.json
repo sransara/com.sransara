@@ -22,4 +22,5 @@
   "asciidoc.preview.asciidoctorAttributes": {
     "skip-front-matter": true
   },
+  "asciidoc.antora.enableAntoraSupport": false,
 }

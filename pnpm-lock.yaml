@@ -27,8 +27,8 @@ importers:
         specifier: ^9.6.0
         version: 9.6.0
       '@sransara/astro-adocx':
-        specifier: ^0.0.15
-        version: 0.0.15(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))
+        specifier: ^0.0.16
+        version: 0.0.16(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))
       '@types/eslint':
         specifier: ^8.56.10
         version: 8.56.10
@@ -71,6 +71,9 @@ importers:
       eslint-plugin-tailwindcss:
         specifier: ^3.17.4
         version: 3.17.4(tailwindcss@3.4.4)
+      fast-glob:
+        specifier: ^3.3.2
+        version: 3.3.2
       katex:
         specifier: ^0.16.11
         version: 0.16.11
@@ -841,8 +844,8 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
-  '@sransara/astro-adocx@0.0.15':
-    resolution: {integrity: sha512-8MxJv1ZUj0o2/j6UG9zMA4OtgRNPLCXrvfhJuW1Qc9591yEzrGwosgw5ixxjqDeVlKYI2UWAlSkPnKMfVlWq5A==, tarball: https://registry.npmjs.org/@sransara/astro-adocx/-/astro-adocx-0.0.15.tgz}
+  '@sransara/astro-adocx@0.0.16':
+    resolution: {integrity: sha512-1Sqk0KJJ6JpaCa12gGxSoTUH8vic41DNy0cpKLKYR+DY8KwIcSQQ8o0yHeeADG1Yxdtyuq/IMieTUfbzQxjJ/w==, tarball: https://registry.npmjs.org/@sransara/astro-adocx/-/astro-adocx-0.0.16.tgz}
     peerDependencies:
       asciidoctor: ^3.0.4
       astro: ^4.10.2
@@ -3812,7 +3815,7 @@ snapshots:
     dependencies:
       solid-js: 1.8.18
 
-  '@sransara/astro-adocx@0.0.15(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))':
+  '@sransara/astro-adocx@0.0.16(asciidoctor@3.0.4(chokidar@3.6.0))(astro@4.11.5(@types/node@20.14.10)(typescript@5.5.3))(vite@5.3.3(@types/node@20.14.10))':
     dependencies:
       app-root-path: 3.1.0
       asciidoctor: 3.0.4(chokidar@3.6.0)

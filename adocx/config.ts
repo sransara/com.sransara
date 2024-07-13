@@ -1,6 +1,6 @@
-import path from 'node:path';
-
 import type { AdocOptions, AstroAdocxOptions } from '@sransara/astro-adocx/types';
+import fg from 'fast-glob';
+import path from 'node:path';
 // @ts-ignore: Types are not available
 import { register as krokiPluginRegisterHandle } from 'asciidoctor-kroki';
 
@@ -24,14 +24,17 @@ import poster from './_meta/poster.jpg';
 
 export const adocxConfig = {
   astroFenced,
-  withAsciidocEngine(asciidoctorEngine) {
+  async withAsciidocEngine(asciidoctorEngine) {
     nodeConvertingConverterRegisterHandle(asciidoctorEngine, nodeConverters);
     krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
     inlineMacroCalloutRegisterHandle(asciidoctorEngine.Extensions);
   },
-  withDocument(filePath, document) {
+  async withDocument(filePath, document) {
     // useful for asciidoctor-diagrams/kroki
     document.setAttribute('outdir', path.dirname(filePath));
+  },
+  async withAstroComponent(filePath, component) {
+    return component;
   },
   astroLayouts: {
     note: {
@@ -39,6 +42,7 @@ export const adocxConfig = {
       args: 'poster={poster} metadata={metadata}',
     },
   },
+  watchFiles: fg.sync('./adocx/**/*.*'),
 } satisfies AstroAdocxOptions;
 
 export const asciidoctorConfig = {
