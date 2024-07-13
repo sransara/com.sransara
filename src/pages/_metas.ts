@@ -1,4 +1,4 @@
-import type { Metadata } from '@/src/lib/types/notes';
+import type { Metadata } from '#/src/lib/types/notes';
 
 type Metas = Record<string, { metadata: Metadata }>;
 const metas = import.meta.glob('./**/_meta/metadata.ts', { eager: true }) as Metas;
