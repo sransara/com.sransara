@@ -13,7 +13,7 @@ export const convert: AdocNodeConverter<Block> = (node: Block, _opts?: any) => {
   const roles = node.getRoles().join(' ');
   const content = node.getContent();
   const style = node.getStyle();
-  addOnceToAstroFence(node, "import Mathtex from '@/src/lib/astro/mathtex/Mathtex.astro';");
+  addOnceToAstroFence(node, "import Mathtex from '@/src/astro/mathtex/Mathtex.astro';");
   return atag('div', {
     id,
     class: `mathblock ${roles}`,

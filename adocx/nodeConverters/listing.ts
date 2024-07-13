@@ -14,10 +14,7 @@ export const convert: AdocNodeConverter<Block> = (node: Block, _opts?: any) => {
   const content = node.getContent();
   const lang = node.getAttribute('language');
 
-  addOnceToAstroFence(
-    node,
-    "import CodeListing from '@/src/lib/astro/codeListing/CodeListing.astro';",
-  );
+  addOnceToAstroFence(node, "import CodeListing from '@/src/astro/codeListing/CodeListing.astro';");
   return atag('div', {
     id,
     class: ['listingblock', ...roles].join(' '),

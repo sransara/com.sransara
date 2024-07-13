@@ -2,9 +2,9 @@
 import { format, parseISO } from 'date-fns';
 
 import BaseLayout from '@/src/layouts/baseLayout/BaseLayout.astro';
-import NavBar from '@/src/lib/astro/navBar/NavBar.astro';
+import NavBar from '@/src/astro/navBar/NavBar.astro';
 import { routes } from '@/src/pages/_metas.ts';
-import { groupBy } from '@/src/lib/utils.ts';
+import { groupBy } from '@/src/lib/array';
 
 const notesGroupedByYear = groupBy(
   routes('/notes'),
