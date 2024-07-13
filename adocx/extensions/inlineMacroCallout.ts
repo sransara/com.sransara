@@ -1,9 +1,9 @@
 import type { Extensions } from 'asciidoctor';
 
-import { isExtensionSingleton } from '@sransara/astro-adocx/types';
+import { isExtensionRegistrySingleton } from '@sransara/astro-adocx/utils/extension';
 
 export function register(registry: typeof Extensions | Extensions.Registry) {
-  if (isExtensionSingleton(registry)) {
+  if (isExtensionRegistrySingleton(registry)) {
     registry.register(function () {
       this.inlineMacro('callout', extension);
     });

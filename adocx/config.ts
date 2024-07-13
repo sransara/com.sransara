@@ -1,4 +1,4 @@
-import type { AdocOptions, AstroAdocxOptions } from '@sransara/astro-adocx/types';
+import type { AdocOptions, AstroAdocxOptions } from '@sransara/astro-adocx/config';
 import fg from 'fast-glob';
 import path from 'node:path';
 // @ts-ignore: Types are not available
