@@ -29,6 +29,7 @@ export const convert: AdocNodeConverter<Block> = (node: Block, _opts?: any) => {
           atag('Mathtex', {
             block: true,
             lang: style,
+            'is:raw': true,
             children: [content],
           }),
         ],

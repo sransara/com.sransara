@@ -53,8 +53,8 @@ os.execv( <1>
 === Why it works?
 
 It works because the bootstrapper created by the
-https://cs.opensource.google/bazel/bazel/+/master:tools/python/python_bootstrap_template.txt;drc=91584dd4f189f60b67d1984aeeaf2de8496ea824[python_bootstrap_template.txt]template
-sets the `PYTHONPATH` and starts our `pyshell.py` script.
+https://cs.opensource.google/bazel/bazel/+/master:tools/python/python_bootstrap_template.txt;drc=91584dd4f189f60b67d1984aeeaf2de8496ea824[python_bootstrap_template.txt]
+template sets the `PYTHONPATH` and starts our `pyshell.py` script.
 `execv` replaces the current process with a new process, and the new process inherits the environment variables from the old process
 including the `PYTHONPATH` set by the bootstrapper.
 

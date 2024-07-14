@@ -29,6 +29,7 @@ export const convert: AdocNodeConverter<Block> = (node: Block, _opts?: any) => {
         children: [
           atag('CodeListing', {
             lang,
+            'is:raw': true,
             children: [content],
           }),
         ],
