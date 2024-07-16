@@ -25,7 +25,7 @@ import poster from './_meta/poster.jpg';
 export const adocxConfig = {
   astroFenced,
   async withAsciidocEngine(asciidoctorEngine) {
-    nodeConvertingConverterRegisterHandle(asciidoctorEngine, nodeConverters);
+    nodeConvertingConverterRegisterHandle(nodeConverters);
     krokiPluginRegisterHandle(asciidoctorEngine.Extensions);
     inlineMacroCalloutRegisterHandle(asciidoctorEngine.Extensions);
   },
