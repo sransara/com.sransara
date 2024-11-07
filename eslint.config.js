@@ -1,7 +1,7 @@
 import js from '@eslint/js';
 import eslintPluginAstro from 'eslint-plugin-astro';
 
-/** @type { import("eslint").Linter.FlatConfig[] } */
+/** @type { import("eslint").Linter.Config[] } */
 const config = [
   js.configs.recommended,
   ...eslintPluginAstro.configs.recommended,
